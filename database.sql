@@ -202,6 +202,7 @@ CREATE TABLE `users`
     `username`         VARCHAR(30)                      NOT NULL,
     `birthdate`        DATE                             NULL,
     `login_type`       ENUM ('LOCAL', 'KAKAO', 'NAVER') NOT NULL,
+    `provider_id`      VARCHAR(255)                     NULL, -- provider_id 다시 추가
     `user_profile_url` VARCHAR(100)                     NULL,
     `is_deleted`       BOOLEAN                          NULL     DEFAULT FALSE,
     `growth_score`     INT                              NOT NULL DEFAULT 0,
