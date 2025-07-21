@@ -4,8 +4,12 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
     <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </context-param>
+    <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/spring/root-context.xml</param-value>
+        <param-value>com.kbulkup.common.config.RootConfig</param-value>
     </context-param>
 
     <listener>
