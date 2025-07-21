@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS kbulkupdb;
+CREATE DATABASE kbulkupdb;
+USE kbulkupdb;
+
 -- `reviews` 테이블 생성
 CREATE TABLE `reviews`
 (
@@ -89,10 +93,15 @@ CREATE TABLE `routines`
 -- `roles` 테이블 생성
 CREATE TABLE `roles`
 (
-    `role_id` BIGINT                               NOT NULL,
+    `role_id` BIGINT                               NOT NULL AUTO_INCREMENT,
     `role`    ENUM ('TRAINEE', 'TRAINER', 'ADMIN') NOT NULL,
     PRIMARY KEY (`role_id`)
 );
+
+-- 기본 역할 데이터 삽입
+INSERT INTO `roles` (`role`) VALUES ('TRAINEE');
+INSERT INTO `roles` (`role`) VALUES ('TRAINER');
+INSERT INTO `roles` (`role`) VALUES ('ADMIN');
 
 -- `trainings` 테이블 생성
 CREATE TABLE `trainings`
@@ -187,17 +196,19 @@ CREATE TABLE `admin_approval_logs`
 -- `users` 테이블 생성
 CREATE TABLE `users`
 (
-    `user_id`          BIGINT                           NOT NULL,
+    `user_id`          BIGINT                           NOT NULL AUTO_INCREMENT,
     `email`            VARCHAR(100)                     NOT NULL,
-    `password`         VARCHAR(255)                     NOT NULL,
+    `password`         VARCHAR(255)                     NULL, -- 소셜 로그인의 경우 비밀번호가 없을 수 있으므로 NULL 허용
     `username`         VARCHAR(30)                      NOT NULL,
+    `birthdate`        DATE                             NULL,
     `login_type`       ENUM ('LOCAL', 'KAKAO', 'NAVER') NOT NULL,
     `user_profile_url` VARCHAR(100)                     NULL,
     `is_deleted`       BOOLEAN                          NULL     DEFAULT FALSE,
     `growth_score`     INT                              NOT NULL DEFAULT 0,
     `created_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP,
     `updated_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`)
+    PRIMARY KEY (`user_id`),
+    CONSTRAINT `UQ_users_email_login_type` UNIQUE (`email`, `login_type`)
 );
 
 -- `user_roles` 테이블 생성
