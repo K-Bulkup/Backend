@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -27,6 +28,7 @@ public class SignupRequestDTO {
     private String email;
     private String phone;
     private String address;
+    @NotBlank(message = "역할은 필수 선택 사항입니다.")
     private String role; // 추가: "TRAINEE", "TRAINER" 등
     private String loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
     private String providerId; // 소셜 로그인 제공자 ID

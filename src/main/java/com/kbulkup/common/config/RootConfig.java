@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:/config/db.properties")
+@PropertySource("classpath:application.properties")
 @ComponentScan(basePackages = "com.kbulkup")
 @MapperScan(basePackages = "com.kbulkup")
 @EnableTransactionManagement
