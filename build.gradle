@@ -21,10 +21,10 @@ dependencies {
     // JSON 처리
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
 
-    // 데이터베이스 드라이버 (MySQL 예시)
+    // 데이터베이스 드라이버 (MySQL)
     implementation 'mysql:mysql-connector-java:8.0.33'
 
-    // 데이터베이스 커넥션 풀 (DBCP2 예시)
+    // 데이터베이스 커넥션 풀 (DBCP2)
     implementation 'org.apache.commons:commons-dbcp2:2.9.0'
 
     // MyBatis
