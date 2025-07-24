@@ -1,7 +1,7 @@
 package com.kbulkup.auth.service;
 
-import com.kbulkup.auth.dto.SignupRequestDTO;
-import com.kbulkup.auth.dto.SignupResponseDTO;
+import com.kbulkup.auth.dto.request.SignupRequestDTO;
+import com.kbulkup.auth.dto.response.SignupResponseDTO;
 import com.kbulkup.user.domain.User;
 import com.kbulkup.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -47,25 +47,13 @@ public class SignupService {
 
         } else {
             // 사용자가 존재하지 않을 경우: 신규 회원가입 로직
-            User newUser = User.builder()
-                    .username(signupRequestDTO.getName())
-                    .password(passwordEncoder.encode(signupRequestDTO.getPassword()))
-                    .email(email)
-                    .loginType(loginType)
-                    .providerId(signupRequestDTO.getProviderId())
-                    .birthdate(signupRequestDTO.getBirthdate())
-                    .build();
+            User newUser = User.createUser(username,email,password,birthdate,role,loginType);
 
             userMapper.saveUser(newUser);
 
             userMapper.saveUserRole(newUser.getUserId(), role);
 
-            return SignupResponseDTO.builder()
-                    .message("회원가입이 성공적으로 완료되었습니다.")
-                    .userId(newUser.getUserId())
-                    .email(newUser.getEmail())
-                    .username(newUser.getUsername())
-                    .build();
+            return SignupResponseDTO.toDTO(newUser);
         }
     }
 }

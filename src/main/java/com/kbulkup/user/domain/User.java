@@ -28,4 +28,8 @@ public class User {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private List<String> roles;
+
+    public static User createUser(User user) {
+        return '='
+    }
 }
