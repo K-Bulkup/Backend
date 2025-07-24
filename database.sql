@@ -99,9 +99,12 @@ CREATE TABLE `roles`
 );
 
 -- 기본 역할 데이터 삽입
-INSERT INTO `roles` (`role`) VALUES ('TRAINEE');
-INSERT INTO `roles` (`role`) VALUES ('TRAINER');
-INSERT INTO `roles` (`role`) VALUES ('ADMIN');
+INSERT INTO `roles` (`role`)
+VALUES ('TRAINEE');
+INSERT INTO `roles` (`role`)
+VALUES ('TRAINER');
+INSERT INTO `roles` (`role`)
+VALUES ('ADMIN');
 
 -- `trainings` 테이블 생성
 CREATE TABLE `trainings`
@@ -322,3 +325,13 @@ ALTER TABLE `admin_approval_logs`
 ALTER TABLE `admin_approval_logs`
     ADD CONSTRAINT `FK_admin_approval_logs_trainer_profiles` FOREIGN KEY (`trainer_id`)
         REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+SELECT u.email,
+       u.username,
+       r.role
+FROM users u
+         LEFT JOIN
+     user_roles ur ON u.user_id = ur.FK1
+         LEFT JOIN
+     roles r ON ur.FK2 = r.role_id
+WHERE u.email = 'test2@test.com';

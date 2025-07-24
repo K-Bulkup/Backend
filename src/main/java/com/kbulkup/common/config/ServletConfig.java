@@ -76,6 +76,15 @@ public class ServletConfig implements WebMvcConfigurer {
         return resolver;
     }
 
+    @Override
+    public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins("http://localhost:5173")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+    }
+
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         // 업로드 경로가 존재하지 않으면 생성
