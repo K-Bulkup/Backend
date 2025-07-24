@@ -1,7 +1,7 @@
 package com.kbulkup.auth.service;
 
-import com.kbulkup.auth.dto.LoginRequestDTO;
-import com.kbulkup.auth.dto.LoginResponseDTO;
+import com.kbulkup.auth.dto.request.LoginRequestDTO;
+import com.kbulkup.auth.dto.response.LoginResponseDTO;
 import com.kbulkup.user.mapper.UserMapper;
 import com.kbulkup.common.security.JwtTokenProvider;
 import com.kbulkup.user.domain.User;
