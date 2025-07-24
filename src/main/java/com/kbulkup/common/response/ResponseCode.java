@@ -9,6 +9,9 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ResponseCode {
 
+    //400 BadRequest
+    VALIDATION_ERROR(BAD_REQUEST, "사용자 입력값이 올바르지 않습니다."),
+
     //200 OK
     SUCCESS(OK,"성공했습니다.");
 
