@@ -1,4 +1,4 @@
-package com.kbulkup.auth.dto;
+package com.kbulkup.auth.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

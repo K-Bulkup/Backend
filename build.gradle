@@ -60,6 +60,11 @@ dependencies {
     implementation 'org.springframework.security:spring-security-web:5.8.5'
     implementation 'org.springframework.security:spring-security-config:5.8.5'
 
+
+    // Java 8 날짜/시간 타입 (LocalDate, LocalDateTime 등) JSON 처리를 위한 의존성
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+
     // 테스트
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'

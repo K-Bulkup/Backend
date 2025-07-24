@@ -1,4 +1,4 @@
-package com.kbulkup.auth.dto;
+package com.kbulkup.auth.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
