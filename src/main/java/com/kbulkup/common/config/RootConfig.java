@@ -1,16 +1,14 @@
 package com.kbulkup.common.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -18,9 +16,17 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:application.properties")
-@ComponentScan(basePackages = "com.kbulkup")
-@MapperScan(basePackages = "com.kbulkup")
+@PropertySource("classpath:/config/db.properties")
+// 1. 일반 컴포넌트를 스캔할 때는 Mapper 인터페이스를 제외시킵니다.
+@ComponentScan(
+        basePackages = "com.kbulkup",
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = Mapper.class)
+)
+// 2. Mapper 인터페이스는 @MapperScan으로만 스캔합니다.
+@MapperScan(
+        basePackages = "com.kbulkup",
+        annotationClass = Mapper.class
+)
 @EnableTransactionManagement
 public class RootConfig {
 
