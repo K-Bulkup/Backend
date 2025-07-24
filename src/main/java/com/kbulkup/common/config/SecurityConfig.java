@@ -36,6 +36,10 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/common/auth/login", "/api/common/auth/signup").permitAll()
+                .antMatchers(org.springframework.http.HttpMethod.OPTIONS, "/api/common/auth/**").permitAll()
+                .antMatchers("/api/trainer/**").hasRole("TRAINER")
+                .antMatchers("/api/trainee/**").hasRole("TRAINEE")
+                .antMatchers("/api/common/**").hasAnyRole("TRAINER", "TRAINEE") // common 경로는 두 역할 모두 접근 가능
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
