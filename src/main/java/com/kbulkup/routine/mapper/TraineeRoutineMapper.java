@@ -4,7 +4,7 @@ import com.kbulkup.routine.dto.TraineeRoutineDetailResponseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-
+@Mapper
 public interface TraineeRoutineMapper {
 
     /**

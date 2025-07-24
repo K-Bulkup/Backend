@@ -13,7 +13,7 @@
         <result property="level" column="level"/>
     </resultMap>
 
-    <select id="findRoutineDetailById" resultMap="RoutineDetailMap" parameterType="map">
+    <select id="findRoutineDetailById" resultMap="RoutineDetailMap" parameterType="long">
         SELECT
             r.title AS routine_title,
             r.description AS routine_description,
