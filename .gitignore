@@ -64,3 +64,5 @@ temp/
 .env
 .env.local
 .env.*.local
+
+application-secret.properties

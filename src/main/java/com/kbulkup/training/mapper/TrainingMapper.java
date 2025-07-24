@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface TrainingMapper {
-    void create(Training training);
+    void createTraining(Training training);
 }

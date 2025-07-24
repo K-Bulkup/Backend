@@ -23,8 +23,8 @@ public class TrainingServiceImpl implements TrainingService {
     public void createTraining(Long trainerId, TrainerTrainingCreateRequestDTO dto) {
 
         // 트레이닝 도메인 생성 및 저장
-        Training training = Training.create(trainerId, dto);
-        trainingMapper.create(training);
+        Training training = Training.from(trainerId, dto);
+        trainingMapper.createTraining(training);
 
         // 루틴 생성 및 저장
         List<TrainerTrainingCreateRequestDTO.RoutineDTO> routines = dto.getRoutines();
