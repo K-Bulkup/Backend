@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.training.mapper.TrainingRoutineMapper">
+
+    <insert id="createRoutine" useGeneratedKeys="true" keyProperty="routineId">
+        INSERT INTO routines (
+            training_id,
+            title,
+            description,
+            routine_type,
+            quiz_type,
+            order_number,
+            score
+        ) VALUES (
+                     #{trainingId},
+                     #{title},
+                     #{description},
+                     #{routineType},
+                     #{quizType},
+                     #{orderNumber},
+                     #{score}
+                 )
+    </insert>
+
+    <insert id="createRoutineVideo">
+        INSERT INTO RoutineVideos (routine_id, routine_video_url)
+        VALUES (#{routineId}, #{videoUrl})
+    </insert>
+
+</mapper>

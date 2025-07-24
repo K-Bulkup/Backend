@@ -21,7 +21,7 @@ public class Routine {
     private LocalDateTime createdAt; // 생성 일시
     private LocalDateTime updatedAt; // 수정 일시
 
-    public static Routine create(Long trainingId, TrainerTrainingCreateRequestDTO.RoutineDTO dto) {
+    public static Routine createRoutine(Long trainingId, TrainerTrainingCreateRequestDTO.RoutineDTO dto) {
         return Routine.builder()
                 .trainingId(trainingId)
                 .title(dto.getTitle())

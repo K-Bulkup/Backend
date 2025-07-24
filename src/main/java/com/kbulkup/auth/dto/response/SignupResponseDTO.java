@@ -1,13 +1,11 @@
 package com.kbulkup.auth.dto.response;
 
 import com.kbulkup.user.domain.User;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-/**
- * 회원가입 성공 시 클라이언트에 반환될 응답 데이터를 담는 DTO
- */
-@Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class SignupResponseDTO {
 

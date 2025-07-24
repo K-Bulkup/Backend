@@ -32,5 +32,5 @@ public class SignupRequestDTO {
     private String role; // 추가: "TRAINEE", "TRAINER" 등
     private String loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
     private String providerId; // 소셜 로그인 제공자 ID
-    private LocalDate birthdate;
+    private String birthdate;
 }

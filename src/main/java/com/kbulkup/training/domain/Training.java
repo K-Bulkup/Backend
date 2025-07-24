@@ -27,7 +27,7 @@ public class Training {
     private LocalDateTime createdAt;   // 생성일
     private LocalDateTime updatedAt;   // 수정일
 
-    public static Training create(Long trainerId, com.kbulkup.training.dto.TrainerTrainingCreateRequestDTO dto) {
+    public static Training from(Long trainerId, com.kbulkup.training.dto.TrainerTrainingCreateRequestDTO dto) {
         return Training.builder()
                 .trainerId(trainerId)
                 .title(dto.getTitle())

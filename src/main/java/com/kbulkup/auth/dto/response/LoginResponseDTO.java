@@ -1,20 +1,27 @@
 package com.kbulkup.auth.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.kbulkup.user.domain.User;
+import lombok.*;
 
+import java.util.Collections;
 import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class LoginResponseDTO {
-    private String message;     // 예: "로그인 성공"
     private String accessToken; // 최종 인증 JWT
     private Long userId;        // 사용자의 고유 ID
     private String nickname;    // 사용자의 닉네임
     private List<String> roles; // 사용자가 가진 모든 역할 목록
+
+    public static LoginResponseDTO toDTO(User user, String accessToken, String requestedRole) {
+        return LoginResponseDTO.builder().
+                accessToken(accessToken).
+                userId(user.getUserId()).
+                nickname(user.getUsername()).
+                roles(Collections.singletonList(requestedRole)).
+                build();
+    }
 }

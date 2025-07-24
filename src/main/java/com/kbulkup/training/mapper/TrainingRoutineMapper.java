@@ -1,14 +1,11 @@
-package com.kbulkup.routine.mapper;
+package com.kbulkup.training.mapper;
 
 import com.kbulkup.routine.domain.Routine;
-import com.kbulkup.training.dto.TrainerTrainingCreateRequestDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 @Mapper
-public interface RoutineMapper {
+public interface TrainingRoutineMapper {
 
     // Routine 도메인 객체를 받아 DB에 저장합니다.
     void createRoutine(Routine routine);

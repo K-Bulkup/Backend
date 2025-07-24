@@ -8,9 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/trainer/trainings")
 @RequiredArgsConstructor
-@Slf4j
+@RequestMapping("/api/trainer/trainings")
 public class TrainingController {
 
     private final TrainingService trainingService;
