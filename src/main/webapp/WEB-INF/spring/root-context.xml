@@ -26,12 +26,11 @@
         <constructor-arg ref="sqlSessionFactory" />
     </bean>
 
-    <!-- 1. MyBatis는 mapper 패키지만 스캔하도록 경로를 명확히 지정합니다. -->
-    <mybatis-spring:scan base-package="com.kbulkup.**.mapper" />
+    <!-- 1. MyBatis 매퍼는 여기서만 스캔 -->
+    <mybatis-spring:scan base-package="com.kbulkup" annotation="org.apache.ibatis.annotations.Mapper" />
 
-    <!-- 2. Spring Component는 mapper를 제외한 나머지 패키지를 스캔하도록 설정합니다. -->
+    <!-- 2. Spring 컴포넌트 스캔할 때는 매퍼 인터페이스 제외 (이 부분은 그대로 둡니다) -->
     <context:component-scan base-package="com.kbulkup">
         <context:exclude-filter type="annotation" expression="org.apache.ibatis.annotations.Mapper"/>
     </context:component-scan>
-
 </beans>
