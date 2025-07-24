@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.user.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="com.kbulkup.user.domain.User">
+        <id property="userId" column="user_id"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="username" column="username"/>
+        <result property="loginType" column="login_type"/>
+        <result property="providerId" column="provider_id"/>
+        <result property="birthdate" column="birthdate"/>
+        <result property="userProfileUrl" column="user_profile_url"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="growthScore" column="growth_score"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <collection property="roles" ofType="java.lang.String">
+            <result column="role"/>
+        </collection>
+    </resultMap>
+
+    <select id="findByEmail" parameterType="string" resultMap="userResultMap">
+        SELECT
+            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id, u.birthdate, u.user_profile_url,
+            u.is_deleted, u.growth_score, u.created_at, u.updated_at, r.role
+        FROM users u
+        LEFT JOIN user_roles ur ON u.user_id = ur.FK1
+        LEFT JOIN roles r ON ur.FK2 = r.role_id
+        WHERE u.email = #{email}
+    </select>
+
+    <select id="findByEmailAndLoginType" resultMap="userResultMap">
+        SELECT
+            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id, u.birthdate, u.user_profile_url,
+            u.is_deleted, u.growth_score, u.created_at, u.updated_at, r.role
+        FROM users u
+        LEFT JOIN user_roles ur ON u.user_id = ur.FK1
+        LEFT JOIN roles r ON ur.FK2 = r.role_id
+        WHERE u.email = #{email} AND u.login_type = #{loginType}
+    </select>
+
+    <select id="findByProviderIdAndLoginType" resultMap="userResultMap">
+        SELECT
+            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id, u.birthdate, u.user_profile_url,
+            u.is_deleted, u.growth_score, u.created_at, u.updated_at, r.role
+        FROM users u
+        LEFT JOIN user_roles ur ON u.user_id = ur.FK1
+        LEFT JOIN roles r ON ur.FK2 = r.role_id
+        WHERE u.provider_id = #{providerId} AND u.login_type = #{loginType}
+    </select>
+
+    <insert id="saveUser" parameterType="com.kbulkup.user.domain.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO users (email, password, username, login_type, provider_id, birthdate, user_profile_url)
+        VALUES (#{email}, #{password}, #{username}, #{loginType}, #{providerId}, #{birthdate}, #{userProfileUrl})
+    </insert>
+
+    <insert id="saveUserRole">
+        INSERT INTO user_roles (FK1, FK2)
+        VALUES (#{userId}, (SELECT role_id FROM roles WHERE role = #{role}))
+    </insert>
+
+    <select id="existsUserRole" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM user_roles ur
+            JOIN roles r ON ur.FK2 = r.role_id
+            WHERE ur.FK1 = #{userId} AND r.role = #{role}
+        )
+    </select>
+
+    <update id="updateUserProviderId">
+        UPDATE users
+        SET provider_id = #{providerId}
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

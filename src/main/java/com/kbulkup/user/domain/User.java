@@ -1,35 +1,40 @@
 package com.kbulkup.user.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
-    private long userId;
+    private Long userId;
     private String email;
     private String password;
     private String username;
     private String loginType;
-    private String providerId; // 소셜 로그인 제공자 ID
-    private LocalDate birthdate;
+    private String providerId;
+    private String birthdate;
     
     private String userProfileUrl;
     private boolean isDeleted;
     private int growthScore;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
     private List<String> roles;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public static User createUser(User user) {
-        return '='
+    public static User createUser(String email, String password, String username, String loginType, String providerId, String birthdate) {
+        return User.builder().
+                email(email).
+                password(password).
+                username(username).
+                loginType(loginType).
+                providerId(providerId).
+                birthdate(birthdate).
+                createdAt(LocalDateTime.now()).
+                updatedAt(LocalDateTime.now()).
+                build();
     }
 }

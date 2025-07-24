@@ -1,4 +1,4 @@
 package com.kbulkup.user.service;
 
-public class UserService {
+public interface UserService {
 }

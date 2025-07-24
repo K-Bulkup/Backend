@@ -1,16 +1,17 @@
 package com.kbulkup.routine.controller;
 
 import com.kbulkup.routine.dto.TraineeRoutineDetailResponseDTO;
-import com.kbulkup.routine.service.TraineeRoutineQueryService;
+import com.kbulkup.routine.service.RoutineService;
+import com.kbulkup.training.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/trainee/routines")
-public class TraineeRoutineQueryController {
+public class TraineeRoutineController {
 
-    private final TraineeRoutineQueryService traineeRoutineQueryService;
+    private final RoutineService routineService;
 
     /**
      * 루틴 상세 정보 조회 API
@@ -21,6 +22,6 @@ public class TraineeRoutineQueryController {
     @GetMapping("/{routineId}")
     public TraineeRoutineDetailResponseDTO getRoutineDetail(
             @PathVariable Long routineId) {
-        return traineeRoutineQueryService.getRoutineDetail(routineId);
+        return routineService.getRoutineDetail(routineId);
     }
 }
