@@ -27,8 +27,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
     public CustomResponse<Void> updateTrainerProfileCareer(Long trainerId, TrainerProfileCareerUpdateRequestDTO dto) {
 
         // 트레이너 프로필이 존재하는지 확인
-        trainerProfileMapper.getTrainerProfile(trainerId)
-                .orElseThrow(() -> new ProfileException(ResponseCode.NOT_FOUND_TRAINER_PROFILE));
+        getTrainerProfile(trainerId);
 
         boolean isUpdated = trainerProfileMapper.updateTrainerCareer(trainerId, dto.getCareer());
 
