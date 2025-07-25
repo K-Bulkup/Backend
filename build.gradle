@@ -64,6 +64,9 @@ dependencies {
     // Java 8 날짜/시간 타입 (LocalDate, LocalDateTime 등) JSON 처리를 위한 의존성
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
+    // WebSocket + STOMP 추가
+    implementation 'org.springframework:spring-websocket:5.3.30'
+    implementation 'org.springframework:spring-messaging:5.3.30'
 
     // 테스트
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
