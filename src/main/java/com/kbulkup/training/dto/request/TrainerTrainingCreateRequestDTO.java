@@ -1,4 +1,4 @@
-package com.kbulkup.training.dto;
+package com.kbulkup.training.dto.request;
 
 import lombok.Data;
 
