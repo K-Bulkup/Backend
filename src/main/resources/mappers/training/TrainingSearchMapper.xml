@@ -4,23 +4,26 @@
 
 <mapper namespace="com.kbulkup.training.mapper.TrainingSearchMapper">
 
-    <select id="searchTrainings" resultType="com.kbulkup.training.dto.response.TrainingSearchListResponseDTO">
-        SELECT
-        t.training_id AS trainingId,
-        t.title,
-        u.username AS trainerName,  <!-- 핵심 수정 -->
-        t.average_rating,
-        t.trainee_count,
-        t.price,
-        t.thumbnail_url,
-        t.level,
-        t.category
-        FROM trainings t
-        JOIN users u ON t.trainer_id = u.user_id
-        WHERE t.approval_status = '승인'  <!-- 또는 'APPROVED' 실제 enum 확인 필요 -->
-        AND t.title LIKE CONCAT('%', #{keyword}, '%')
-        ORDER BY t.created_at DESC
-    </select>
+    <select id="searchTrainings"
+            parameterType="String"
+            resultType="com.kbulkup.training.dto.response.TrainingSearchListResponseDTO">
 
+        SELECT
+            t.training_id AS trainingId,
+            t.title,
+            u.username AS trainerName,
+            t.average_rating,
+            t.trainee_count,
+            t.price,
+            t.thumbnail_url,
+            t.level,
+            t.category
+        FROM trainings t
+                 JOIN users u ON t.trainer_id = u.user_id
+        WHERE t.approval_status = '승인'
+          AND t.title LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY t.created_at DESC
+
+    </select>
 
 </mapper>

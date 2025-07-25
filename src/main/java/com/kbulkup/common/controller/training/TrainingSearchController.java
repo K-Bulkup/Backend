@@ -6,26 +6,24 @@ import com.kbulkup.training.dto.request.TrainingSearchListRequestDTO;
 import com.kbulkup.training.dto.response.TrainingSearchListResponseDTO;
 import com.kbulkup.training.service.TrainingSearchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/common/trainings")
 @RequiredArgsConstructor
+@RequestMapping("/api/common/trainings")
 public class TrainingSearchController {
 
     private final TrainingSearchService trainingSearchService;
 
     @GetMapping("/search")
     public CustomResponse<List<TrainingSearchListResponseDTO>> searchTrainings(
-            @ModelAttribute TrainingSearchListRequestDTO request
+            @ModelAttribute TrainingSearchListRequestDTO dto
     ) {
-        // keyword 비어있을 경우 빈 리스트 반환
-        if (request.getKeyword() == null || request.getKeyword().isBlank()) {
-            return CustomResponse.success(ResponseCode.SUCCESS, List.of());
-        }
-
-        return CustomResponse.success(ResponseCode.SUCCESS, trainingSearchService.searchTrainings(request));
+        return CustomResponse.success(ResponseCode.SUCCESS, trainingSearchService.searchTrainings(dto));
     }
 }
