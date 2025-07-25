@@ -1,6 +1,6 @@
 package com.kbulkup.training.domain;
 
-import com.kbulkup.training.dto.TrainerTrainingCreateRequestDTO;
+import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,7 +27,7 @@ public class Training {
     private LocalDateTime createdAt;   // 생성일
     private LocalDateTime updatedAt;   // 수정일
 
-    public static Training from(Long trainerId, com.kbulkup.training.dto.TrainerTrainingCreateRequestDTO dto) {
+    public static Training from(Long trainerId, TrainerTrainingCreateRequestDTO dto) {
         return Training.builder()
                 .trainerId(trainerId)
                 .title(dto.getTitle())

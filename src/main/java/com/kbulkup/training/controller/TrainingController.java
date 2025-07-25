@@ -1,9 +1,8 @@
 package com.kbulkup.training.controller;
 
-import com.kbulkup.training.dto.TrainerTrainingCreateRequestDTO;
+import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import com.kbulkup.training.service.TrainingService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
