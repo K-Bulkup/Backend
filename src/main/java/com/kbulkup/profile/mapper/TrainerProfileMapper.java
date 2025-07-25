@@ -11,5 +11,6 @@ public interface TrainerProfileMapper {
 
     Optional<TrainerProfileDetailResponseDTO> getTrainerProfile(@Param("trainerId") Long TrainerId);
     boolean updateTrainerCareer(@Param("trainerId") Long trainerId, @Param("career") String career);
+    boolean updateTrainerProfileImage(@Param("trainerId") Long trainerId, @Param("profileImageUrl") String profileImageUrl);
 
 }

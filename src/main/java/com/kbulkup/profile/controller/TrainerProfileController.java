@@ -3,6 +3,7 @@ package com.kbulkup.profile.controller;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.profile.dto.request.TrainerProfileCareerUpdateRequestDTO;
+import com.kbulkup.profile.dto.request.TrainerProfileImageUpdateRequestDTO;
 import com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO;
 import com.kbulkup.profile.service.TrainerProfileService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,13 @@ public class TrainerProfileController {
     public CustomResponse<Void> putTrainerProfile(@PathVariable Long trainerId,
                                                   @RequestBody TrainerProfileCareerUpdateRequestDTO dto){
         return trainerProfileService.updateTrainerProfileCareer(trainerId,dto);
+    }
+
+    @PutMapping("/profile-image/{trainerId}")
+    public CustomResponse<Void> updateTrainerProfileImage(
+            @PathVariable Long trainerId,
+            @RequestBody TrainerProfileImageUpdateRequestDTO dto) {
+        return trainerProfileService.updateTrainerProfileImage(trainerId, dto);
     }
 
 }

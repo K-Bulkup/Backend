@@ -30,4 +30,9 @@
         WHERE trainer_id = #{trainerId}
     </update>
 
+    <update id="updateTrainerProfileImage" parameterType="map">
+        UPDATE users
+        SET user_profile_url = #{profileImageUrl}
+        WHERE user_id = #{trainerId}
+    </update>
 </mapper>

@@ -4,6 +4,7 @@ import com.kbulkup.common.exception.ProfileException;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.profile.dto.request.TrainerProfileCareerUpdateRequestDTO;
+import com.kbulkup.profile.dto.request.TrainerProfileImageUpdateRequestDTO;
 import com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO;
 import com.kbulkup.profile.mapper.TrainerProfileMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,26 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
         if (isUpdated) {
             return CustomResponse.success(ResponseCode.SUCCESS);
-
         }
         else{
             throw new ProfileException(ResponseCode.TRAINER_CAREER_UPDATE_FAILED);
+        }
+    }
+
+    @Override
+    @Transactional
+    public CustomResponse<Void> updateTrainerProfileImage(Long trainerId, TrainerProfileImageUpdateRequestDTO dto) {
+
+        // 트레이너 프로필이 존재하는지 확인
+        getTrainerProfile(trainerId);
+
+        boolean isUpdated = trainerProfileMapper.updateTrainerProfileImage(trainerId, dto.getProfileImageUrl());
+
+        if (isUpdated) {
+            return CustomResponse.success(ResponseCode.SUCCESS);
+        }
+        else{
+            throw new ProfileException(ResponseCode.TRAINER_PROFILE_IMAGE_UPDATE_FAILED);
         }
     }
 }
