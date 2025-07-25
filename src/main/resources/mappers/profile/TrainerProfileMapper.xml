@@ -24,4 +24,10 @@
         WHERE tp.trainer_id = #{trainerId};
     </select>
 
+    <update id="updateTrainerCareer" parameterType="map">
+        UPDATE trainer_profiles
+        SET career = #{career}
+        WHERE trainer_id = #{trainerId}
+    </update>
+
 </mapper>

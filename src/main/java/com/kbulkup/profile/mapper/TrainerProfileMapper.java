@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface TrainerProfileMapper {
 
     Optional<TrainerProfileDetailResponseDTO> getTrainerProfile(@Param("trainerId") Long TrainerId);
+    boolean updateTrainerCareer(@Param("trainerId") Long trainerId, @Param("career") String career);
 
 }

@@ -2,6 +2,7 @@ package com.kbulkup.profile.controller;
 
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.profile.dto.request.TrainerProfileCareerUpdateRequestDTO;
 import com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO;
 import com.kbulkup.profile.service.TrainerProfileService;
 import lombok.RequiredArgsConstructor;
@@ -19,4 +20,11 @@ public class TrainerProfileController {
         TrainerProfileDetailResponseDTO dto = trainerProfileService.getTrainerProfile(trainerId);
         return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }
+
+    @PostMapping("/career/{trainerId}")
+    public CustomResponse<Void> putTrainerProfile(@PathVariable Long trainerId,
+                                                  @RequestBody TrainerProfileCareerUpdateRequestDTO dto){
+        return trainerProfileService.updateTrainerProfileCareer(trainerId,dto);
+    }
+
 }
