@@ -21,7 +21,7 @@ public class TrainerProfileController {
         return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }
 
-    @PostMapping("/career/{trainerId}")
+    @PutMapping("/career/{trainerId}")
     public CustomResponse<Void> putTrainerProfile(@PathVariable Long trainerId,
                                                   @RequestBody TrainerProfileCareerUpdateRequestDTO dto){
         return trainerProfileService.updateTrainerProfileCareer(trainerId,dto);
