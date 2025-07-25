@@ -28,6 +28,8 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 
+out/
+
 # Gradle
 build/
 .gradle/
