@@ -1,14 +1,19 @@
 package com.kbulkup.auth.service;
 
+import com.kbulkup.auth.domain.LoginType;
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
 import com.kbulkup.auth.dto.response.SignupResponseDTO;
 import com.kbulkup.common.security.JwtTokenProvider;
+import com.kbulkup.user.domain.RoleType;
 import com.kbulkup.user.domain.User;
 import com.kbulkup.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.kbulkup.auth.exception.AuthException;
+import com.kbulkup.common.response.ResponseCode;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -23,29 +28,40 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public LoginResponseDTO login(String loginType, String email, String password, String code, String role) {
-        User user = userMapper.findByEmailAndLoginType(email, "LOCAL")
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일이거나 소셜 로그인 계정입니다."));
+    public LoginResponseDTO login(LoginType loginType, String email, String password, String code, RoleType role) {
+        User user = userMapper.findByEmailAndLoginType(email, LoginType.LOCAL)
+                .orElseThrow(() -> new AuthException(ResponseCode.INVALID_LOGIN_REQUEST));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+            throw new AuthException(ResponseCode.INVALID_PASSWORD);
         }
 
         // 요청된 역할(role)이 사용자의 실제 역할 목록에 포함되어 있는지 확인
-        String requestedRole = role;
-        if (requestedRole == null || user.getRoles().stream().noneMatch(r -> r.equalsIgnoreCase(requestedRole))) {
-            throw new IllegalArgumentException("요청한 역할(" + requestedRole + ")로 로그인할 수 없습니다. 사용자의 역할 목록에 없습니다.");
+        RoleType finalRoleToLogin;
+
+        if (role == null) {
+            // 역할이 지정되지 않은 경우, 사용자의 첫 번째 역할을 기본값으로 사용
+            finalRoleToLogin = user.getRoles().stream()
+                    .findFirst()
+                    .orElseThrow(() -> new AuthException(ResponseCode.NO_ROLE_ASSIGNED));
+        } else {
+            // 역할이 지정된 경우, 해당 역할을 사용
+            finalRoleToLogin = role;
+            // 그리고 이 역할이 사용자의 실제 역할 목록에 포함되어 있는지 확인
+            if (user.getRoles().stream().noneMatch(r -> r == finalRoleToLogin)) {
+                throw new AuthException(ResponseCode.INVALID_ROLE);
+            }
         }
 
         // 요청된 역할만 포함하여 JWT 토큰 생성
-        String accesstoken = jwtTokenProvider.createToken(user.getEmail(), Collections.singletonList(requestedRole));
+        String accesstoken = jwtTokenProvider.createToken(user.getEmail(), Collections.singletonList(finalRoleToLogin.getKey()));
 
-        return LoginResponseDTO.toDTO(user, accesstoken, role);
+        return LoginResponseDTO.toDTO(user, accesstoken, finalRoleToLogin);
     }
 
     @Override
     @Transactional
-    public SignupResponseDTO signup(String userId, String password, String name, String email, String phone, String address, String role, String loginType, String providerId, String birthdate) {
+    public SignupResponseDTO signup(String userId, String password, String name, String email, String phone, String address, RoleType role, LoginType loginType, String providerId, String birthdate) {
         Optional<User> existingUserOptional = userMapper.findByEmailAndLoginType(email, loginType);
 
         if (existingUserOptional.isPresent()) {
@@ -54,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
 
             // 이미 해당 역할을 가지고 있는지 확인
             if (userMapper.existsUserRole(existingUser.getUserId(), role)) {
-                throw new IllegalArgumentException("이미 해당 역할로 가입된 사용자입니다.");
+                throw new AuthException(ResponseCode.DUPLICATE_ROLE);
             }
 
             // 새로운 역할 추가

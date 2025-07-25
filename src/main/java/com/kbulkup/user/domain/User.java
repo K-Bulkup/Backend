@@ -1,6 +1,10 @@
 package com.kbulkup.user.domain;
 
-import lombok.*;
+import com.kbulkup.auth.domain.LoginType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,18 +18,18 @@ public class User {
     private String email;
     private String password;
     private String username;
-    private String loginType;
+    private LoginType loginType;
     private String providerId;
     private String birthdate;
     
     private String userProfileUrl;
     private boolean isDeleted;
     private int growthScore;
-    private List<String> roles;
+    private List<RoleType> roles;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static User createUser(String email, String password, String username, String loginType, String providerId, String birthdate) {
+    public static User createUser(String email, String password, String username, LoginType loginType, String providerId, String birthdate) {
         return User.builder().
                 email(email).
                 password(password).

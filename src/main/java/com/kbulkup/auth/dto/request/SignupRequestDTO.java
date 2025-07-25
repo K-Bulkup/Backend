@@ -1,16 +1,14 @@
 package com.kbulkup.auth.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.kbulkup.auth.domain.LoginType;
+import com.kbulkup.user.domain.RoleType;
+import lombok.*;
 
-import java.time.LocalDate;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -28,9 +26,9 @@ public class SignupRequestDTO {
     private String email;
     private String phone;
     private String address;
-    @NotBlank(message = "역할은 필수 선택 사항입니다.")
-    private String role; // 추가: "TRAINEE", "TRAINER" 등
-    private String loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
+    @NotNull(message = "역할은 필수 선택 사항입니다.")
+    private RoleType role; // 추가: "TRAINEE", "TRAINER" 등
+    private LoginType loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
     private String providerId; // 소셜 로그인 제공자 ID
     private String birthdate;
 }
