@@ -5,9 +5,10 @@ import com.kbulkup.user.domain.RoleType;
 import lombok.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+
 
 public class LoginRequestDTO {
     private LoginType loginType;

@@ -9,9 +9,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+
 public class SignupRequestDTO {
     private String userId;
     @Size(min = 8, max = 64, message = "비밀번호는 8자 이상 64자 이하로 입력해주세요.")

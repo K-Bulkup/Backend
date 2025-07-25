@@ -4,9 +4,10 @@ import com.kbulkup.user.domain.User;
 import lombok.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+
 public class SignupResponseDTO {
 
     private Long userId;

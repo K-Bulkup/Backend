@@ -7,9 +7,10 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+
 public class LoginResponseDTO {
     private String accessToken; // 최종 인증 JWT
     private Long userId;        // 사용자의 고유 ID
