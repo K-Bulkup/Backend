@@ -16,7 +16,8 @@ public class TrainerCounselingListResponseDTO {
 
     private String traineeName;
     private String traineeProfileUrl;
-//    private CounselingStatus status;
+    //    private CounselingStatus status;
+    private String roomId;
     private String status;
     private String trainingTitle;
     private String latestMessage;

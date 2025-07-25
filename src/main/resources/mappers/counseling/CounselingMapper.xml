@@ -11,6 +11,7 @@
             SELECT
                 u.username AS traineeName,
                 u.user_profile_url AS traineeProfileUrl,
+                c.room_id,
                 c.status,
                 t.title AS trainingTitle,
                 c.latest_message AS latestMessage,
