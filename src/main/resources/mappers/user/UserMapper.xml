@@ -19,7 +19,7 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <collection property="roles" ofType="com.kbulkup.user.domain.RoleType">
-            <result column="role" typeHandler="com.kbulkup.common.mybatis.typehandler.RoleTypeHandler"/>
+            <result column="role" typeHandler="com.kbulkup.common.typehandler.RoleTypeHandler"/>
         </collection>
     </resultMap>
 

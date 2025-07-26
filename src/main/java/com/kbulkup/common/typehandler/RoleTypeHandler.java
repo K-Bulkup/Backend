@@ -1,4 +1,4 @@
-package com.kbulkup.common.mybatis.typehandler;
+package com.kbulkup.common.typehandler;
 
 import com.kbulkup.user.domain.RoleType;
 import org.apache.ibatis.type.BaseTypeHandler;

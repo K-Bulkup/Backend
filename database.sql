@@ -2,95 +2,26 @@ DROP DATABASE IF EXISTS kbulkupdb;
 CREATE DATABASE kbulkupdb;
 USE kbulkupdb;
 
--- `reviews` 테이블 생성
-CREATE TABLE `reviews`
+-- users
+CREATE TABLE `users`
 (
-    `review_id`   BIGINT    NOT NULL,
-    `user_id`     BIGINT    NOT NULL,
-    `training_id` BIGINT    NOT NULL,
-    `rating`      INT       NULL,
-    `content`     TEXT      NULL,
-    `created_at`  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`review_id`)
+    `user_id`          BIGINT                           NOT NULL AUTO_INCREMENT,
+    `email`            VARCHAR(100)                     NOT NULL,
+    `password`         VARCHAR(255)                     NULL,
+    `username`         VARCHAR(30)                      NOT NULL,
+    `birthdate`        DATE                             NULL,
+    `login_type`       ENUM ('LOCAL', 'KAKAO', 'NAVER') NOT NULL,
+    `provider_id`      VARCHAR(255)                     NULL,
+    `user_profile_url` VARCHAR(100)                     NULL,
+    `is_deleted`       BOOLEAN                          NULL     DEFAULT FALSE,
+    `growth_score`     INT                              NOT NULL DEFAULT 0,
+    `created_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`),
+    CONSTRAINT `UQ_users_email_login_type` UNIQUE (`email`, `login_type`)
 );
 
--- `routine_results` 테이블 생성
-CREATE TABLE `routine_results`
-(
-    `routine_result_id` BIGINT            NOT NULL,
-    `enrollment_id`     BIGINT            NOT NULL,
-    `routine_id`        BIGINT            NOT NULL,
-    `status`            BOOLEAN           NULL,
-    `awared_score`      INT               NULL,
-    `pass_fail_result`  ENUM ('성공', '실패') NULL,
-    `answer_text`       VARCHAR(255)      NULL,
-    `evidence_url`      VARCHAR(255)      NULL,
-    `submitted_at`      TIMESTAMP         NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`routine_result_id`)
-);
-
--- `trainer_certificates` 테이블 생성
-CREATE TABLE `trainer_certificates`
-(
-    `trainer_certificate_id` BIGINT                                          NOT NULL,
-    `trainer_id`             BIGINT                                          NOT NULL,
-    `cert_type`              ENUM ('전산회계운용사', '회계관리', '재경관리사','전산세무회계','기타') NULL,
-    `cert_number`            VARCHAR(50)                                     NULL,
-    `created_at`             TIMESTAMP                                       NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`trainer_certificate_id`)
-);
-
--- `RoutineVideos` 테이블 생성
-CREATE TABLE `RoutineVideos`
-(
-    `routine_id`        BIGINT       NOT NULL,
-    `routine_video_url` VARCHAR(255) NULL,
-    PRIMARY KEY (`routine_id`)
-);
-
--- `trainer_profiles` 테이블 생성
-CREATE TABLE `trainer_profiles`
-(
-    `trainer_id`           BIGINT    NOT NULL,
-    `career`               TEXT      NULL,
-    `total_average_rating` FLOAT     NULL,
-    `total_trainee_count`  INT       NULL,
-    `created_at`           TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`           TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`trainer_id`)
-);
-
--- `qnas` 테이블 생성
-CREATE TABLE `qnas`
-(
-    `qna_id`      BIGINT    NOT NULL,
-    `user_id`     BIGINT    NOT NULL,
-    `training_id` BIGINT    NOT NULL,
-    `trainer_id`  BIGINT    NOT NULL,
-    `question`    TEXT      NULL,
-    `answer`      TEXT      NULL,
-    `created_at`  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    `answered_at` TIMESTAMP NULL,
-    PRIMARY KEY (`qna_id`)
-);
-
--- `routines` 테이블 생성
-CREATE TABLE `routines`
-(
-    `routine_id`   BIGINT                               NOT NULL,
-    `training_id`  BIGINT                               NOT NULL,
-    `title`        VARCHAR(100)                         NULL,
-    `description`  TEXT                                 NULL, -- 추가/수정된 컬럼
-    `routine_type` ENUM ('VIDEO', 'QUIZ', 'TEXT')       NULL,
-    `quiz_type`    ENUM ('OX', 'PHOTO', 'SHORT_ANSWER') NULL,
-    `order_number` INT                                  NULL,
-    `score`        INT                                  NULL,
-    `created_at`   TIMESTAMP                            NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   TIMESTAMP                            NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`routine_id`)
-);
-
--- `roles` 테이블 생성
+-- roles
 CREATE TABLE `roles`
 (
     `role_id` BIGINT                               NOT NULL AUTO_INCREMENT,
@@ -98,18 +29,41 @@ CREATE TABLE `roles`
     PRIMARY KEY (`role_id`)
 );
 
--- 기본 역할 데이터 삽입
-INSERT INTO `roles` (`role`)
-VALUES ('TRAINEE');
-INSERT INTO `roles` (`role`)
-VALUES ('TRAINER');
-INSERT INTO `roles` (`role`)
-VALUES ('ADMIN');
+-- user_roles
+CREATE TABLE `user_roles`
+(
+    `FK1` BIGINT NOT NULL,
+    `FK2` BIGINT NOT NULL,
+    PRIMARY KEY (`FK1`, `FK2`)
+);
 
--- `trainings` 테이블 생성
+-- trainer_profiles
+CREATE TABLE `trainer_profiles`
+(
+    `trainer_id`           BIGINT    NOT NULL AUTO_INCREMENT,
+    `career`               TEXT      DEFAULT NULL,
+    `total_average_rating` FLOAT     NULL DEFAULT 0,
+    `total_trainee_count`  INT       NULL DEFAULT 0,
+    `created_at`           TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`           TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`trainer_id`)
+);
+
+-- trainer_certificates
+CREATE TABLE `trainer_certificates`
+(
+    `trainer_certificate_id` BIGINT                                          NOT NULL AUTO_INCREMENT,
+    `trainer_id`             BIGINT                                          NOT NULL,
+    `cert_type`              ENUM ('전산회계운용사', '회계관리', '재경관리사','전산세무회계','기타') NULL,
+    `cert_number`            VARCHAR(50)                                     NULL,
+    `created_at`             TIMESTAMP                                       NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`trainer_certificate_id`)
+);
+
+-- trainings
 CREATE TABLE `trainings`
 (
-    `training_id`     BIGINT                                                               NOT NULL,
+    `training_id`     BIGINT                                                               NOT NULL AUTO_INCREMENT,
     `trainer_id`      BIGINT                                                               NOT NULL,
     `title`           VARCHAR(100)                                                         NULL,
     `description`     TEXT                                                                 NULL,
@@ -126,7 +80,31 @@ CREATE TABLE `trainings`
     PRIMARY KEY (`training_id`)
 );
 
--- `routine_answers` 테이블 생성
+-- routines
+CREATE TABLE `routines`
+(
+    `routine_id`   BIGINT                               NOT NULL AUTO_INCREMENT,
+    `training_id`  BIGINT                               NOT NULL,
+    `title`        VARCHAR(100)                         NULL,
+    `description`  TEXT                                 NULL,
+    `routine_type` ENUM ('VIDEO', 'QUIZ', 'TEXT')       NULL,
+    `quiz_type`    ENUM ('OX', 'PHOTO', 'SHORT_ANSWER') NULL,
+    `order_number` INT                                  NULL,
+    `score`        INT                                  NULL,
+    `created_at`   TIMESTAMP                            NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   TIMESTAMP                            NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`routine_id`)
+);
+
+-- RoutineVideos
+CREATE TABLE `RoutineVideos`
+(
+    `routine_id`        BIGINT       NOT NULL,
+    `routine_video_url` VARCHAR(255) NULL,
+    PRIMARY KEY (`routine_id`)
+);
+
+-- routine_answers
 CREATE TABLE `routine_answers`
 (
     `routine_id` BIGINT NOT NULL,
@@ -134,10 +112,75 @@ CREATE TABLE `routine_answers`
     PRIMARY KEY (`routine_id`)
 );
 
--- `counselings` 테이블 생성
+-- enrollments
+CREATE TABLE `enrollments`
+(
+    `enrollment_id` BIGINT    NOT NULL AUTO_INCREMENT,
+    `user_id`       BIGINT    NOT NULL,
+    `training_id`   BIGINT    NOT NULL,
+    `progress`      FLOAT     NULL,
+    `created_at`    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    `completed_at`  TIMESTAMP NULL,
+    PRIMARY KEY (`enrollment_id`)
+);
+
+-- routine_results
+CREATE TABLE `routine_results`
+(
+    `routine_result_id` BIGINT            NOT NULL AUTO_INCREMENT,
+    `enrollment_id`     BIGINT            NOT NULL,
+    `routine_id`        BIGINT            NOT NULL,
+    `status`            BOOLEAN           NULL,
+    `awared_score`      INT               NULL,
+    `pass_fail_result`  ENUM ('성공', '실패') NULL,
+    `answer_text`       VARCHAR(255)      NULL,
+    `evidence_url`      VARCHAR(255)      NULL,
+    `submitted_at`      TIMESTAMP         NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`routine_result_id`)
+);
+
+-- reviews
+CREATE TABLE `reviews`
+(
+    `review_id`   BIGINT    NOT NULL AUTO_INCREMENT,
+    `user_id`     BIGINT    NOT NULL,
+    `training_id` BIGINT    NOT NULL,
+    `rating`      INT       NULL,
+    `content`     TEXT      NULL,
+    `created_at`  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`review_id`)
+);
+
+-- qnas
+CREATE TABLE `qnas`
+(
+    `qna_id`      BIGINT    NOT NULL AUTO_INCREMENT,
+    `user_id`     BIGINT    NOT NULL,
+    `training_id` BIGINT    NOT NULL,
+    `trainer_id`  BIGINT    NOT NULL,
+    `question`    TEXT      NULL,
+    `answer`      TEXT      NULL,
+    `created_at`  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    `answered_at` TIMESTAMP NULL,
+    PRIMARY KEY (`qna_id`)
+);
+
+-- portfolios
+CREATE TABLE `portfolios`
+(
+    `portfolio_id`       BIGINT    NOT NULL AUTO_INCREMENT,
+    `user_id`            BIGINT    NOT NULL,
+    `total_income`       BIGINT    NOT NULL DEFAULT 0,
+    `total_expense`      BIGINT    NOT NULL DEFAULT 0,
+    `avg_daily_spending` FLOAT     NOT NULL DEFAULT 0.0,
+    `created_at`         TIMESTAMP NULL     DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`portfolio_id`)
+);
+
+-- counselings
 CREATE TABLE `counselings`
 (
-    `counseling_id` BIGINT                        NOT NULL,
+    `counseling_id` BIGINT                        NOT NULL AUTO_INCREMENT,
     `user_id`       BIGINT                        NOT NULL,
     `trainer_id`    BIGINT                        NOT NULL,
     `training_id`   BIGINT                        NOT NULL,
@@ -148,45 +191,21 @@ CREATE TABLE `counselings`
     PRIMARY KEY (`counseling_id`)
 );
 
--- `user_fintech_auths` 테이블 생성
+-- user_fintech_auths (수정된 부분)
 CREATE TABLE `user_fintech_auths`
 (
-    `Key`             BIGINT       NOT NULL,
+    `user_id`         BIGINT       NOT NULL,
     `fintech_use_num` VARCHAR(100) NULL,
     `bank_code`       VARCHAR(10)  NULL,
     `account_name`    VARCHAR(50)  NULL,
     `created_at`      TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`Key`)
+    PRIMARY KEY (`user_id`)
 );
 
--- `enrollments` 테이블 생성
-CREATE TABLE `enrollments`
-(
-    `enrollment_id` BIGINT    NOT NULL,
-    `user_id`       BIGINT    NOT NULL,
-    `training_id`   BIGINT    NOT NULL,
-    `progress`      FLOAT     NULL,
-    `created_at`    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    `completed_at`  TIMESTAMP NULL,
-    PRIMARY KEY (`enrollment_id`)
-);
-
--- `portfolios` 테이블 생성
-CREATE TABLE `portfolios`
-(
-    `portfolio_id`       BIGINT    NOT NULL,
-    `user_id`            BIGINT    NOT NULL,
-    `total_income`       BIGINT    NOT NULL DEFAULT 0,
-    `total_expense`      BIGINT    NOT NULL DEFAULT 0,
-    `avg_daily_spending` FLOAT     NOT NULL DEFAULT 0.0,
-    `created_at`         TIMESTAMP NULL     DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`portfolio_id`)
-);
-
--- `admin_approval_logs` 테이블 생성
+-- admin_approval_logs
 CREATE TABLE `admin_approval_logs`
 (
-    `admin_approval_log_id` BIGINT            NOT NULL,
+    `admin_approval_log_id` BIGINT            NOT NULL AUTO_INCREMENT,
     `admin_id`              BIGINT            NOT NULL,
     `training_id`           BIGINT            NOT NULL,
     `trainer_id`            BIGINT            NOT NULL,
@@ -196,142 +215,68 @@ CREATE TABLE `admin_approval_logs`
     PRIMARY KEY (`admin_approval_log_id`)
 );
 
--- `users` 테이블 생성
-CREATE TABLE `users`
-(
-    `user_id`          BIGINT                           NOT NULL AUTO_INCREMENT,
-    `email`            VARCHAR(100)                     NOT NULL,
-    `password`         VARCHAR(255)                     NULL, -- 소셜 로그인의 경우 비밀번호가 없을 수 있으므로 NULL 허용
-    `username`         VARCHAR(30)                      NOT NULL,
-    `birthdate`        DATE                             NULL,
-    `login_type`       ENUM ('LOCAL', 'KAKAO', 'NAVER') NOT NULL,
-    `provider_id`      VARCHAR(255)                     NULL, -- provider_id 다시 추가
-    `user_profile_url` VARCHAR(100)                     NULL,
-    `is_deleted`       BOOLEAN                          NULL     DEFAULT FALSE,
-    `growth_score`     INT                              NOT NULL DEFAULT 0,
-    `created_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`),
-    CONSTRAINT `UQ_users_email_login_type` UNIQUE (`email`, `login_type`)
-);
+-- 기본 역할 데이터 삽입
+INSERT INTO `roles` (`role`)
+VALUES ('TRAINEE'),
+       ('TRAINER'),
+       ('ADMIN');
 
--- `user_roles` 테이블 생성
-CREATE TABLE `user_roles`
-(
-    `FK1` BIGINT NOT NULL,
-    `FK2` BIGINT NOT NULL,
-    PRIMARY KEY (`FK1`, `FK2`)
-);
-
--- 외래 키 제약 조건 추가
--- 기존에 제공된 외래 키
+-- 외래 키 제약 조건
 ALTER TABLE `RoutineVideos`
-    ADD CONSTRAINT `FK_RoutineVideos_routines` FOREIGN KEY (`routine_id`)
-        REFERENCES `routines` (`routine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_RoutineVideos_routines` FOREIGN KEY (`routine_id`) REFERENCES `routines` (`routine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `trainer_profiles`
-    ADD CONSTRAINT `FK_trainer_profiles_users` FOREIGN KEY (`trainer_id`)
-        REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_trainer_profiles_users` FOREIGN KEY (`trainer_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `routine_answers`
-    ADD CONSTRAINT `FK_routine_answers_routines` FOREIGN KEY (`routine_id`)
-        REFERENCES `routines` (`routine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_routine_answers_routines` FOREIGN KEY (`routine_id`) REFERENCES `routines` (`routine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- user_fintech_auths 외래 키 (수정된 올바른 구문만 남김)
 ALTER TABLE `user_fintech_auths`
-    ADD CONSTRAINT `FK_user_fintech_auths_users` FOREIGN KEY (`Key`)
-        REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_user_fintech_auths_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `user_roles`
-    ADD CONSTRAINT `FK_user_roles_users` FOREIGN KEY (`FK1`)
-        REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `user_roles`
-    ADD CONSTRAINT `FK_user_roles_roles` FOREIGN KEY (`FK2`)
-        REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- 논리적으로 필요하여 추가된 외래 키 (이전 답변에서 포함되었던 내용)
-ALTER TABLE `counselings`
-    ADD CONSTRAINT `FK_counselings_users` FOREIGN KEY (`user_id`)
-        REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_user_roles_users` FOREIGN KEY (`FK1`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_user_roles_roles` FOREIGN KEY (`FK2`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `counselings`
-    ADD CONSTRAINT `FK_counselings_trainer_profiles` FOREIGN KEY (`trainer_id`)
-        REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `counselings`
-    ADD CONSTRAINT `FK_counselings_trainings` FOREIGN KEY (`training_id`)
-        REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_counselings_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_counselings_trainer_profiles` FOREIGN KEY (`trainer_id`) REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_counselings_trainings` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `reviews`
-    ADD CONSTRAINT `FK_reviews_users` FOREIGN KEY (`user_id`)
-        REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `reviews`
-    ADD CONSTRAINT `FK_reviews_trainings` FOREIGN KEY (`training_id`)
-        REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_reviews_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_reviews_trainings` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `enrollments`
-    ADD CONSTRAINT `FK_enrollments_users` FOREIGN KEY (`user_id`)
-        REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `enrollments`
-    ADD CONSTRAINT `FK_enrollments_trainings` FOREIGN KEY (`training_id`)
-        REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_enrollments_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_enrollments_trainings` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `routines`
-    ADD CONSTRAINT `FK_routines_trainings` FOREIGN KEY (`training_id`)
-        REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_routines_trainings` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `trainings`
-    ADD CONSTRAINT `FK_trainings_trainer_profiles` FOREIGN KEY (`trainer_id`)
-        REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_trainings_trainer_profiles` FOREIGN KEY (`trainer_id`) REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `routine_results`
-    ADD CONSTRAINT `FK_routine_results_enrollments` FOREIGN KEY (`enrollment_id`)
-        REFERENCES `enrollments` (`enrollment_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `routine_results`
-    ADD CONSTRAINT `FK_routine_results_routines` FOREIGN KEY (`routine_id`)
-        REFERENCES `routines` (`routine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_routine_results_enrollments` FOREIGN KEY (`enrollment_id`) REFERENCES `enrollments` (`enrollment_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_routine_results_routines` FOREIGN KEY (`routine_id`) REFERENCES `routines` (`routine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `portfolios`
-    ADD CONSTRAINT `FK_portfolios_users` FOREIGN KEY (`user_id`)
-        REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_portfolios_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `qnas`
-    ADD CONSTRAINT `FK_qnas_users` FOREIGN KEY (`user_id`)
-        REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `qnas`
-    ADD CONSTRAINT `FK_qnas_trainings` FOREIGN KEY (`training_id`)
-        REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `qnas`
-    ADD CONSTRAINT `FK_qnas_trainer_profiles` FOREIGN KEY (`trainer_id`)
-        REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_qnas_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_qnas_trainings` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_qnas_trainer_profiles` FOREIGN KEY (`trainer_id`) REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `trainer_certificates`
-    ADD CONSTRAINT `FK_trainer_certificates_trainer_profiles` FOREIGN KEY (`trainer_id`)
-        REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- `admin_approval_logs` 테이블의 `admin_id`에 대한 참조 테이블이 없으므로, 주석 처리 유지
--- ALTER TABLE `admin_approval_logs` ADD CONSTRAINT `FK_admin_approval_logs_admins` FOREIGN KEY (`admin_id`)
--- REFERENCES `admins` (`admin_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_trainer_certificates_trainer_profiles` FOREIGN KEY (`trainer_id`) REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `admin_approval_logs`
-    ADD CONSTRAINT `FK_admin_approval_logs_trainings` FOREIGN KEY (`training_id`)
-        REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_admin_approval_logs_trainings` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_admin_approval_logs_trainer_profiles` FOREIGN KEY (`trainer_id`) REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `admin_approval_logs`
-    ADD CONSTRAINT `FK_admin_approval_logs_trainer_profiles` FOREIGN KEY (`trainer_id`)
-        REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-SELECT u.email,
-       u.username,
-       r.role
-FROM users u
-         LEFT JOIN
-     user_roles ur ON u.user_id = ur.FK1
-         LEFT JOIN
-     roles r ON ur.FK2 = r.role_id
-WHERE u.email = 'test2@test.com';
+-- admin_approval_logs 의 admin_id 외래키 생략 주석 유지
+-- ALTER TABLE admin_approval_logs ADD CONSTRAINT FK_admin_approval_logs_admins FOREIGN KEY (admin_id)
+-- REFERENCES admins (admin_id) ON DELETE CASCADE ON UPDATE CASCADE;

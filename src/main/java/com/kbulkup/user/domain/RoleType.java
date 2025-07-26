@@ -10,7 +10,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum RoleType {
     TRAINER("TRAINER", "트레이너"),
-    TRAINEE("TRAINEE", "훈련생");
+    TRAINEE("TRAINEE", "트레이니");
 
     private final String key;
     private final String description;
