@@ -15,27 +15,28 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/trainings") // 공용 prefix로 통일
+@RequestMapping("/api/trainer/trainings")
 public class TrainingController {
 
     private final TrainingService trainingService;
     private final TrainingSearchService trainingSearchService;
 
     // [트레이너] 트레이닝 생성
-    @PostMapping("/trainer/{trainerId}")
-    public ResponseEntity<String> createTraining(
-            @PathVariable Long trainerId,
-            @RequestBody TrainerTrainingCreateRequestDTO dto) {
+    @PostMapping("/{trainerId}")
+    public ResponseEntity<String> createTraining(@PathVariable Long trainerId,
+                                                 @RequestBody TrainerTrainingCreateRequestDTO dto) {
 
         trainingService.createTraining(trainerId, dto);
         return ResponseEntity.ok("Training created successfully");
     }
 
     // [공용] 트레이닝 검색
-    @GetMapping("/search")
+    @GetMapping("/api/trainings/search")  // 절대 경로 지정
     public CustomResponse<List<TrainingSearchListResponseDTO>> searchTrainings(
-            @ModelAttribute TrainingSearchListRequestDTO dto) {
-
+            @RequestParam String keyword) {
+        TrainingSearchListRequestDTO dto = new TrainingSearchListRequestDTO();
+        dto.setKeyword(keyword);
         return CustomResponse.success(ResponseCode.SUCCESS, trainingSearchService.searchTrainings(dto));
     }
+
 }
