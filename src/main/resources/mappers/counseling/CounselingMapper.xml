@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.counseling.mapper.CounselingMapper">
+
+    <select id="findByTrainerId"
+            parameterType="long"
+            resultType="com.kbulkup.counseling.dto.response.TrainerCounselingListResponseDTO">
+            SELECT
+                u.username AS traineeName,
+                u.user_profile_url AS traineeProfileUrl,
+                c.room_id,
+                c.status,
+                t.title AS trainingTitle,
+                c.latest_message AS latestMessage,
+                c.latest_at AS latestAt
+            FROM counselings c
+            JOIN users u ON c.user_id = u.user_id
+            JOIN trainings t ON c.training_id = t.training_id
+            WHERE c.trainer_id = #{trainerId}
+            ORDER BY c.latest_at DESC
+    </select>
+</mapper>
