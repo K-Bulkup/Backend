@@ -1,12 +1,11 @@
 package com.kbulkup.profile.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class TrainerProfileDetailResponseDTO {
     private String username; //닉네임
     private String userProfileUrl; //프로필 url
