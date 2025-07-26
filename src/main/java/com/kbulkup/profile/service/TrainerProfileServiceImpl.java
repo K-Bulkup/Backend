@@ -18,7 +18,6 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
     private final TrainerProfileMapper trainerProfileMapper;
 
     @Override
-    @Transactional
     public TrainerProfileDetailResponseDTO getTrainerProfile(Long trainerId) {
         return trainerProfileMapper.getTrainerProfile(trainerId).orElseThrow(() -> new ProfileException(ResponseCode.NOT_FOUND_TRAINER_PROFILE));
     }
