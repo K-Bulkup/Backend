@@ -1,16 +1,12 @@
 package com.kbulkup.counseling.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+public class CounselingStatus {
+    public static final String THREE_DAYS_LEFT = "3일 남음";
+    public static final String TWO_DAYS_LEFT = "2일 남음";
+    public static final String ONE_DAYS_LEFT = "1일 남음";
+    public static final String EXPIRED = "만료";
 
-@Getter
-@AllArgsConstructor
-public enum CounselingStatus {
-
-    THREE_DAYS_LEFT("3일 남음"),
-    TWO_DAYS_LEFT("2일 남음"),
-    ONE_DAYS_LEFT("1일 남음"),
-    EXPIRED("만료");
-
-    private final String name;
+    private CounselingStatus() {
+        // Prevent instantiation
+    }
 }

@@ -1,25 +1,11 @@
 package com.kbulkup.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+public class RoleType {
+    public static final String TRAINER = "TRAINER";
+    public static final String TRAINEE = "TRAINEE";
+    public static final String ADMIN = "ADMIN";
 
-import java.util.Arrays;
-
-@Getter
-@RequiredArgsConstructor
-public enum RoleType {
-    TRAINER("TRAINER", "트레이너"),
-    TRAINEE("TRAINEE", "트레이니");
-
-    private final String key;
-    private final String description;
-
-    @JsonCreator
-    public static RoleType fromKey(String key) {
-        return Arrays.stream(RoleType.values())
-                .filter(type -> type.getKey().equalsIgnoreCase(key))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("지원하지 않는 역할 타입입니다: " + key));
+    private RoleType() {
+        // Prevent instantiation
     }
 }

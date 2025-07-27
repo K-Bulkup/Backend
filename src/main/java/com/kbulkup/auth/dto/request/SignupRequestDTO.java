@@ -1,7 +1,5 @@
 package com.kbulkup.auth.dto.request;
 
-import com.kbulkup.auth.domain.LoginType;
-import com.kbulkup.user.domain.RoleType;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -27,8 +25,8 @@ public class SignupRequestDTO {
     private String phone;
     private String address;
     @NotNull(message = "역할은 필수 선택 사항입니다.")
-    private RoleType role; // 추가: "TRAINEE", "TRAINER" 등
-    private LoginType loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
+    private String role; // 추가: "TRAINEE", "TRAINER" 등
+    private String loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
     private String providerId; // 소셜 로그인 제공자 ID
     private String birthdate;
 }

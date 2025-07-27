@@ -1,7 +1,5 @@
 package com.kbulkup.auth.dto.request;
 
-import com.kbulkup.auth.domain.LoginType;
-import com.kbulkup.user.domain.RoleType;
 import lombok.*;
 
 @Getter
@@ -11,9 +9,9 @@ import lombok.*;
 
 
 public class LoginRequestDTO {
-    private LoginType loginType;
+    private String loginType;
     private String email;
     private String password;
     private String code;
-    private RoleType role;
+    private String role;
 }
