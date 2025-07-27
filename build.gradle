@@ -71,6 +71,11 @@ dependencies {
     // 테스트
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+
+    //Webclient
+    implementation 'org.springframework:spring-webflux:5.3.23'
+    implementation 'io.projectreactor.netty:reactor-netty:1.0.24'
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.100.Final:osx-aarch_64' //MAC의 경우
 }
 
 // WAR 파일 이름 설정 (선택 사항)
