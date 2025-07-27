@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.profile.mapper.TrainerProfileMapper">
+
+    <resultMap id="trainerProfileResultMap" type="com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO">
+        <result property="username" column="username"/>
+        <result property="userProfileUrl" column="user_profile_url"/>
+        <result property="career" column="career"/>
+        <result property="totalAverageRating" column="total_average_rating"/>
+        <result property="totalStudentCount" column="total_student_count"/>
+    </resultMap>
+
+    <select id="getTrainerProfile" parameterType="Long" resultMap="trainerProfileResultMap">
+        SELECT
+            u.username,
+            u.user_profile_url,
+            tp.career,
+            tp.total_average_rating,
+            tp.total_trainee_count
+        FROM trainer_profiles tp JOIN users u ON tp.trainer_id = u.user_id
+        WHERE tp.trainer_id = #{trainerId};
+    </select>
+
+    <update id="updateTrainerCareer" parameterType="map">
+        UPDATE trainer_profiles
+        SET career = #{career}
+        WHERE trainer_id = #{trainerId}
+    </update>
+
+    <update id="updateTrainerProfileImage" parameterType="map">
+        UPDATE users
+        SET user_profile_url = #{profileImageUrl}
+        WHERE user_id = #{trainerId}
+    </update>
+</mapper>
