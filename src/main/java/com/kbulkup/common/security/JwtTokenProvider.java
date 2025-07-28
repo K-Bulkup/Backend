@@ -33,8 +33,9 @@ public class JwtTokenProvider {
     }
 
     // 최종 인증 JWT 생성
-    public String createToken(String userPk, List<String> roles) {
+    public String createToken(String userPk, Long userId, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userPk);
+        claims.put("userId", userId);
         claims.put("roles", roles);
         Date now = new Date();
         return Jwts.builder()
@@ -72,5 +73,24 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Long getUserId(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKeyBytes)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("userId", Long.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getRoles(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKeyBytes)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return (List<String>) claims.get("roles");
     }
 }

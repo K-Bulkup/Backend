@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 요청된 역할만 포함하여 JWT 토큰 생성
-        String accesstoken = jwtTokenProvider.createToken(user.getEmail(), Collections.singletonList(finalRoleToLogin));
+        String accesstoken = jwtTokenProvider.createToken(user.getEmail(), user.getUserId(), Collections.singletonList(requestedRole));
 
         return LoginResponseDTO.toDTO(user, accesstoken, finalRoleToLogin);
     }

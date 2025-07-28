@@ -2,27 +2,30 @@ package com.kbulkup.counseling.controller;
 
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.counseling.dto.request.CounselingCreateRequestDTO;
+import com.kbulkup.counseling.dto.response.CounselingCreateResponseDTO;
 import com.kbulkup.counseling.dto.response.TrainerCounselingListResponseDTO;
 import com.kbulkup.counseling.service.CounselingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/trainer/counselings")
+@RequestMapping("/api/common/counselings")
 public class CounselingController {
 
     private final CounselingService counselingService;
 
-    @GetMapping("/{trainerId}")
-    public CustomResponse<List<TrainerCounselingListResponseDTO>> readCounselings(@PathVariable Long trainerId) {
+    @GetMapping("/{userId}")
+    public CustomResponse<List<TrainerCounselingListResponseDTO>> readCounselings(@PathVariable Long userId) {
         //trainerId -> Authentication authentication 으로 변경 예정
-        return CustomResponse.success(ResponseCode.SUCCESS, counselingService.getCounselingsByTrainer(trainerId));
+        return CustomResponse.success(ResponseCode.SUCCESS, counselingService.getCounselingsByTrainer(userId));
+    }
+
+    @PostMapping("")
+    public CustomResponse<CounselingCreateResponseDTO> createCounselings(@RequestBody CounselingCreateRequestDTO dto) {
+        return CustomResponse.success(ResponseCode.SUCCESS, counselingService.createOrGetCounselingsRoom(dto.getTrainerId(), dto.getTraineeId(), dto.getTrainingId()));
     }
 }

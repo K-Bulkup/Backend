@@ -22,4 +22,36 @@
             WHERE c.trainer_id = #{trainerId}
             ORDER BY c.latest_at DESC
     </select>
+
+    <select id="findByTraineeAndTrainer" resultType="com.kbulkup.counseling.domain.Counseling">
+        SELECT *
+        FROM counselings
+        WHERE user_id = #{traineeId}
+          AND trainer_id = #{trainerId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertCounselings" parameterType="com.kbulkup.counseling.domain.Counseling">
+        INSERT INTO counselings (
+            user_id,
+            trainer_id,
+            training_id,
+            room_id,
+            status,
+            latest_message,
+            latest_at,
+            start_at,
+            expires_at
+        ) VALUES (
+            #{userId},
+            #{trainerId},
+            #{trainingId},
+            #{roomId},
+            #{status},
+            #{latestMessage},
+            #{latestAt},
+            #{startAt},
+            #{expiresAt}
+        )
+    </insert>
 </mapper>

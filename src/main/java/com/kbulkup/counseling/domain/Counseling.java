@@ -24,4 +24,16 @@ public class Counseling {
     private LocalDateTime latestAt;
     private LocalDateTime startAt;
     private LocalDateTime expiresAt;
+
+    public static Counseling createCounseling(Long traineeId, Long trainerId, Long trainingId, String roomId) {
+        return Counseling.builder()
+                .userId(traineeId)
+                .trainerId(trainerId)
+                .trainingId(trainingId)
+                .roomId(roomId)
+                .status("1일 남음")
+                .startAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusDays(1))
+                .build();
+    }
 }
