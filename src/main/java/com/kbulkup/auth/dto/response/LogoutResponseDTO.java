@@ -1,12 +1,11 @@
 package com.kbulkup.auth.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 /**
  * 로그아웃 성공 시 클라이언트에 반환될 응답 데이터를 담는 DTO
  */
-@Data
+@Getter
 @Builder
 public class LogoutResponseDTO {
     private String message;
