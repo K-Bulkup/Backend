@@ -38,7 +38,6 @@ public class AuthServiceImpl implements AuthService {
 
         // 요청된 역할(role)이 사용자의 실제 역할 목록에 포함되어 있는지 확인
         String finalRoleToLogin;
-
         if (role == null) {
             // 역할이 지정되지 않은 경우, 사용자의 첫 번째 역할을 기본값으로 사용
             finalRoleToLogin = user.getRoles().stream()
