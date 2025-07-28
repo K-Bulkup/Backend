@@ -4,7 +4,8 @@ import com.kbulkup.asset.domain.Composition;
 import com.kbulkup.asset.domain.Snapshot;
 import com.kbulkup.asset.domain.Transaction;
 import com.kbulkup.asset.dto.request.TokenRequestDTO;
-import com.kbulkup.asset.dto.response.TokenResponseDTO;
+import com.kbulkup.asset.dto.response.ExternalAssetResponseDTO;
+import com.kbulkup.asset.dto.response.ExternalTokenResponseDTO;
 import com.kbulkup.asset.dto.response.TraineeAssetDetailResponseDTO;
 import com.kbulkup.asset.mapper.TraineeAssetMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,42 +33,44 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     @Override
     @Transactional
     public void createUserPortfolio(String bank, Long id) {
-        TokenResponseDTO dto = getAccessToken(bank, id);
-        insertTraineeAsset(id, getUserAssetData(dto.getAccessToken()));
+        ExternalTokenResponseDTO externalTokenResponseDTO = getAccessToken(bank, id);
+        ExternalAssetResponseDTO externalAssetResponseDTO = getUserAssetData(externalTokenResponseDTO.getAccessToken());
+        insertTraineeAsset(id, externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
     }
 
     @Transactional
     public void insertTraineeAsset(Long id, TraineeAssetDetailResponseDTO dto) {
+        traineeAssetMapper.insertPortfolio(id);
         traineeAssetMapper.insertTransactions(id, dto.getTransactions());
         traineeAssetMapper.insertSnapshots(id, dto.getSnapshots());
         traineeAssetMapper.insertComposition(id, dto.getComposition());
     }
 
-    private TokenResponseDTO getAccessToken(String bank, Long id) {
+    private ExternalTokenResponseDTO getAccessToken(String bank, Long id) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://localhost:8888")
+                .baseUrl("http://localhost:9080")
                 .build();
         return webClient.post()
                 .uri("/external-api/token")
                 .header("X-User-Id", String.valueOf(id))
                 .bodyValue(TokenRequestDTO.create(bank))
                 .retrieve()
-                .bodyToMono(TokenResponseDTO.class)
+                .bodyToMono(ExternalTokenResponseDTO.class)
                 .block();
     }
 
-    private TraineeAssetDetailResponseDTO getUserAssetData(String token) {
+    private ExternalAssetResponseDTO getUserAssetData(String token) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://localhost:8888")
+                .baseUrl("http://localhost:9080")
                 .build();
 
         return webClient.post()
                 .uri("/external-api/user-data")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
-                .bodyToMono(TraineeAssetDetailResponseDTO.class)
+                .bodyToMono(ExternalAssetResponseDTO.class)
                 .block();
     }
 }
