@@ -6,7 +6,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 
 public class SignupRequestDTO {
-    private String userId;
+    private Long userId;
     @Size(min = 8, max = 64, message = "비밀번호는 8자 이상 64자 이하로 입력해주세요.")
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,64}$",
@@ -31,6 +31,6 @@ public class SignupRequestDTO {
     private String role; // 추가: "TRAINEE", "TRAINER" 등
     private String loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
     private String providerId; // 소셜 로그인 제공자 ID
-    @JsonFormat(pattern = "yyMMdd")
-    private LocalDate birthdate;
+    @JsonFormat(pattern = "yyMMddHHmmss")
+    private LocalDateTime birthdate;
 }
