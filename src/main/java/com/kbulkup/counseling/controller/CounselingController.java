@@ -21,11 +21,11 @@ public class CounselingController {
     @GetMapping("/{userId}")
     public CustomResponse<List<TrainerCounselingListResponseDTO>> readCounselings(@PathVariable Long userId) {
         //trainerId -> Authentication authentication 으로 변경 예정
-        return CustomResponse.success(ResponseCode.SUCCESS, counselingService.getCounselingsByTrainer(userId));
+        return CustomResponse.success(ResponseCode.SUCCESS, counselingService.getCounselings(userId));
     }
 
     @PostMapping("")
     public CustomResponse<CounselingCreateResponseDTO> createCounselings(@RequestBody CounselingCreateRequestDTO dto) {
-        return CustomResponse.success(ResponseCode.SUCCESS, counselingService.createOrGetCounselingsRoom(dto.getTrainerId(), dto.getTraineeId(), dto.getTrainingId()));
+        return CustomResponse.success(ResponseCode.SUCCESS, counselingService.createOrGetCounselingsRoom(dto.getTraineeId(), dto.getTrainingId()));
     }
 }
