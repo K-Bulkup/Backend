@@ -1,10 +1,7 @@
 package com.kbulkup.training.service;
 
-import com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResponseDTO;
-import com.kbulkup.training.dto.response.TrainerTrainingSummaryDTO;
-import java.util.List;
+import com.kbulkup.training.dto.response.TrainerDetailResponseDTO;
 
 public interface TrainerService {
-    TrainingTrainerDetailProfileResponseDTO getTrainerProfile(Long trainerId);
-    List<TrainerTrainingSummaryDTO> getTrainerTrainings(Long trainerId);
+    TrainerDetailResponseDTO getTrainerDetail(Long trainerId);
 }

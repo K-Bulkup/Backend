@@ -1,5 +1,6 @@
 package com.kbulkup.training.service;
 
+import com.kbulkup.training.dto.response.TrainerDetailResponseDTO;
 import com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResponseDTO;
 import com.kbulkup.training.dto.response.TrainerTrainingSummaryDTO;
 import com.kbulkup.training.mapper.TraineeTrainerMapper;
@@ -15,12 +16,9 @@ public class TrainerServiceImpl implements TrainerService {
     private final TraineeTrainerMapper traineeTrainerMapper;
 
     @Override
-    public TrainingTrainerDetailProfileResponseDTO getTrainerProfile(Long trainerId) {
-        return traineeTrainerMapper.selectTrainerProfile(trainerId);
-    }
-
-    @Override
-    public List<TrainerTrainingSummaryDTO> getTrainerTrainings(Long trainerId) {
-        return traineeTrainerMapper.selectTrainerTrainings(trainerId);
+    public TrainerDetailResponseDTO getTrainerDetail(Long trainerId) {
+        TrainingTrainerDetailProfileResponseDTO profile = traineeTrainerMapper.selectTrainerProfile(trainerId);
+        List<TrainerTrainingSummaryDTO> trainings = traineeTrainerMapper.selectTrainerTrainings(trainerId);
+        return new TrainerDetailResponseDTO(profile, trainings);
     }
 }
