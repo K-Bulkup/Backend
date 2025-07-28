@@ -5,8 +5,6 @@ import com.kbulkup.auth.dto.request.SignupRequestDTO;
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
 import com.kbulkup.auth.dto.response.SignupResponseDTO;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public interface AuthService {
 
