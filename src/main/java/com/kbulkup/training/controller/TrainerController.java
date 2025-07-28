@@ -16,12 +16,6 @@ public class TrainerController {
 
     @GetMapping("/{trainerId}")
     public CustomResponse<TrainerDetailResponseDTO> getTrainerDetail(@PathVariable Long trainerId) {
-
-        TrainerDetailResponseDTO response = new TrainerDetailResponseDTO(
-                trainerService.getTrainerProfile(trainerId),
-                trainerService.getTrainerTrainings(trainerId)
-        );
-
-        return CustomResponse.success(ResponseCode.SUCCESS, response);
+        return CustomResponse.success(ResponseCode.SUCCESS, trainerService.getTrainerDetail(trainerId));
     }
 }
