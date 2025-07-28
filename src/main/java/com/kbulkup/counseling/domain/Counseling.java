@@ -31,7 +31,7 @@ public class Counseling {
                 .trainerId(trainerId)
                 .trainingId(trainingId)
                 .roomId(roomId)
-                .status("1일 남음")
+                .status("대기")
                 .startAt(LocalDateTime.now())
                 .expiresAt(LocalDateTime.now().plusDays(1))
                 .build();

@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface CounselingMapper {
 
-    List<TrainerCounselingListResponseDTO> findByTrainerId(Long trainerId);
+    List<TrainerCounselingListResponseDTO> findByUserId(Long userId);
 
     Counseling findByTraineeAndTrainer(@Param("traineeId") Long traineeId, @Param("trainerId") Long trainerId);
 

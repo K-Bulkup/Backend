@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kbulkup.counseling.mapper.CounselingMapper">
 
-    <select id="findByTrainerId"
+    <select id="findByUserId"
             parameterType="long"
             resultType="com.kbulkup.counseling.dto.response.TrainerCounselingListResponseDTO">
             SELECT
@@ -19,7 +19,8 @@
             FROM counselings c
             JOIN users u ON c.user_id = u.user_id
             JOIN trainings t ON c.training_id = t.training_id
-            WHERE c.trainer_id = #{trainerId}
+            WHERE c.user_id = #{userId}
+               OR c.trainer_id = #{userId}
             ORDER BY c.latest_at DESC
     </select>
 
