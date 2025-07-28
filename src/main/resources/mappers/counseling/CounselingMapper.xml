@@ -31,7 +31,14 @@
         LIMIT 1
     </select>
 
-    <insert id="insertCounselings" parameterType="com.kbulkup.counseling.domain.Counseling">
+    <select id="findByRoomId" resultType="com.kbulkup.counseling.domain.Counseling">
+        SELECT *
+        FROM counselings
+        WHERE room_id = #{roomId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertCounseling" parameterType="com.kbulkup.counseling.domain.Counseling">
         INSERT INTO counselings (
             user_id,
             trainer_id,
@@ -54,4 +61,11 @@
             #{expiresAt}
         )
     </insert>
+
+    <update id="updateLatestMessage">
+        UPDATE counselings
+        SET latest_message = #{latestMessage},
+            latest_at = #{latestAt}
+        WHERE room_id = #{roomId}
+    </update>
 </mapper>
