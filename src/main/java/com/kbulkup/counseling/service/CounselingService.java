@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CounselingService {
 
-    List<TrainerCounselingListResponseDTO> getCounselingsByTrainer(Long trainerId);
+    List<TrainerCounselingListResponseDTO> getCounselings(Long userId);
 
-    CounselingCreateResponseDTO createOrGetCounselingsRoom(Long trainerId, Long traineeId, Long trainingId);
+    CounselingCreateResponseDTO createOrGetCounselingsRoom(Long traineeId, Long trainingId);
 }

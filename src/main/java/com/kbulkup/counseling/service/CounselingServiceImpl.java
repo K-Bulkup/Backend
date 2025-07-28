@@ -4,6 +4,7 @@ import com.kbulkup.counseling.domain.Counseling;
 import com.kbulkup.counseling.dto.response.CounselingCreateResponseDTO;
 import com.kbulkup.counseling.dto.response.TrainerCounselingListResponseDTO;
 import com.kbulkup.counseling.mapper.CounselingMapper;
+import com.kbulkup.training.mapper.TrainingMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,18 @@ import java.util.UUID;
 public class CounselingServiceImpl implements CounselingService {
 
     private final CounselingMapper counselingMapper;
+    private final TrainingMapper trainingMapper;
 
     @Override
-    public List<TrainerCounselingListResponseDTO> getCounselingsByTrainer(Long trainerId) {
-        return counselingMapper.findByTrainerId(trainerId);
+    public List<TrainerCounselingListResponseDTO> getCounselings(Long userId) {
+        return counselingMapper.findByUserId(userId);
     }
 
     @Override
     @Transactional
-    public CounselingCreateResponseDTO createOrGetCounselingsRoom(Long trainerId, Long traineeId, Long trainingId) {
+    public CounselingCreateResponseDTO createOrGetCounselingsRoom(Long traineeId, Long trainingId) {
 
+        Long trainerId = trainingMapper.findTrainerByTrainingId(trainingId);
         Counseling existing = counselingMapper.findByTraineeAndTrainer(traineeId, trainerId);
 
         if (existing != null) {
