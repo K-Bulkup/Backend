@@ -37,26 +37,26 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 요청된 역할(role)이 사용자의 실제 역할 목록에 포함되어 있는지 확인
-        String finalRoleToLogin;
+        String requestedRole;
 
         if (role == null) {
             // 역할이 지정되지 않은 경우, 사용자의 첫 번째 역할을 기본값으로 사용
-            finalRoleToLogin = user.getRoles().stream()
+            requestedRole = user.getRoles().stream()
                     .findFirst()
                     .orElseThrow(() -> new AuthException(ResponseCode.NO_ROLE_ASSIGNED));
         } else {
             // 역할이 지정된 경우, 해당 역할을 사용
-            finalRoleToLogin = role;
-            // 그리고 이 역할이 사용자의 실제 역할 목록에 포함되어 있는지 확인
-            if (user.getRoles().stream().noneMatch(r -> r.equals(finalRoleToLogin))) {
+            requestedRole = role;
+            // 그리고 이 역할이 사용자의 실제 역할 목록에 포함되어 있는지 확인finalRoleToLogin
+            if (user.getRoles().stream().noneMatch(r -> r.equals(requestedRole))) {
                 throw new AuthException(ResponseCode.INVALID_ROLE);
             }
         }
 
         // 요청된 역할만 포함하여 JWT 토큰 생성
-        String accesstoken = jwtTokenProvider.createToken(user.getEmail(), Collections.singletonList(finalRoleToLogin));
+        String accesstoken = jwtTokenProvider.createToken(user.getEmail(), Collections.singletonList(requestedRole));
 
-        return LoginResponseDTO.toDTO(user, accesstoken, finalRoleToLogin);
+        return LoginResponseDTO.toDTO(user, accesstoken, requestedRole);
     }
 
     @Override
