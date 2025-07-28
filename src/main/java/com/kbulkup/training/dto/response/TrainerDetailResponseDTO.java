@@ -1,18 +1,15 @@
 package com.kbulkup.training.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TrainerDetailResponseDTO {
 
     private TrainingTrainerDetailProfileResponseDTO trainer;
     private List<TrainerTrainingSummaryDTO> trainings;
-
-    public TrainerDetailResponseDTO(TrainingTrainerDetailProfileResponseDTO trainer,
-                                    List<TrainerTrainingSummaryDTO> trainings) {
-        this.trainer = trainer;
-        this.trainings = trainings;
-    }
-
-    public TrainingTrainerDetailProfileResponseDTO getTrainer() { return trainer; }
-    public List<TrainerTrainingSummaryDTO> getTrainings() { return trainings; }
 }

@@ -1,5 +1,12 @@
 package com.kbulkup.training.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TrainingTrainerDetailProfileResponseDTO {
 
     private String name;
@@ -8,13 +15,4 @@ public class TrainingTrainerDetailProfileResponseDTO {
     private Integer traineeCount;
     private Float averageRating;
     private Boolean isCertified;
-
-    public TrainingTrainerDetailProfileResponseDTO() {}
-
-    public String getName() { return name; }
-    public String getProfileUrl() { return profileUrl; }
-    public String getDescription() { return description; }
-    public Integer getTraineeCount() { return traineeCount; }
-    public Float getAverageRating() { return averageRating; }
-    public Boolean getIsCertified() { return isCertified; }
 }
