@@ -41,7 +41,7 @@ CREATE TABLE `user_roles`
 CREATE TABLE `trainer_profiles`
 (
     `trainer_id`           BIGINT    NOT NULL AUTO_INCREMENT,
-    `career`               TEXT      DEFAULT NULL,
+    `career`               TEXT           DEFAULT NULL,
     `total_average_rating` FLOAT     NULL DEFAULT 0,
     `total_trainee_count`  INT       NULL DEFAULT 0,
     `created_at`           TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -166,15 +166,45 @@ CREATE TABLE `qnas`
 );
 
 -- portfolios
-CREATE TABLE `portfolios`
+CREATE TABLE portfolios
 (
-    `portfolio_id`       BIGINT    NOT NULL AUTO_INCREMENT,
-    `user_id`            BIGINT    NOT NULL,
-    `total_income`       BIGINT    NOT NULL DEFAULT 0,
-    `total_expense`      BIGINT    NOT NULL DEFAULT 0,
-    `avg_daily_spending` FLOAT     NOT NULL DEFAULT 0.0,
-    `created_at`         TIMESTAMP NULL     DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`portfolio_id`)
+    user_id BIGINT PRIMARY KEY,
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
+);
+
+-- transactions
+CREATE TABLE transactions
+(
+    transaction_id         BIGINT PRIMARY KEY,
+    user_id                BIGINT            NOT NULL,
+    transaction_type       ENUM ('입금', '출금') NOT NULL,
+    amount                 BIGINT            NOT NULL,
+    `transaction_category` ENUM (
+        '식비', '교통비', '주거/공과금', '생필품',
+        '의료/건강', '패션/미용', '문화생활/여가', '기타',
+        '월급', '부수입'
+        )                                    NULL,
+    tran_date              DATETIME          NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES portfolios (user_id)
+);
+
+-- snapshots
+CREATE TABLE snapshots
+(
+    snapshot_id   BIGINT PRIMARY KEY,
+    user_id       BIGINT NOT NULL,
+    balance       BIGINT NOT NULL,
+    snapshot_date DATE   NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES portfolios (user_id)
+);
+
+-- compositions
+CREATE TABLE compositions
+(
+    composition_id    BIGINT PRIMARY KEY,
+    user_id           BIGINT NOT NULL,
+    asset_composition JSON   NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES portfolios (user_id)
 );
 
 -- counselings
@@ -262,9 +292,6 @@ ALTER TABLE `routine_results`
     ADD CONSTRAINT `FK_routine_results_enrollments` FOREIGN KEY (`enrollment_id`) REFERENCES `enrollments` (`enrollment_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `FK_routine_results_routines` FOREIGN KEY (`routine_id`) REFERENCES `routines` (`routine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `portfolios`
-    ADD CONSTRAINT `FK_portfolios_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
 ALTER TABLE `qnas`
     ADD CONSTRAINT `FK_qnas_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `FK_qnas_trainings` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -276,6 +303,29 @@ ALTER TABLE `trainer_certificates`
 ALTER TABLE `admin_approval_logs`
     ADD CONSTRAINT `FK_admin_approval_logs_trainings` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `FK_admin_approval_logs_trainer_profiles` FOREIGN KEY (`trainer_id`) REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE portfolios
+    ADD CONSTRAINT fk_portfolios_user
+        FOREIGN KEY (user_id) REFERENCES users (user_id)
+            ON DELETE CASCADE;
+
+-- 자산 구성
+ALTER TABLE compositions
+    ADD CONSTRAINT fk_compositions_portfolio
+        FOREIGN KEY (user_id) REFERENCES portfolios (user_id)
+            ON DELETE CASCADE;
+
+-- 자산 추이
+ALTER TABLE snapshots
+    ADD CONSTRAINT fk_snapshots_portfolio
+        FOREIGN KEY (user_id) REFERENCES portfolios (user_id)
+            ON DELETE CASCADE;
+
+-- 거래 내역
+ALTER TABLE transactions
+    ADD CONSTRAINT fk_transactions_portfolio
+        FOREIGN KEY (user_id) REFERENCES portfolios (user_id)
+            ON DELETE CASCADE;
 
 -- admin_approval_logs 의 admin_id 외래키 생략 주석 유지
 -- ALTER TABLE admin_approval_logs ADD CONSTRAINT FK_admin_approval_logs_admins FOREIGN KEY (admin_id)
