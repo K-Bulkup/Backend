@@ -3,7 +3,7 @@ package com.kbulkup.training.service;
 import com.kbulkup.routine.domain.Routine;
 import com.kbulkup.training.mapper.TrainingRoutineMapper;
 import com.kbulkup.training.domain.Training;
-import com.kbulkup.training.dto.TrainerTrainingCreateRequestDTO;
+import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import com.kbulkup.training.mapper.TrainingMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
