@@ -4,15 +4,15 @@ import java.util.List;
 
 public class TrainerDetailResponseDTO {
 
-    private TrainingTrainerDetailProfileResonseDTO trainer;
+    private TrainingTrainerDetailProfileResponseDTO trainer;
     private List<TrainerTrainingSummaryDTO> trainings;
 
-    public TrainerDetailResponseDTO(TrainingTrainerDetailProfileResonseDTO trainer,
+    public TrainerDetailResponseDTO(TrainingTrainerDetailProfileResponseDTO trainer,
                                     List<TrainerTrainingSummaryDTO> trainings) {
         this.trainer = trainer;
         this.trainings = trainings;
     }
 
-    public TrainingTrainerDetailProfileResonseDTO getTrainer() { return trainer; }
+    public TrainingTrainerDetailProfileResponseDTO getTrainer() { return trainer; }
     public List<TrainerTrainingSummaryDTO> getTrainings() { return trainings; }
 }

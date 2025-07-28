@@ -1,6 +1,6 @@
 package com.kbulkup.training.service;
 
-import com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResonseDTO;
+import com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResponseDTO;
 import com.kbulkup.training.dto.response.TrainerTrainingSummaryDTO;
 import com.kbulkup.training.mapper.TraineeTrainerMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class TrainerServiceImpl implements TrainerService {
     private final TraineeTrainerMapper traineeTrainerMapper;
 
     @Override
-    public TrainingTrainerDetailProfileResonseDTO getTrainerProfile(Long trainerId) {
+    public TrainingTrainerDetailProfileResponseDTO getTrainerProfile(Long trainerId) {
         return traineeTrainerMapper.selectTrainerProfile(trainerId);
     }
 

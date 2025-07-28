@@ -5,9 +5,9 @@
 
 <mapper namespace="com.kbulkup.training.mapper.TraineeTrainerMapper">
 
-    <!-- 트레이너 프로필 + 인증 여부 -->
+    <!-- 트레이너 프로필 조회 -->
     <select id="selectTrainerProfile" parameterType="long"
-            resultType="com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResonseDTO">
+            resultType="com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResponseDTO">
         SELECT
             u.username AS name,
             u.user_profile_url AS profileUrl,
@@ -26,7 +26,7 @@
         WHERE tp.trainer_id = #{trainerId}
     </select>
 
-    <!-- 트레이닝 요약 목록 -->
+    <!-- 트레이너가 개설한 트레이닝 목록 -->
     <select id="selectTrainerTrainings" parameterType="long"
             resultType="com.kbulkup.training.dto.response.TrainerTrainingSummaryDTO">
         SELECT
@@ -39,5 +39,6 @@
     </select>
 
 </mapper>
+
 
 

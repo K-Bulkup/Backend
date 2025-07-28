@@ -1,6 +1,6 @@
 package com.kbulkup.training.dto.response;
 
-public class TrainingTrainerDetailProfileResonseDTO {
+public class TrainingTrainerDetailProfileResponseDTO {
 
     private String name;
     private String profileUrl;
@@ -9,7 +9,7 @@ public class TrainingTrainerDetailProfileResonseDTO {
     private Float averageRating;
     private Boolean isCertified;
 
-    public TrainingTrainerDetailProfileResonseDTO() {}
+    public TrainingTrainerDetailProfileResponseDTO() {}
 
     public String getName() { return name; }
     public String getProfileUrl() { return profileUrl; }
