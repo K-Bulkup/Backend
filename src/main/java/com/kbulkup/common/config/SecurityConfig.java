@@ -5,6 +5,7 @@ import com.kbulkup.common.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,8 +36,10 @@ public class SecurityConfig {
                 .cors() // CORS 설정 추가
                 .and()
                 .authorizeRequests()
+                .antMatchers("/ws/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/api/common/auth/login", "/api/common/auth/signup").permitAll()
-                .antMatchers(org.springframework.http.HttpMethod.OPTIONS, "/api/common/auth/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/api/common/auth/**").permitAll()
                 .antMatchers("/api/trainer/**").hasRole("TRAINER")
                 .antMatchers("/api/trainee/**").hasRole("TRAINEE")
                 .antMatchers("/api/common/**").hasAnyRole("TRAINER", "TRAINEE") // common 경로는 두 역할 모두 접근 가능
@@ -55,7 +58,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 허용할 Origin 설정
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:5500")); // 허용할 Origin 설정
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP Method 설정
         configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 Header 허용
         configuration.setAllowCredentials(true); // 자격 증명 허용
