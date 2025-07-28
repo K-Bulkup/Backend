@@ -72,7 +72,7 @@ CREATE TABLE `trainings`
     `level`           ENUM ('초급', '중급', '고급')                                              NOT NULL,
     `thumbnail_url`   VARCHAR(255)                                                         NULL,
     `total_score`     INT                                                                  NULL,
-    `approval_status` ENUM ('대기', '승인', '거부')                                              NOT NULL DEFAULT '대기',
+    `approval_status` ENUM ('대기', '승인', '거부') NOT NULL DEFAULT '대기',
     `average_rating`  FLOAT                                                                NULL,
     `trainee_count`   INT                                                                  NULL,
     `created_at`      TIMESTAMP                                                            NULL     DEFAULT CURRENT_TIMESTAMP,
@@ -97,7 +97,7 @@ CREATE TABLE `routines`
 );
 
 -- RoutineVideos
-CREATE TABLE `RoutineVideos`
+CREATE TABLE `routine_videos`
 (
     `routine_id`        BIGINT       NOT NULL,
     `routine_video_url` VARCHAR(255) NULL,
@@ -222,7 +222,7 @@ VALUES ('TRAINEE'),
        ('ADMIN');
 
 -- 외래 키 제약 조건
-ALTER TABLE `RoutineVideos`
+ALTER TABLE `routine_videos`
     ADD CONSTRAINT `FK_RoutineVideos_routines` FOREIGN KEY (`routine_id`) REFERENCES `routines` (`routine_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `trainer_profiles`

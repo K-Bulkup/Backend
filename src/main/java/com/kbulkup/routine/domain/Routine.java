@@ -1,6 +1,6 @@
 package com.kbulkup.routine.domain;
 
-import com.kbulkup.training.dto.TrainerTrainingCreateRequestDTO;
+import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import lombok.Builder;
 import lombok.Data;
 

@@ -1,6 +1,5 @@
 package com.kbulkup.counseling.dto.response;
 
-import com.kbulkup.counseling.domain.CounselingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

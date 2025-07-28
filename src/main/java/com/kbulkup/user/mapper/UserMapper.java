@@ -17,9 +17,9 @@ public interface UserMapper {
 
     void saveUser(User user);
 
-    void saveUserRole(@Param("userId") long userId, @Param("role") String role);
+    void saveUserRole(@Param("userId") Long userId, @Param("role") String role);
 
-    boolean existsUserRole(@Param("userId") long userId, @Param("role") String role);
+    boolean existsUserRole(@Param("userId") Long userId, @Param("role") String role);
 
     void updateUserProviderId(@Param("userId") long userId, @Param("providerId") String providerId);
 
