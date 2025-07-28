@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class User {
     private String username;
     private String loginType;
     private String providerId;
-    private String birthdate;
+    private LocalDate birthdate;
     
     private String userProfileUrl;
     private boolean isDeleted;
@@ -28,7 +29,7 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static User createUser(String email, String password, String username, String loginType, String providerId, String birthdate) {
+    public static User createUser(String email, String password, String username, String loginType, String providerId, LocalDate birthdate) {
         return User.builder().
                 email(email).
                 password(password).

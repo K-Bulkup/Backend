@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public SignupResponseDTO signup(String userId, String password, String name, String email, String phone, String address, String role, String loginType, String providerId, String birthdate) {
+    public SignupResponseDTO signup(String userId, String password, String name, String email, String phone, String address, String role, String loginType, String providerId, java.time.LocalDate birthdate) {
         Optional<User> existingUserOptional = userMapper.findByEmailAndLoginType(email, loginType);
 
         if (existingUserOptional.isPresent()) {

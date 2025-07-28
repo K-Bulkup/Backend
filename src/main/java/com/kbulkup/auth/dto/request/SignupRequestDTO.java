@@ -1,10 +1,12 @@
 package com.kbulkup.auth.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -20,7 +22,8 @@ public class SignupRequestDTO {
     )
     private String password;
 
-    private String name;
+    @NotNull(message = "사용자 이름은 필수 입력 사항입니다.")
+    private String username;
     private String email;
     private String phone;
     private String address;
@@ -28,5 +31,6 @@ public class SignupRequestDTO {
     private String role; // 추가: "TRAINEE", "TRAINER" 등
     private String loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
     private String providerId; // 소셜 로그인 제공자 ID
-    private String birthdate;
+    @JsonFormat(pattern = "yyMMdd")
+    private LocalDate birthdate;
 }
