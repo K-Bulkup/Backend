@@ -7,5 +7,6 @@
     </settings>
     <typeHandlers>
         <typeHandler handler="com.kbulkup.asset.typehandler.JsonToMapTypeHandler"/>
+        <typeHandler handler="com.kbulkup.asset.typehandler.TransactionCategoryTypeHandler"/>
     </typeHandlers>
 </configuration>
