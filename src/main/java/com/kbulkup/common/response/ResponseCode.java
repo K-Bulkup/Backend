@@ -12,6 +12,7 @@ public enum ResponseCode {
     //400 BadRequest
     VALIDATION_ERROR(BAD_REQUEST, "사용자 입력값이 올바르지 않습니다."),
     NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST,"트레이너 프로필 정보를 찾을 수 없습니다."),
+    USER_NOT_FOUND(BAD_REQUEST, "사용자를 찾을 수 없습니다."),
 
     //500 InternalServerError
     TRAINER_CAREER_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 소개 업데이트에 실패했습니다."),
