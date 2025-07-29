@@ -28,7 +28,7 @@
 
     <!-- 트레이너가 개설한 트레이닝 목록 -->
     <select id="selectTrainerTrainings" parameterType="long"
-            resultType="com.kbulkup.training.dto.response.TrainerTrainingSummaryDTO">
+            resultType="com.kbulkup.training.dto.response.TrainerTrainingSummaryResponseDTO">
         SELECT
             t.training_id AS trainingId,
             t.title AS title,

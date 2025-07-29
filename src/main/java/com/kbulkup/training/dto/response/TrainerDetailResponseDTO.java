@@ -13,10 +13,10 @@ import java.util.List;
 public class TrainerDetailResponseDTO {
 
     private TrainingTrainerDetailProfileResponseDTO trainer;
-    private List<TrainerTrainingSummaryDTO> trainings;
+    private List<TrainerTrainingSummaryResponseDTO> trainings;
 
     public static TrainerDetailResponseDTO create(TrainingTrainerDetailProfileResponseDTO trainer,
-                                                  List<TrainerTrainingSummaryDTO> trainings) {
+                                                  List<TrainerTrainingSummaryResponseDTO> trainings) {
         return TrainerDetailResponseDTO.builder()
                 .trainer(trainer)
                 .trainings(trainings)
