@@ -2,8 +2,10 @@ package com.kbulkup.counseling.controller;
 
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.common.security.CustomUserDetails;
 import com.kbulkup.counseling.dto.request.CounselingCreateRequestDTO;
 import com.kbulkup.counseling.dto.response.CounselingCreateResponseDTO;
+import com.kbulkup.counseling.dto.response.CounselingDetailResponseDTO;
 import com.kbulkup.counseling.dto.response.TrainerCounselingListResponseDTO;
 import com.kbulkup.counseling.service.CounselingService;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +29,10 @@ public class CounselingController {
     @PostMapping("")
     public CustomResponse<CounselingCreateResponseDTO> createCounselings(@RequestBody CounselingCreateRequestDTO dto) {
         return CustomResponse.success(ResponseCode.SUCCESS, counselingService.createOrGetCounselingsRoom(dto.getTraineeId(), dto.getTrainingId()));
+    }
+
+    @GetMapping("/detail/{roomId}/{userId}")
+    public CustomResponse<CounselingDetailResponseDTO> getCounselingDetail(@PathVariable String roomId, @PathVariable Long userId) {
+        return CustomResponse.success(ResponseCode.SUCCESS, counselingService.getCounselingDetail(roomId, userId));
     }
 }
