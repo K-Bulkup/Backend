@@ -19,8 +19,8 @@ public class ChatRestController {
 
     private final ChatService chatService;
 
-    @GetMapping("/{roomId}")
-    public CustomResponse<List<MongoChatMessage>> getChatHistory(@PathVariable String roomId) {
-        return CustomResponse.success(ResponseCode.SUCCESS, chatService.getMessagesByRoomId(roomId));
+    @GetMapping("/{roomId}/{userId}")
+    public CustomResponse<List<MongoChatMessage>> getChatHistory(@PathVariable String roomId, @PathVariable String userId) {
+        return CustomResponse.success(ResponseCode.SUCCESS, chatService.getMessagesByRoomId(roomId, userId));
     }
 }

@@ -35,7 +35,19 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<MongoChatMessage> getMessagesByRoomId(String roomId) {
-        return chatMongoRepository.findByRoomId(roomId);
+    @Transactional
+    public List<MongoChatMessage> getMessagesByRoomId(String roomId, String userId) {
+        List<MongoChatMessage> messages = chatMongoRepository.findByRoomId(roomId);
+
+        //본인이 수신자이고 읽지 않은 메시지 읽음 처리
+        List<MongoChatMessage> unreadMessages = messages.stream()
+                .filter(m -> m.getReceiverId().equals(userId) && !m.isRead())
+                .peek(m -> m.setRead(true))
+                .toList();
+
+        //읽음 처리된 메시지 저장
+        chatMongoRepository.saveAll(unreadMessages);
+
+        return messages;
     }
 }

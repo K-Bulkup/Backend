@@ -9,5 +9,5 @@ public interface ChatService {
 
     void saveChatMessage(ChatMessage chatMessage);
 
-    List<MongoChatMessage> getMessagesByRoomId(String roomId);
+    List<MongoChatMessage> getMessagesByRoomId(String roomId, String userId);
 }

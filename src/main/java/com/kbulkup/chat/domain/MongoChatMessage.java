@@ -1,9 +1,6 @@
 package com.kbulkup.chat.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,6 +19,7 @@ public class MongoChatMessage {
     private String senderId;
     private String receiverId;
     private String message;
+    @Setter
     private boolean isRead;
     private LocalDateTime sendAt;
 
