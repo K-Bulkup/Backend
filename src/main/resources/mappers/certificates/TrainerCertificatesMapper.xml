@@ -13,7 +13,7 @@
             cert_number,
             created_at
         ) VALUES (
-             #{trainerID},
+             #{trainerId},
              #{certType},
              #{certNumber},
              NOW()
