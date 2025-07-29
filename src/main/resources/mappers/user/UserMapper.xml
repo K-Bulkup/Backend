@@ -18,7 +18,7 @@
         <result property="growthScore" column="growth_score"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
-        <collection property="roles" ofType="java.lang.String">
+        <collection property="roles" ofType="string">
             <result column="role"/>
         </collection>
     </resultMap>

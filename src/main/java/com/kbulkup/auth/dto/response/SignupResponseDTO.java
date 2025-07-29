@@ -4,20 +4,23 @@ import com.kbulkup.user.domain.User;
 import lombok.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+
 public class SignupResponseDTO {
 
-    private Long userId;    // 생성된 사용자의 고유 ID
-    private String email;   // 생성된 사용자의 이메일
-    private String username; // 생성된 사용자의 이름(닉네임)
+    private Long userId;
+    private String email;
+    private String username;
+    private String loginType;
 
     public static SignupResponseDTO toDTO(User user) {
         return SignupResponseDTO.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .loginType(user.getLoginType())
                 .build();
     }
 

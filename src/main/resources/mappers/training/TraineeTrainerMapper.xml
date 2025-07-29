@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.training.mapper.TraineeTrainerMapper">
+
+    <!-- 트레이너 프로필 조회 -->
+    <select id="selectTrainerProfile" parameterType="long"
+            resultType="com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResponseDTO">
+        SELECT
+            u.username AS name,
+            u.user_profile_url AS profileUrl,
+            tp.career AS description,
+            (SELECT COUNT(*)
+             FROM enrollments e
+                      JOIN trainings t2 ON e.training_id = t2.training_id
+             WHERE t2.trainer_id = #{trainerId}) AS traineeCount,
+            tp.total_average_rating AS averageRating,
+            CASE
+                WHEN EXISTS (SELECT 1 FROM trainer_certificates tc WHERE tc.trainer_id = tp.trainer_id)
+                    THEN TRUE ELSE FALSE
+                END AS isCertified
+        FROM users u
+                 JOIN trainer_profiles tp ON u.user_id = tp.trainer_id
+        WHERE tp.trainer_id = #{trainerId}
+    </select>
+
+    <!-- 트레이너가 개설한 트레이닝 목록 -->
+    <select id="selectTrainerTrainings" parameterType="long"
+            resultType="com.kbulkup.training.dto.response.TrainerTrainingSummaryResponseDTO">
+        SELECT
+            t.training_id AS trainingId,
+            t.title AS title,
+            t.level AS level,
+            t.thumbnail_url AS thumbnailUrl
+        FROM trainings t
+        WHERE t.trainer_id = #{trainerId}
+    </select>
+
+</mapper>
+
+
+
+

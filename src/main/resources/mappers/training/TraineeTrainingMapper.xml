@@ -1,0 +1,50 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.training.mapper.TraineeTrainingMapper">
+
+    <select id="findTrainingById" resultType="com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO">
+        SELECT t.title, t.description, t.price, t.category, t.level,
+               t.total_score AS totalScore, t.average_rating AS averageRating,
+               t.trainee_count AS traineeCount,
+               e.progress
+        FROM trainings t
+                 JOIN enrollments e ON e.training_id = t.training_id
+        WHERE t.training_id = #{trainingId}
+          AND e.user_id = #{userId}
+    </select>
+
+    <select id="findRoutinesByTraining" resultType="com.kbulkup.routine.dto.RoutineSummaryResponseDTO">
+        SELECT r.routine_id AS routineId, r.title, rr.status AS completed,
+               rr.awared_score AS rewardPoint, rr.submitted_at AS completedAt
+        FROM routines r
+                 JOIN routine_results rr ON r.routine_id = rr.routine_id
+                 JOIN enrollments e ON rr.enrollment_id = e.enrollment_id
+        WHERE r.training_id = #{trainingId}
+          AND e.user_id = #{userId}
+    </select>
+
+    <select id="countCompletedRoutines" resultType="int">
+        SELECT COUNT(*)
+        FROM routine_results rr
+                 JOIN enrollments e ON rr.enrollment_id = e.enrollment_id
+        WHERE e.training_id = #{trainingId}
+          AND e.user_id = #{userId}
+          AND rr.status = TRUE
+    </select>
+
+    <select id="countTotalRoutines" resultType="int">
+        SELECT COUNT(*)
+        FROM routines
+        WHERE training_id = #{trainingId}
+    </select>
+
+    <update id="updateTrainingProgress">
+        UPDATE enrollments
+        SET progress = #{progress}
+        WHERE training_id = #{trainingId}
+          AND user_id = #{userId}
+    </update>
+
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.asset.mapper.TraineeAssetMapper">
+    <select id="getTransactionsByTraineeId" resultType="com.kbulkup.asset.domain.Transaction">
+        SELECT transaction_id,
+               user_id,
+               transaction_type,
+               amount,
+               transaction_category,
+               tran_date
+        FROM transactions
+        WHERE user_id = #{traineeId}
+        ORDER BY tran_date DESC
+    </select>
+
+    <select id="getSnapshotsByTraineeId" resultType="com.kbulkup.asset.domain.Snapshot">
+        SELECT snapshot_id,
+               user_id,
+               balance,
+               snapshot_date
+        FROM snapshots
+        WHERE user_id = #{traineeId}
+        ORDER BY snapshot_date DESC
+    </select>
+
+    <resultMap id="CompositionResultMap" type="com.kbulkup.asset.domain.Composition">
+        <id property="compositionId" column="composition_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="assetComposition" column="asset_composition"
+                typeHandler="com.kbulkup.asset.typehandler.JsonToMapTypeHandler"/>
+    </resultMap>
+
+    <select id="getCompositionsByTraineeId" resultMap="CompositionResultMap">
+        SELECT composition_id,
+               user_id,
+               asset_composition
+        FROM compositions
+        WHERE user_id = #{traineeId}
+    </select>
+
+    <insert id="insertPortfolio">
+        INSERT INTO portfolios (user_id)
+        VALUES (#{traineeId})
+    </insert>
+
+    <insert id="insertTransactions">
+        INSERT INTO transactions (
+        transaction_id,
+        user_id,
+        transaction_type,
+        amount,
+        transaction_category,
+        tran_date
+        )
+        VALUES
+        <foreach collection="transactions" item="transaction" separator=",">
+            (
+            #{transaction.transactionId},
+            #{transaction.userId},
+            #{transaction.transactionType},
+            #{transaction.amount},
+            #{transaction.transactionCategory, typeHandler=com.kbulkup.asset.typehandler.TransactionCategoryTypeHandler},
+            #{transaction.tranDate}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertSnapshots">
+        INSERT INTO snapshots (
+        snapshot_id,
+        user_id,
+        balance,
+        snapshot_date
+        )
+        VALUES
+        <foreach collection="snapshots" item="snapshot" separator=",">
+            (
+            #{snapshot.snapshotId},
+            #{snapshot.userId},
+            #{snapshot.balance},
+            #{snapshot.snapshotDate}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertComposition">
+        INSERT INTO compositions (composition_id,
+                                       user_id,
+                                       asset_composition)
+        VALUES (#{composition.compositionId},
+                #{composition.userId},
+                #{composition.assetComposition, typeHandler=com.kbulkup.asset.typehandler.JsonToMapTypeHandler})
+    </insert>
+
+
+</mapper>

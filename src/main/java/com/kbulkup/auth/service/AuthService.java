@@ -1,15 +1,16 @@
 package com.kbulkup.auth.service;
 
+import com.kbulkup.auth.dto.request.LoginRequestDTO;
+import com.kbulkup.auth.dto.request.SignupRequestDTO;
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
 import com.kbulkup.auth.dto.response.SignupResponseDTO;
 
-import java.time.LocalDate;
 
 public interface AuthService {
 
-    LoginResponseDTO login(String loginType, String email, String password, String code, String role);
+    LoginResponseDTO login(LoginRequestDTO dto);
 
-    SignupResponseDTO signup(String userId, String password, String name, String email, String phone, String address, String role, String loginType, String providerId, String birthdate);
+    SignupResponseDTO signup(SignupRequestDTO dto);
 
     void logout();
 }
