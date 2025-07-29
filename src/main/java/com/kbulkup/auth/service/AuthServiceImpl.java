@@ -1,23 +1,19 @@
 package com.kbulkup.auth.service;
 
-import com.kbulkup.auth.dto.request.LoginRequestDTO;
+import com.kbulkup.auth.dto.request.SocialSignUpRequestDTO;
 import com.kbulkup.auth.dto.request.SignupRequestDTO;
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
 import com.kbulkup.auth.dto.response.SignupResponseDTO;
+import com.kbulkup.common.exception.BaseException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.common.security.JwtTokenProvider;
 import com.kbulkup.user.domain.User;
 import com.kbulkup.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.kbulkup.auth.exception.AuthException;
-import com.kbulkup.common.response.ResponseCode;
-import com.kbulkup.auth.domain.LoginType;
-import com.kbulkup.user.domain.RoleType;
-
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -29,69 +25,98 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    @Transactional
-    public LoginResponseDTO login(LoginRequestDTO dto) {
-        User user = userMapper.findByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL)
-                .orElseThrow(() -> new AuthException(ResponseCode.INVALID_LOGIN_REQUEST));
+    public SignupResponseDTO signup(SignupRequestDTO dto) {
+        // 이메일 중복 확인
+        Optional<User> existingUser = userMapper.findByEmail(dto.getEmail());
 
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-            throw new AuthException(ResponseCode.INVALID_PASSWORD);
-        }
+        if (existingUser.isPresent()) {
 
-        String requestedRole;
-
-        if (dto.getRole() == null) {
-            requestedRole = user.getRoles().stream()
-                    .findFirst()
-                    .orElseThrow(() -> new AuthException(ResponseCode.NO_ROLE_ASSIGNED));
-        } else {
-            requestedRole = dto.getRole();
-            if (user.getRoles().stream().noneMatch(r -> r.equals(requestedRole))) {
-                throw new AuthException(ResponseCode.INVALID_ROLE);
+            // 이미 역할이 존재하는지 확인
+            if (userMapper.existsUserRole(dto.getUserId(), dto.getRole())) {
+                return SignupResponseDTO.builder()
+                        .success(true)
+                        .userId(dto.getUserId())
+                        .email(dto.getEmail())
+                        .username(dto.getUsername())
+                        .loginType(dto.getLoginType())
+                        .message("이미 해당 역할로 가입된 사용자입니다.")
+                        .build();
+            } else {
+                // 역할 추가
+                userMapper.saveUserRole(dto.getUserId(), dto.getRole());
+                return SignupResponseDTO.builder()
+                        .success(true)
+                        .userId(dto.getUserId())
+                        .email(dto.getEmail())
+                        .username(dto.getUsername())
+                        .loginType(dto.getLoginType())
+                        .message("역할이 성공적으로 추가되었습니다.")
+                        .build();
             }
         }
 
-        // 요청된 역할만 포함하여 JWT 토큰 생성
-        String accessToken = jwtTokenProvider.createToken(user.getEmail(), user.getUserId(), Collections.singletonList(requestedRole));
+        // 비밀번호 암호화
+        String encryptedPassword = passwordEncoder.encode(dto.getPassword());
 
-        return LoginResponseDTO.toDTO(user, accessToken, requestedRole);
+        // User 객체 생성
+        User user = User.builder()
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .password(encryptedPassword)
+                .loginType("LOCAL")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        // DB에 사용자 정보 저장
+        userMapper.saveUser(user);
+
+        // 로컬 로그인 사용자는 회원가입 시 역할을 즉시 부여
+        userMapper.saveUserRole(user.getUserId(), dto.getRole());
+
+        return SignupResponseDTO.builder()
+                .success(true)
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .loginType(user.getLoginType())
+                .message("회원가입 및 역할 부여 성공.")
+                .build();
     }
 
     @Override
-    @Transactional
-    public SignupResponseDTO signup(SignupRequestDTO dto) {
-        Optional<User> existingUserOptional = userMapper.findByEmailAndLoginType(dto.getEmail(), dto.getLoginType());
-
-        if (existingUserOptional.isPresent()) {
-            User existingUser = existingUserOptional.get();
-
-            if (userMapper.existsUserRole(existingUser.getUserId(), dto.getRole())) {
-                throw new AuthException(ResponseCode.DUPLICATE_ROLE);
-            }
-
-            userMapper.saveUserRole(existingUser.getUserId(), dto.getRole());
-            return SignupResponseDTO.toDTO(existingUser);
-        } else {
-            User newUser = User.createUser(
-                    dto.getEmail(),
-                    passwordEncoder.encode(dto.getPassword()),
-                    dto.getUsername(),
-                    dto.getLoginType(),
-                    dto.getProviderId(),
-                    dto.getBirthdate()
-            );
-
-            userMapper.saveUser(newUser);
-            userMapper.saveUserRole(newUser.getUserId(), dto.getRole());
-
-            return SignupResponseDTO.toDTO(newUser);
+    public LoginResponseDTO socialSignUp(SocialSignUpRequestDTO dto) {
+        // 임시 토큰에서 사용자 ID 추출 및 유효성 검증
+        Long userId = jwtTokenProvider.getUserIdFromTempToken(dto.getTempAccessToken());
+        if (userId == null) {
+            throw new BaseException(ResponseCode.VALIDATION_ERROR);
         }
+
+        // DB에서 사용자 정보 조회
+        User user = userMapper.findById(userId)
+                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+
+        // 이미 역할이 존재하는지 확인
+        if (userMapper.existsUserRole(user.getUserId(), dto.getRole())) {
+            throw new BaseException(ResponseCode.DUPLICATE_ROLE);
+        }
+
+        // 사용자가 선택한 새로운 역할 저장
+        userMapper.saveUserRole(user.getUserId(), dto.getRole());
+
+        // 역할이 추가된 최신 사용자 정보 다시 로드
+        User updatedUser = userMapper.findById(userId)
+                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+
+        // 최종 액세스 토큰 발급
+        String accessToken = jwtTokenProvider.createAccessToken(updatedUser.getUserId(), updatedUser.getRoles());
+
+        return LoginResponseDTO.toDTO(updatedUser, accessToken, updatedUser.getRoles(), false);
     }
 
     @Override
     public void logout() {
-        // 현재 JWT(stateless) 방식에서는 서버에서 특별히 처리할 작업은 없습니다.
-        // 클라이언트 측에서 토큰을 삭제하는 것이 핵심입니다.
-        // 추후 토큰 블랙리스트와 같은 stateful 로직이 필요할 경우 여기에 구현합니다.
+        // JWT는 서버에 상태를 저장하지 않는 무상태(stateless) 방식입니다.
+        // 따라서 백엔드에서는 별다른 처리 없이, 클라이언트에서 토큰을 삭제하면 로그아웃됩니다.
     }
 }
