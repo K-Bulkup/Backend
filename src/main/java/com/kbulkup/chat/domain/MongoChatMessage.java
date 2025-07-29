@@ -1,5 +1,6 @@
 package com.kbulkup.chat.domain;
 
+import com.kbulkup.chat.dto.ChatMessageDTO;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,14 +24,14 @@ public class MongoChatMessage {
     private boolean isRead;
     private LocalDateTime sendAt;
 
-    public static MongoChatMessage create(ChatMessage chatMessage, String receiverId) {
+    public static MongoChatMessage create(ChatMessageDTO chatMessageDTO, String receiverId) {
         return MongoChatMessage.builder()
-                .roomId(chatMessage.getRoomId())
-                .senderId(chatMessage.getSenderId())
+                .roomId(chatMessageDTO.getRoomId())
+                .senderId(chatMessageDTO.getSenderId())
                 .receiverId(receiverId)
-                .message(chatMessage.getMessage())
+                .message(chatMessageDTO.getMessage())
                 .isRead(false)
-                .sendAt(chatMessage.getSendAt())
+                .sendAt(chatMessageDTO.getSendAt())
                 .build();
     }
 
