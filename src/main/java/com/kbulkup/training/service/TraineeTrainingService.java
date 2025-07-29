@@ -1,10 +1,10 @@
 package com.kbulkup.training.service;
 
-import com.kbulkup.training.dto.response.TrainingDetailResponseDTO;
+import com.kbulkup.routine.dto.RoutineSummaryResponseDTO;
+import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
 import com.kbulkup.training.mapper.TraineeTrainingMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,18 +14,17 @@ public class TraineeTrainingService {
 
     private final TraineeTrainingMapper traineeTrainingMapper;
 
-    @Transactional(readOnly = true)
-    public TrainingDetailResponseDTO getTrainingDetail(Long trainingId, Long userId) {
+    public TraineeRoutineSummaryResponseDTO getTrainingDetail(Long trainingId, Long userId) {
+        TraineeRoutineSummaryResponseDTO training = traineeTrainingMapper.findTrainingById(trainingId, userId);
+        List<RoutineSummaryResponseDTO> routines = traineeTrainingMapper.findRoutinesByTraining(trainingId, userId);
 
-        TrainingDetailResponseDTO training = traineeTrainingMapper.findTrainingById(trainingId, userId);
-        if (training == null) {
-            return null;
-        }
+        int completed = traineeTrainingMapper.countCompletedRoutines(trainingId, userId);
+        int total = traineeTrainingMapper.countTotalRoutines(trainingId);
+        int progress = total > 0 ? (completed * 100 / total) : 0;
 
-        // 루틴 조회
-        List<TrainingDetailResponseDTO.RoutineDTO> routines =
-                traineeTrainingMapper.findRoutinesByTraining(trainingId, userId);
-        training = TrainingDetailResponseDTO.builder()
+        traineeTrainingMapper.updateTrainingProgress(trainingId, userId, progress);
+
+        return TraineeRoutineSummaryResponseDTO.builder()
                 .title(training.getTitle())
                 .description(training.getDescription())
                 .price(training.getPrice())
@@ -34,20 +33,8 @@ public class TraineeTrainingService {
                 .totalScore(training.getTotalScore())
                 .averageRating(training.getAverageRating())
                 .traineeCount(training.getTraineeCount())
-                .progress(training.getProgress())
-                .completedAt(training.getCompletedAt())
+                .progress(progress)
                 .routines(routines)
                 .build();
-
-        return training;
-    }
-
-    @Transactional
-    public void updateTrainingProgress(Long trainingId, Long userId) {
-        int completedCount = traineeTrainingMapper.countCompletedRoutines(trainingId, userId);
-        int totalCount = traineeTrainingMapper.countTotalRoutines(trainingId);
-
-        float progress = (totalCount == 0) ? 0 : ((float) completedCount / totalCount) * 100;
-        traineeTrainingMapper.updateTrainingProgress(trainingId, userId, progress);
     }
 }
