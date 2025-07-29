@@ -20,10 +20,22 @@ public class ChatMongoRepository {
         mongoTemplate.save(mongoChatMessage);
     }
 
+    public void saveAll(List<MongoChatMessage> mongoChatMessages) {
+        mongoChatMessages.forEach(this::save);
+    }
+
     public List<MongoChatMessage> findByRoomId(String roomId) {
         Query query = new Query(Criteria.where("roomId").is(roomId));
         query.with(Sort.by(Sort.Direction.ASC, "sendAt"));
 
         return mongoTemplate.find(query, MongoChatMessage.class, "chat_messages");
+    }
+
+    public long countUnreadMessages(String roomId, String receiverId) {
+        Query query = new Query(Criteria.where("roomId").is(roomId)
+                .and("receiverId").is(receiverId)
+                .and("isRead").is(false));
+
+        return mongoTemplate.count(query, MongoChatMessage.class, "chat_messages");
     }
 }

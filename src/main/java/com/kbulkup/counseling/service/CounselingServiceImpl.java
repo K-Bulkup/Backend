@@ -1,5 +1,6 @@
 package com.kbulkup.counseling.service;
 
+import com.kbulkup.chat.repository.ChatMongoRepository;
 import com.kbulkup.counseling.domain.Counseling;
 import com.kbulkup.counseling.dto.response.CounselingCreateResponseDTO;
 import com.kbulkup.counseling.dto.response.TrainerCounselingListResponseDTO;
@@ -16,12 +17,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CounselingServiceImpl implements CounselingService {
 
+    private final ChatMongoRepository chatMongoRepository;
     private final CounselingMapper counselingMapper;
     private final TrainingMapper trainingMapper;
 
     @Override
     public List<TrainerCounselingListResponseDTO> getCounselings(Long userId) {
-        return counselingMapper.findByUserId(userId);
+        List<TrainerCounselingListResponseDTO> counselingList = counselingMapper.findByUserId(userId);
+
+        counselingList.forEach(dto -> {
+            int count = (int) chatMongoRepository.countUnreadMessages(dto.getRoomId(), userId.toString());
+            dto.setUnreadCount(count);
+        });
+
+        return counselingList;
     }
 
     @Override
