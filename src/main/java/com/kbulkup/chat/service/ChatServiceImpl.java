@@ -1,7 +1,8 @@
 package com.kbulkup.chat.service;
 
-import com.kbulkup.chat.domain.ChatMessage;
+import com.kbulkup.chat.dto.ChatMessageDTO;
 import com.kbulkup.chat.domain.MongoChatMessage;
+import com.kbulkup.chat.dto.ChatSummaryDTO;
 import com.kbulkup.chat.repository.ChatMongoRepository;
 import com.kbulkup.counseling.domain.Counseling;
 import com.kbulkup.counseling.mapper.CounselingMapper;
@@ -20,18 +21,22 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public void saveChatMessage(ChatMessage chatMessage) {
+    public ChatSummaryDTO saveChatMessage(ChatMessageDTO chatMessageDTO) {
 
-        Counseling counseling = counselingMapper.findByRoomId(chatMessage.getRoomId());
-        String receiverId = chatMessage.getSenderId().equals(counseling.getUserId().toString())
+        Counseling counseling = counselingMapper.findByRoomId(chatMessageDTO.getRoomId());
+        String receiverId = chatMessageDTO.getSenderId().equals(counseling.getUserId().toString())
                 ? counseling.getTrainerId().toString() : counseling.getUserId().toString();
 
         //mongodb 채팅 내역 저장
-        MongoChatMessage document = MongoChatMessage.create(chatMessage, receiverId);
+        MongoChatMessage document = MongoChatMessage.create(chatMessageDTO, receiverId);
         chatMongoRepository.save(document);
 
         //mysql 마지막 채팅 시간, 마지막 채팅 업데이트
-        counselingMapper.updateLatestMessage(chatMessage.getRoomId(), chatMessage.getMessage(), chatMessage.getSendAt());
+        counselingMapper.updateLatestMessage(chatMessageDTO.getRoomId(), chatMessageDTO.getMessage(), chatMessageDTO.getSendAt());
+
+        //채팅방 요약 정보 전송 위함
+        int unreadCount = (int) chatMongoRepository.countUnreadMessages(chatMessageDTO.getRoomId(), receiverId);
+        return ChatSummaryDTO.create(chatMessageDTO, unreadCount, receiverId);
     }
 
     @Override
