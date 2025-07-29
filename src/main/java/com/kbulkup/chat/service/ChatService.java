@@ -11,4 +11,6 @@ public interface ChatService {
     ChatSummaryDTO saveChatMessage(ChatMessageDTO chatMessageDTO);
 
     List<MongoChatMessage> getMessagesByRoomId(String roomId, String userId);
+
+    void MarkMessagesAsRead(String roomId, String userId);
 }
