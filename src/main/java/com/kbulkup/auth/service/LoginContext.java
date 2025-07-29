@@ -39,4 +39,13 @@ public class LoginContext {
         }
         return strategy.login(dto);
     }
+
+    public LoginResponseDTO executeSocialLogin(String loginType, String code) {
+        System.out.println("LoginContext received social loginType for execution: " + loginType);
+        LoginStrategy strategy = loginStrategies.get(loginType);
+        if (strategy == null) {
+            throw new IllegalArgumentException("지원하지 않는 소셜 로그인 방식입니다.");
+        }
+        return strategy.login(code);
+    }
 }

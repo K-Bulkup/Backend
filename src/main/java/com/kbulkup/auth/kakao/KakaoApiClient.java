@@ -32,6 +32,14 @@ public class KakaoApiClient {
         this.webClient = webClientBuilder.baseUrl("").build(); // WebClient 인스턴스 생성
     }
 
+    public String getClientId() {
+        return kakaoClientId;
+    }
+
+    public String getRedirectUri() {
+        return kakaoRedirectUri;
+    }
+
     // 인가 코드를 사용하여 액세스 토큰을 받아오는 메서드
     public KakaoTokenResponse getAccessToken(String code) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();

@@ -76,10 +76,10 @@ public class AuthServiceImpl implements AuthService {
 
         return SignupResponseDTO.builder()
                 .success(true)
-                .userId(user.getUserId())
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .loginType(user.getLoginType())
+                .userId(dto.getUserId())
+                .email(dto.getEmail())
+                .username(dto.getUsername())
+                .loginType(dto.getLoginType())
                 .message("회원가입 및 역할 부여 성공.")
                 .build();
     }
@@ -111,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
         // 최종 액세스 토큰 발급
         String accessToken = jwtTokenProvider.createAccessToken(updatedUser.getUserId(), updatedUser.getRoles());
 
-        return LoginResponseDTO.toDTO(updatedUser, accessToken, updatedUser.getRoles(), false);
+        return LoginResponseDTO.toDTO(updatedUser, accessToken, updatedUser.getRoles(), false, updatedUser.getLoginType(), updatedUser.getProviderId());
     }
 
     @Override

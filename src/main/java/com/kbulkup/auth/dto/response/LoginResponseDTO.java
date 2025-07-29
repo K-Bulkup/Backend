@@ -17,8 +17,10 @@ public class LoginResponseDTO {
     private String email;       // 사용자의 이메일
     private List<String> roles; // 사용자가 가진 모든 역할 목록
     private boolean isNewUser;
+    private String loginType; // loginType 필드 추가
+    private String providerId; // providerId 필드 추가
 
-    public static LoginResponseDTO toDTO(User user, String accessToken, List<String> roles, boolean isNewUser) {
+    public static LoginResponseDTO toDTO(User user, String accessToken, List<String> roles, boolean isNewUser, String loginType, String providerId) {
         return LoginResponseDTO.builder().
                 accessToken(accessToken).
                 userId(user.getUserId()).
@@ -26,10 +28,12 @@ public class LoginResponseDTO {
                 email(user.getEmail()).
                 roles(roles).
                 isNewUser(isNewUser).
+                loginType(loginType).
+                providerId(providerId).
                 build();
     }
 
-    public static LoginResponseDTO toDTO(User user, String accessToken, String requestedRole, boolean isNewUser) {
+    public static LoginResponseDTO toDTO(User user, String accessToken, String requestedRole, boolean isNewUser, String loginType, String providerId) {
         return LoginResponseDTO.builder().
                 accessToken(accessToken).
                 userId(user.getUserId()).
@@ -37,6 +41,8 @@ public class LoginResponseDTO {
                 email(user.getEmail()).
                 roles(Collections.singletonList(requestedRole)).
                 isNewUser(isNewUser).
+                loginType(loginType).
+                providerId(providerId).
                 build();
     }
 }

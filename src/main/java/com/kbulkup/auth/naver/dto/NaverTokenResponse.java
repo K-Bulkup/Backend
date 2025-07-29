@@ -32,4 +32,10 @@ public class NaverTokenResponse {
      */
     @JsonProperty("expires_in")
     private String expiresIn;
+
+    @JsonProperty("error")
+    private String error;
+
+    @JsonProperty("error_description")
+    private String errorDescription;
 }

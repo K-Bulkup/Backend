@@ -34,7 +34,8 @@ public class NaverLoginStrategy implements LoginStrategy {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRoles());
-            return LoginResponseDTO.toDTO(user, accessToken, user.getRoles(), false);
+            boolean isNewUser = user.getRoles() == null || user.getRoles().isEmpty(); // 역할이 없으면 신규 사용자처럼 처리
+            return LoginResponseDTO.toDTO(user, accessToken, user.getRoles(), isNewUser, LoginType.NAVER.toString(), user.getProviderId());
         }
 
         // 신규 사용자일 경우
@@ -58,6 +59,8 @@ public class NaverLoginStrategy implements LoginStrategy {
                     .username(newUser.getUsername())
                     .roles(null)
                     .isNewUser(true)
+                    .loginType(LoginType.NAVER.toString())
+                    .providerId(naverProfile.getProviderId()) // providerId 설정
                     .build();
         }
     }

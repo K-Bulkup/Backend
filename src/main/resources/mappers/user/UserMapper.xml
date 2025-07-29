@@ -53,6 +53,16 @@
         WHERE u.provider_id = #{providerId} AND u.login_type = #{loginType}
     </select>
 
+    <select id="findById" parameterType="long" resultMap="userResultMap">
+        SELECT
+            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id, u.birthdate, u.user_profile_url,
+            u.is_deleted, u.growth_score, u.created_at, u.updated_at, r.role
+        FROM users u
+        LEFT JOIN user_roles ur ON u.user_id = ur.FK1
+        LEFT JOIN roles r ON ur.FK2 = r.role_id
+        WHERE u.user_id = #{userId}
+    </select>
+
     <insert id="saveUser" parameterType="com.kbulkup.user.domain.User" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO users (email, password, username, login_type, provider_id, birthdate, user_profile_url)
         VALUES (#{email}, #{password}, #{username}, #{loginType}, #{providerId}, #{birthdate}, #{userProfileUrl})
