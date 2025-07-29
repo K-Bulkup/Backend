@@ -96,22 +96,16 @@ public class AuthServiceImpl implements AuthService {
         User user = userMapper.findById(userId)
                 .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
 
-        // 이미 역할이 존재하는지 확인
-        if (userMapper.existsUserRole(user.getUserId(), dto.getRole())) {
-            throw new BaseException(ResponseCode.DUPLICATE_ROLE);
+        // 사용자가 선택한 역할을 이미 가지고 있는지 확인하고, 없는 경우에만 새로 저장
+        if (!userMapper.existsUserRole(user.getUserId(), dto.getRole())) {
+            userMapper.saveUserRole(user.getUserId(), dto.getRole());
         }
 
-        // 사용자가 선택한 새로운 역할 저장
-        userMapper.saveUserRole(user.getUserId(), dto.getRole());
+        // 최종 액세스 토큰은 *선택된 역할 하나*에 대해서만 발급
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), java.util.Collections.singletonList(dto.getRole()));
 
-        // 역할이 추가된 최신 사용자 정보 다시 로드
-        User updatedUser = userMapper.findById(userId)
-                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
-
-        // 최종 액세스 토큰 발급
-        String accessToken = jwtTokenProvider.createAccessToken(updatedUser.getUserId(), updatedUser.getRoles());
-
-        return LoginResponseDTO.toDTO(updatedUser, accessToken, updatedUser.getRoles(), false, updatedUser.getLoginType(), updatedUser.getProviderId());
+        // 응답 DTO에는 *선택된 역할 하나*만 담아서 반환
+        return LoginResponseDTO.toDTO(user, accessToken, dto.getRole(), false, user.getLoginType(), user.getProviderId());
     }
 
     @Override

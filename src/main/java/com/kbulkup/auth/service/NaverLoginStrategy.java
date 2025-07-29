@@ -30,39 +30,38 @@ public class NaverLoginStrategy implements LoginStrategy {
 
         Optional<User> userOptional = userMapper.findByProviderIdAndLoginType(naverProfile.getProviderId(), LoginType.NAVER);
 
-        // 기존 사용자일 경우, 바로 로그인 처리
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRoles());
-            boolean isNewUser = user.getRoles() == null || user.getRoles().isEmpty(); // 역할이 없으면 신규 사용자처럼 처리
-            return LoginResponseDTO.toDTO(user, accessToken, user.getRoles(), isNewUser, LoginType.NAVER.toString(), user.getProviderId());
-        }
-
-        // 신규 사용자일 경우
-        else {
-            User newUser = User.builder()
+        User user;
+        // 신규 사용자일 경우 DB에 저장
+        if (userOptional.isEmpty()) {
+            user = User.builder()
                     .providerId(naverProfile.getProviderId())
                     .username(naverProfile.getName())
                     .email(naverProfile.getEmail())
                     .loginType(LoginType.NAVER)
                     .build();
-
-            userMapper.saveUser(newUser);
-
-            // 회원가입을 위한 임시 토큰 발급
-            String tempAccessToken = jwtTokenProvider.createTempAccessToken(newUser.getUserId());
-
-            // 응답 DTO에 임시 토큰과 함께 신규 사용자임을 나타내는 정보를 담아 보냅니다.
-            return LoginResponseDTO.builder()
-                    .accessToken(tempAccessToken)
-                    .userId(newUser.getUserId())
-                    .username(newUser.getUsername())
-                    .roles(null)
-                    .isNewUser(true)
-                    .loginType(LoginType.NAVER.toString())
-                    .providerId(naverProfile.getProviderId()) // providerId 설정
-                    .build();
+            userMapper.saveUser(user);
+            // 새로 생성된 사용자는 역할이 없으므로 DB에서 다시 조회할 필요 없음
+            user.setRoles(new java.util.ArrayList<>());
+        } else {
+            // 기존 사용자의 경우 DB에서 최신 정보 조회
+            user = userMapper.findById(userOptional.get().getUserId())
+                    .orElseThrow(() -> new com.kbulkup.common.exception.BaseException(com.kbulkup.common.response.ResponseCode.USER_NOT_FOUND));
         }
+
+        // 항상 임시 토큰을 발급하여 역할 선택 화면으로 유도
+        String tempAccessToken = jwtTokenProvider.createTempAccessToken(user.getUserId());
+
+        // 프론트엔드에서 역할 선택 화면을 렌더링할 수 있도록 필요한 정보를 모두 담아 전달
+        return LoginResponseDTO.builder()
+                .accessToken(tempAccessToken) // 임시 토큰
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .roles(user.getRoles() != null ? user.getRoles() : java.util.Collections.emptyList()) // 현재 역할 목록
+                .isNewUser(true) // 역할 선택이 필요하다는 플래그
+                .loginType(LoginType.NAVER.toString())
+                .providerId(user.getProviderId())
+                .build();
     }
 
     @Override

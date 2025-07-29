@@ -14,16 +14,19 @@ import org.springframework.web.reactive.function.client.WebClient; // WebClient 
 @Component
 public class KakaoApiClient {
 
-    @Value("${kakao.client-id}")
+    @Value("${oauth2.kakao.client.id}")
     private String kakaoClientId;
 
-    @Value("${kakao.redirect-uri}")
+    @Value("${oauth2.kakao.redirect.uri}")
     private String kakaoRedirectUri;
 
-    @Value("${kakao.token-uri}")
+    @Value("${oauth2.kakao.client.secret}")
+    private String kakaoClientSecret;
+
+    @Value("${oauth2.kakao.token-uri}")
     private String kakaoTokenUri; // 토큰 발급 URL
 
-    @Value("${kakao.user-info-uri}")
+    @Value("${oauth2.kakao.user-info-uri}")
     private String kakaoUserInfoUri; // 사용자 정보 URL
 
     private final WebClient webClient; // WebClient 주입
@@ -45,6 +48,7 @@ public class KakaoApiClient {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", "authorization_code");
         formData.add("client_id", kakaoClientId);
+        formData.add("client_secret", kakaoClientSecret);
         formData.add("redirect_uri", kakaoRedirectUri);
         formData.add("code", code);
 

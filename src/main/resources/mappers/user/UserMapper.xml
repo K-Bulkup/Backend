@@ -64,8 +64,25 @@
     </select>
 
     <insert id="saveUser" parameterType="com.kbulkup.user.domain.User" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO users (email, password, username, login_type, provider_id, birthdate, user_profile_url)
-        VALUES (#{email}, #{password}, #{username}, #{loginType}, #{providerId}, #{birthdate}, #{userProfileUrl})
+        INSERT INTO users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="email != null">email,</if>
+            password,
+            username,
+            login_type,
+            provider_id,
+            birthdate,
+            user_profile_url,
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="email != null">#{email},</if>
+            #{password},
+            #{username},
+            #{loginType},
+            #{providerId},
+            #{birthdate},
+            #{userProfileUrl},
+        </trim>
     </insert>
 
     <insert id="saveUserRole">

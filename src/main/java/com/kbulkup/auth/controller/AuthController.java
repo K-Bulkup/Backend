@@ -151,4 +151,53 @@ public class AuthController {
         LoginResponseDTO responseDTO = authService.socialSignUp(dto);
         return ResponseEntity.ok(responseDTO);
     }
+
+    // 8. 카카오 로그인 콜백 엔드포인트
+    @GetMapping("/login/oauth2/code/kakao")
+    public RedirectView kakaoCallback(@RequestParam String code) {
+        LoginResponseDTO responseDTO = loginContext.executeSocialLogin(LoginType.KAKAO, code);
+
+        String redirectUrl = "http://localhost:5173/login"; // 프론트엔드 로그인 페이지 URL
+        StringBuilder queryParams = new StringBuilder();
+
+        if (responseDTO.getAccessToken() != null) {
+            queryParams.append("accessToken=").append(responseDTO.getAccessToken());
+        }
+
+        if (responseDTO.getRoles() != null && !responseDTO.getRoles().isEmpty()) {
+            String rolesString = String.join(",", responseDTO.getRoles());
+            if (queryParams.length() > 0) queryParams.append("&");
+            queryParams.append("role=").append(rolesString);
+        }
+
+        if (responseDTO.isNewUser()) {
+            if (queryParams.length() > 0) queryParams.append("&");
+            queryParams.append("isNewUser=").append(true);
+            // 신규 사용자일 경우 추가 정보 전달
+            if (responseDTO.getEmail() != null) {
+                if (queryParams.length() > 0) queryParams.append("&");
+                queryParams.append("email=").append(URLEncoder.encode(responseDTO.getEmail(), StandardCharsets.UTF_8));
+            }
+            if (responseDTO.getUsername() != null) {
+                if (queryParams.length() > 0) queryParams.append("&");
+                queryParams.append("name=").append(URLEncoder.encode(responseDTO.getUsername(), StandardCharsets.UTF_8));
+            }
+            if (responseDTO.getProviderId() != null) {
+                if (queryParams.length() > 0) queryParams.append("&");
+                queryParams.append("providerId=").append(URLEncoder.encode(responseDTO.getProviderId(), StandardCharsets.UTF_8));
+            }
+        }
+
+        // loginType 추가
+        if (responseDTO.getLoginType() != null) {
+            if (queryParams.length() > 0) queryParams.append("&");
+            queryParams.append("loginType=").append(URLEncoder.encode(responseDTO.getLoginType(), StandardCharsets.UTF_8));
+        }
+
+        if (queryParams.length() > 0) {
+            redirectUrl += "?" + queryParams.toString();
+        }
+
+        return new RedirectView(redirectUrl);
+    }
 }

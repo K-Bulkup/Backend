@@ -15,10 +15,12 @@ CREATE TABLE `users`
     `user_profile_url` VARCHAR(100)                     NULL,
     `is_deleted`       BOOLEAN                          NULL     DEFAULT FALSE,
     `growth_score`     INT                              NOT NULL DEFAULT 0,
+    `role`             ENUM ('TRAINEE', 'TRAINER', 'ADMIN') NOT NULL,
     `created_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP,
     `updated_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`),
-    CONSTRAINT `UQ_users_email_login_type` UNIQUE (`email`, `login_type`)
+    CONSTRAINT `UQ_users_email_role` UNIQUE (`email`, `role`),
+    CONSTRAINT `UQ_users_provider_id_role` UNIQUE (`provider_id`, `role`)
 );
 
 -- roles
