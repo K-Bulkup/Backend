@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TrainerTrainingSummaryDTO {
+public class TrainerTrainingSummaryResponseDTO {
 
     private Long trainingId;
     private String title;

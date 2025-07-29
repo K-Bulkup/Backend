@@ -2,7 +2,7 @@ package com.kbulkup.training.service;
 
 import com.kbulkup.training.dto.response.TrainerDetailResponseDTO;
 import com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResponseDTO;
-import com.kbulkup.training.dto.response.TrainerTrainingSummaryDTO;
+import com.kbulkup.training.dto.response.TrainerTrainingSummaryResponseDTO;
 import com.kbulkup.training.mapper.TraineeTrainerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public TrainerDetailResponseDTO getTrainerDetail(Long trainerId) {
         TrainingTrainerDetailProfileResponseDTO profile = traineeTrainerMapper.selectTrainerProfile(trainerId);
-        List<TrainerTrainingSummaryDTO> trainings = traineeTrainerMapper.selectTrainerTrainings(trainerId);
+        List<TrainerTrainingSummaryResponseDTO> trainings = traineeTrainerMapper.selectTrainerTrainings(trainerId);
         return new TrainerDetailResponseDTO(profile, trainings);
     }
 }
