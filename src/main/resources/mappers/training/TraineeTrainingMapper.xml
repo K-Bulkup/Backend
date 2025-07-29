@@ -4,35 +4,27 @@
 
 <mapper namespace="com.kbulkup.training.mapper.TraineeTrainingMapper">
 
-    <!-- 트레이닝 상세 -->
-    <select id="findTrainingById" resultType="com.kbulkup.training.dto.response.TrainingDetailResponseDTO">
+    <select id="findTrainingById" resultType="com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO">
         SELECT t.title, t.description, t.price, t.category, t.level,
                t.total_score AS totalScore, t.average_rating AS averageRating,
                t.trainee_count AS traineeCount,
-               e.progress,
-               e.completed_at AS completedAt
+               e.progress
         FROM trainings t
                  JOIN enrollments e ON e.training_id = t.training_id
         WHERE t.training_id = #{trainingId}
           AND e.user_id = #{userId}
     </select>
 
-    <!-- 루틴 목록 조회 -->
-    <select id="findRoutinesByTraining" resultType="com.kbulkup.training.dto.response.TrainingDetailResponseDTO.RoutineDTO">
-        SELECT r.routine_id AS routineId,
-               r.title AS name,
-               rr.status AS completed,
-               rr.awared_score AS rewardPoint,
-               rr.submitted_at AS completedAt
+    <select id="findRoutinesByTraining" resultType="com.kbulkup.routine.dto.RoutineSummaryResponseDTO">
+        SELECT r.routine_id AS routineId, r.title, rr.status AS completed,
+               rr.awared_score AS rewardPoint, rr.submitted_at AS completedAt
         FROM routines r
-                 LEFT JOIN routine_results rr ON r.routine_id = rr.routine_id
-                 LEFT JOIN enrollments e ON rr.enrollment_id = e.enrollment_id
+                 JOIN routine_results rr ON r.routine_id = rr.routine_id
+                 JOIN enrollments e ON rr.enrollment_id = e.enrollment_id
         WHERE r.training_id = #{trainingId}
           AND e.user_id = #{userId}
-        ORDER BY r.order_number
     </select>
 
-    <!-- 완료된 루틴 수 -->
     <select id="countCompletedRoutines" resultType="int">
         SELECT COUNT(*)
         FROM routine_results rr
@@ -42,14 +34,12 @@
           AND rr.status = TRUE
     </select>
 
-    <!-- 전체 루틴 수 -->
     <select id="countTotalRoutines" resultType="int">
         SELECT COUNT(*)
         FROM routines
         WHERE training_id = #{trainingId}
     </select>
 
-    <!-- 진행률 업데이트 -->
     <update id="updateTrainingProgress">
         UPDATE enrollments
         SET progress = #{progress}
