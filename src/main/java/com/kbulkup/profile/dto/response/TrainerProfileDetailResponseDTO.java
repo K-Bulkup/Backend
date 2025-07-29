@@ -2,6 +2,8 @@ package com.kbulkup.profile.dto.response;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -11,6 +13,7 @@ public class TrainerProfileDetailResponseDTO {
     private String userProfileUrl; //프로필 url
     private String career; //경력소개
     private double totalAverageRating; //트레이너 별점
-    private int totalStudentCount; //누적 수강생수
-    //private List<CertificateDto> certificates;
+    private int totalTraineeCount; //누적 수강생수
+    @Setter
+    private List<String> certificates; //자격증 정보
 }
