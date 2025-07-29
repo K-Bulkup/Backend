@@ -18,7 +18,6 @@ public class Counseling {
     private Long trainerId;
     private Long trainingId;
     private String roomId;
-//    private CounselingStatus status;
     private String status;
     private String latestMessage;
     private LocalDateTime latestAt;
@@ -31,7 +30,7 @@ public class Counseling {
                 .trainerId(trainerId)
                 .trainingId(trainingId)
                 .roomId(roomId)
-                .status("대기")
+                .status(CounselingStatus.PROGRESS.getName())
                 .startAt(LocalDateTime.now())
                 .expiresAt(LocalDateTime.now().plusDays(1))
                 .build();
