@@ -15,7 +15,8 @@
                 c.status,
                 t.title AS trainingTitle,
                 c.latest_message AS latestMessage,
-                c.latest_at AS latestAt
+                c.latest_at AS latestAt,
+                c.expires_at AS expiresAt
             FROM counselings c
             JOIN users u ON c.user_id = u.user_id
             JOIN trainings t ON c.training_id = t.training_id
