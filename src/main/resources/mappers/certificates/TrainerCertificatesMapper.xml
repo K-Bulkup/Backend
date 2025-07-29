@@ -13,11 +13,17 @@
             cert_number,
             created_at
         ) VALUES (
-             #{trainerID},
+             #{trainerId},
              #{certType},
              #{certNumber},
              NOW()
         )
     </insert>
+    
+    <select id="findByTrainerId" parameterType="Long" resultType="String">
+        SELECT tc.cert_type
+        FROM trainer_certificates tc
+        WHERE tc.trainer_id = #{trainerId}
+    </select>
 
 </mapper>

@@ -17,4 +17,11 @@ public interface TraineeAssetMapper {
 
     Composition getCompositionsByTraineeId(@Param("traineeId") Long TraineeId);
 
+    void insertPortfolio(@Param("traineeId") Long id);
+
+    void insertTransactions(@Param("traineeId") Long TraineeId, @Param("transactions") List<Transaction> transactions);
+
+    void insertSnapshots(@Param("traineeId") Long TraineeId, @Param("snapshots") List<Snapshot> snapshots);
+
+    void insertComposition(@Param("traineeId") Long TraineeId, @Param("composition") Composition composition);
 }

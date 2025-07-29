@@ -1,14 +1,12 @@
 package com.kbulkup.asset.controller;
 
+import com.kbulkup.asset.dto.request.TokenRequestDTO;
 import com.kbulkup.asset.dto.response.TraineeAssetDetailResponseDTO;
 import com.kbulkup.asset.service.TraineeAssetService;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +23,12 @@ public class TraineeAssetController {
             return CustomResponse.success(ResponseCode.SUCCESS);
         }
         return CustomResponse.success(ResponseCode.SUCCESS, dto);
+    }
+
+    @PostMapping("/account/{traineeId}")
+    public CustomResponse<Void> postTraineeAccount(@RequestBody TokenRequestDTO dto, @PathVariable Long traineeId) {
+        traineeAssetService.createUserPortfolio(dto.getBank(), traineeId);
+
+        return CustomResponse.success(ResponseCode.SUCCESS);
     }
 }

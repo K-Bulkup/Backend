@@ -227,7 +227,6 @@ CREATE TABLE `user_fintech_auths`
     `user_id`         BIGINT       NOT NULL,
     `fintech_use_num` VARCHAR(100) NULL,
     `bank_code`       VARCHAR(10)  NULL,
-    `account_name`    VARCHAR(50)  NULL,
     `created_at`      TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`)
 );
