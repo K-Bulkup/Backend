@@ -3,7 +3,6 @@ package com.kbulkup.training.mapper;
 import com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResponseDTO;
 import com.kbulkup.training.dto.response.TrainerTrainingSummaryDTO;
 import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
 
 @Mapper
