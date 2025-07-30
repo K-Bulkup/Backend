@@ -1,5 +1,6 @@
 package com.kbulkup.profile.service;
 
+import com.kbulkup.certificates.mapper.CertificatesMapper;
 import com.kbulkup.common.exception.ProfileException;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
@@ -11,15 +12,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class TrainerProfileServiceImpl implements TrainerProfileService {
 
     private final TrainerProfileMapper trainerProfileMapper;
+    private final CertificatesMapper certificatesMapper;
 
     @Override
     public TrainerProfileDetailResponseDTO getTrainerProfile(Long trainerId) {
-        return trainerProfileMapper.getTrainerProfile(trainerId).orElseThrow(() -> new ProfileException(ResponseCode.AUTH_NOT_FOUND_TRAINER_PROFILE));
+
+        TrainerProfileDetailResponseDTO trainerProfileDetailResponseDTO = trainerProfileMapper.findByTrainerId(trainerId)
+                .orElseThrow(() -> new ProfileException(ResponseCode.NOT_FOUND_TRAINER_PROFILE));
+
+        trainerProfileDetailResponseDTO.setCertificates(certificatesMapper.findByTrainerId(trainerId));
+
+        return trainerProfileDetailResponseDTO;
+
     }
 
     @Override

@@ -30,4 +30,8 @@
                      NOW()
                  )
     </insert>
+
+    <select id="findTrainerByTrainingId" resultType="java.lang.Long">
+        SELECT trainer_id FROM trainings WHERE training_id = #{trainingId}
+    </select>
 </mapper>

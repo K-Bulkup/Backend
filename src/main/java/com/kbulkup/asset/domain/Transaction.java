@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -16,6 +16,6 @@ public class Transaction {
     private Long userId;
     private String transactionType;
     private Long amount;
-    private String transactionCategory;
-    private LocalDateTime tranDate;
+    private TransactionCategory transactionCategory;
+    private LocalDate tranDate;
 }

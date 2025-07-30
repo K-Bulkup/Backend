@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kbulkup.counseling.mapper.CounselingMapper">
 
-    <select id="findByTrainerId"
+    <select id="findByUserId"
             parameterType="long"
             resultType="com.kbulkup.counseling.dto.response.TrainerCounselingListResponseDTO">
             SELECT
@@ -15,11 +15,13 @@
                 c.status,
                 t.title AS trainingTitle,
                 c.latest_message AS latestMessage,
-                c.latest_at AS latestAt
+                c.latest_at AS latestAt,
+                c.expires_at AS expiresAt
             FROM counselings c
             JOIN users u ON c.user_id = u.user_id
             JOIN trainings t ON c.training_id = t.training_id
-            WHERE c.trainer_id = #{trainerId}
+            WHERE c.user_id = #{userId}
+               OR c.trainer_id = #{userId}
             ORDER BY c.latest_at DESC
     </select>
 
@@ -31,7 +33,14 @@
         LIMIT 1
     </select>
 
-    <insert id="insertCounselings" parameterType="com.kbulkup.counseling.domain.Counseling">
+    <select id="findByRoomId" resultType="com.kbulkup.counseling.domain.Counseling">
+        SELECT *
+        FROM counselings
+        WHERE room_id = #{roomId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertCounseling" parameterType="com.kbulkup.counseling.domain.Counseling">
         INSERT INTO counselings (
             user_id,
             trainer_id,
@@ -54,4 +63,11 @@
             #{expiresAt}
         )
     </insert>
+
+    <update id="updateLatestMessage">
+        UPDATE counselings
+        SET latest_message = #{latestMessage},
+            latest_at = #{latestAt}
+        WHERE room_id = #{roomId}
+    </update>
 </mapper>

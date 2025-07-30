@@ -223,7 +223,10 @@ CREATE TABLE `counselings`
     `user_id`       BIGINT                        NOT NULL,
     `trainer_id`    BIGINT                        NOT NULL,
     `training_id`   BIGINT                        NOT NULL,
+    `room_id` 		VARCHAR(100) 				  NOT NULL UNIQUE,
     `status`        ENUM ('대기', '승인', '거절', '완료') NOT NULL DEFAULT '대기',
+    `latest_message`TEXT,
+    `latest_at`		DATETIME,
     `start_at`      TIMESTAMP                     NULL,
     `expires_at`    TIMESTAMP                     NULL,
     `message_count` INT                           NULL,
@@ -236,7 +239,6 @@ CREATE TABLE `user_fintech_auths`
     `user_id`         BIGINT       NOT NULL,
     `fintech_use_num` VARCHAR(100) NULL,
     `bank_code`       VARCHAR(10)  NULL,
-    `account_name`    VARCHAR(50)  NULL,
     `created_at`      TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`)
 );
