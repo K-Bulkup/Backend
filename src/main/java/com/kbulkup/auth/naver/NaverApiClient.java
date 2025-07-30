@@ -3,6 +3,8 @@ package com.kbulkup.auth.naver;
 import com.kbulkup.auth.naver.dto.NaverProfile;
 import com.kbulkup.auth.naver.dto.NaverProfileResponse;
 import com.kbulkup.auth.naver.dto.NaverTokenResponse;
+import com.kbulkup.common.exception.AuthException;
+import com.kbulkup.common.response.ResponseCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -62,15 +64,15 @@ public class NaverApiClient {
         NaverTokenResponse response = restTemplate.postForObject(tokenUrl, requestEntity, NaverTokenResponse.class);
 
         if (response == null) {
-            throw new IllegalArgumentException("네이버 액세스 토큰 응답이 null입니다.");
+            throw new AuthException(ResponseCode.VALIDATION_ERROR);
         }
 
         if (response.getError() != null) {
-            throw new IllegalArgumentException("네이버 액세스 토큰 발급 실패: " + response.getErrorDescription() + " (" + response.getError() + ")");
+            throw new AuthException(ResponseCode.AUTH_NAVER_TOKEN_FAILURE);
         }
 
         if (response.getAccessToken() == null) {
-            throw new IllegalArgumentException("네이버 액세스 토큰이 응답에 포함되어 있지 않습니다.");
+            throw new AuthException(ResponseCode.VALIDATION_ERROR);
         }
         return response.getAccessToken();
     }
@@ -91,7 +93,7 @@ public class NaverApiClient {
         ).getBody();
 
         if (response == null || response.getResponse() == null) {
-            throw new IllegalArgumentException("네이버 사용자 정보 조회에 실패했습니다.");
+            throw new AuthException(ResponseCode.VALIDATION_ERROR);
         }
         return response.getResponse();
     }

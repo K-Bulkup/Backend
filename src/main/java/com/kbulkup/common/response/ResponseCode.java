@@ -17,6 +17,7 @@ public enum ResponseCode {
     AUTH_EMAIL_NOT_FOUND(BAD_REQUEST,"존재하지 않는 이메일입니다."),
     AUTH_USER_NOT_FOUND(BAD_REQUEST,"없는 사용자 입니다"),
     AUTH_UNSUPPORTED_LOGIN_TYPE(BAD_REQUEST, "지원하지 않는 로그인 타입입니다."),
+    AUTH_NAVER_TOKEN_FAILURE(BAD_REQUEST, "네이버 액세스 토큰 발급에 실패했습니다."),
     AUTH_NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST,"트레이너 프로필 정보를 찾을 수 없습니다."),
     VALIDATION_ERROR(BAD_REQUEST, "요청값의 형식이 올바르지 않습니다."),
 
@@ -25,6 +26,8 @@ public enum ResponseCode {
     TRAINER_CAREER_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 소개 업데이트에 실패했습니다."),
     TRAINER_PROFILE_IMAGE_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 프로필 이미지 업데이트에 실패했습니다."),
     TRAINER_CERTIFICATES_VALIDATION_FAILED(INTERNAL_SERVER_ERROR, "유효하지 않은 자격정보 입니다."),
+
+
     //200 OK
     SUCCESS(OK,"성공했습니다.");
 
