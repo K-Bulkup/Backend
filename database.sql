@@ -5,38 +5,45 @@ USE kbulkupdb;
 -- users
 CREATE TABLE `users`
 (
-    `user_id`          BIGINT                           NOT NULL AUTO_INCREMENT,
-    `email`            VARCHAR(100)                     NOT NULL,
-    `password`         VARCHAR(255)                     NULL,
-    `username`         VARCHAR(30)                      NOT NULL,
-    `birthdate`        DATE                             NULL,
-    `login_type`       ENUM ('LOCAL', 'KAKAO', 'NAVER') NOT NULL,
-    `provider_id`      VARCHAR(255)                     NULL,
-    `user_profile_url` VARCHAR(100)                     NULL,
-    `is_deleted`       BOOLEAN                          NULL     DEFAULT FALSE,
-    `growth_score`     INT                              NOT NULL DEFAULT 0,
-    `role`             ENUM ('TRAINEE', 'TRAINER', 'ADMIN') NOT NULL,
-    `created_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`       TIMESTAMP                        NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`),
-    CONSTRAINT `UQ_users_email_role` UNIQUE (`email`, `role`),
-    CONSTRAINT `UQ_users_provider_id_role` UNIQUE (`provider_id`, `role`)
+    user_id          BIGINT                           NOT NULL AUTO_INCREMENT,
+    email            VARCHAR(100)                     NOT NULL,
+    password         VARCHAR(255),
+    username         VARCHAR(30)                      NOT NULL,
+    birthdate        DATE,
+    login_type       ENUM ('LOCAL', 'KAKAO', 'NAVER') NOT NULL,
+    provider_id      VARCHAR(255),
+    user_profile_url VARCHAR(100),
+    is_deleted       BOOLEAN                                   DEFAULT FALSE,
+    growth_score     INT                              NOT NULL DEFAULT 0,
+    created_at       TIMESTAMP                                 DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP                                 DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id),
+    UNIQUE (email),
+    UNIQUE (provider_id)
 );
 
 -- roles
 CREATE TABLE `roles`
 (
-    `role_id` BIGINT                               NOT NULL AUTO_INCREMENT,
-    `role`    ENUM ('TRAINEE', 'TRAINER', 'ADMIN') NOT NULL,
-    PRIMARY KEY (`role_id`)
+    role_id BIGINT                               NOT NULL AUTO_INCREMENT,
+    role    ENUM ('TRAINEE', 'TRAINER', 'ADMIN') NOT NULL UNIQUE,
+    PRIMARY KEY (role_id)
 );
+INSERT INTO roles (role)
+VALUES ('TRAINEE');
+INSERT INTO roles (role)
+VALUES ('TRAINER');
+INSERT INTO roles (role)
+VALUES ('ADMIN');
 
 -- user_roles
 CREATE TABLE `user_roles`
 (
-    `FK1` BIGINT NOT NULL,
-    `FK2` BIGINT NOT NULL,
-    PRIMARY KEY (`FK1`, `FK2`)
+    user_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles (role_id) ON DELETE RESTRICT
 );
 
 -- trainer_profiles
@@ -74,7 +81,7 @@ CREATE TABLE `trainings`
     `level`           ENUM ('초급', '중급', '고급')                                              NOT NULL,
     `thumbnail_url`   VARCHAR(255)                                                         NULL,
     `total_score`     INT                                                                  NULL,
-    `approval_status` ENUM ('대기', '승인', '거부') NOT NULL DEFAULT '대기',
+    `approval_status` ENUM ('대기', '승인', '거부')                                              NOT NULL DEFAULT '대기',
     `average_rating`  FLOAT                                                                NULL,
     `trainee_count`   INT                                                                  NULL,
     `created_at`      TIMESTAMP                                                            NULL     DEFAULT CURRENT_TIMESTAMP,
@@ -247,11 +254,6 @@ CREATE TABLE `admin_approval_logs`
     PRIMARY KEY (`admin_approval_log_id`)
 );
 
--- 기본 역할 데이터 삽입
-INSERT INTO `roles` (`role`)
-VALUES ('TRAINEE'),
-       ('TRAINER'),
-       ('ADMIN');
 
 -- 외래 키 제약 조건
 ALTER TABLE `routine_videos`
@@ -268,8 +270,8 @@ ALTER TABLE `user_fintech_auths`
     ADD CONSTRAINT `FK_user_fintech_auths_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `user_roles`
-    ADD CONSTRAINT `FK_user_roles_users` FOREIGN KEY (`FK1`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `FK_user_roles_roles` FOREIGN KEY (`FK2`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `FK_user_roles_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `FK_user_roles_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `counselings`
     ADD CONSTRAINT `FK_counselings_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,

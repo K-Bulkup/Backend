@@ -20,19 +20,6 @@ public class LoginResponseDTO {
     private String loginType; // loginType 필드 추가
     private String providerId; // providerId 필드 추가
 
-    public static LoginResponseDTO toDTO(User user, String accessToken, List<String> roles, boolean isNewUser, String loginType, String providerId) {
-        return LoginResponseDTO.builder().
-                accessToken(accessToken).
-                userId(user.getUserId()).
-                username(user.getUsername()).
-                email(user.getEmail()).
-                roles(roles).
-                isNewUser(isNewUser).
-                loginType(loginType).
-                providerId(providerId).
-                build();
-    }
-
     public static LoginResponseDTO toDTO(User user, String accessToken, String requestedRole, boolean isNewUser, String loginType, String providerId) {
         return LoginResponseDTO.builder().
                 accessToken(accessToken).

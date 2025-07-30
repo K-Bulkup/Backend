@@ -42,7 +42,6 @@ public class KakaoLoginStrategy implements LoginStrategy {
             user = User.builder()
                     .providerId(kakaoProfile.getProviderId())
                     .username(kakaoProfile.getNickname() != null ? kakaoProfile.getNickname() : "")
-                    .email(kakaoProfile.getEmail() != null ? kakaoProfile.getEmail() : "kakao_" + kakaoProfile.getProviderId() + "@kbulkup.com")
                     .loginType(LoginType.KAKAO)
                     .build();
             userMapper.saveUser(user);

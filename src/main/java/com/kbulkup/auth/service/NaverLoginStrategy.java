@@ -36,7 +36,6 @@ public class NaverLoginStrategy implements LoginStrategy {
             user = User.builder()
                     .providerId(naverProfile.getProviderId())
                     .username(naverProfile.getName())
-                    .email(naverProfile.getEmail())
                     .loginType(LoginType.NAVER)
                     .build();
             userMapper.saveUser(user);

@@ -30,26 +30,25 @@ public class AuthServiceImpl implements AuthService {
         Optional<User> existingUser = userMapper.findByEmail(dto.getEmail());
 
         if (existingUser.isPresent()) {
-
             // 이미 역할이 존재하는지 확인
-            if (userMapper.existsUserRole(dto.getUserId(), dto.getRole())) {
+            if (userMapper.existsUserRole(existingUser.get().getUserId(), dto.getRole())) {
                 return SignupResponseDTO.builder()
                         .success(true)
-                        .userId(dto.getUserId())
-                        .email(dto.getEmail())
-                        .username(dto.getUsername())
-                        .loginType(dto.getLoginType())
+                        .userId(existingUser.get().getUserId())
+                        .email(existingUser.get().getEmail())
+                        .username(existingUser.get().getUsername())
+                        .loginType(existingUser.get().getLoginType())
                         .message("이미 해당 역할로 가입된 사용자입니다.")
                         .build();
             } else {
                 // 역할 추가
-                userMapper.saveUserRole(dto.getUserId(), dto.getRole());
+                userMapper.saveUserRole(existingUser.get().getUserId(), dto.getRole());
                 return SignupResponseDTO.builder()
                         .success(true)
-                        .userId(dto.getUserId())
-                        .email(dto.getEmail())
-                        .username(dto.getUsername())
-                        .loginType(dto.getLoginType())
+                        .userId(existingUser.get().getUserId())
+                        .email(existingUser.get().getEmail())
+                        .username(existingUser.get().getUsername())
+                        .loginType(existingUser.get().getLoginType())
                         .message("역할이 성공적으로 추가되었습니다.")
                         .build();
             }
