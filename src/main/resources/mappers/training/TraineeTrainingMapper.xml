@@ -64,5 +64,24 @@
         ORDER BY t.created_at DESC
     </select>
 
+    <select id="findTrainingDetail" parameterType="long"
+            resultType="com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO">
+        SELECT t.title,
+               t.description,
+               t.price,
+               t.category,
+               t.level,
+               t.average_rating   AS averageRating,
+               t.trainee_count    AS traineeCount,
+               u.username         AS trainerNickname,
+               u.user_profile_url AS trainerProfileUrl,
+               t.thumbnail_url    AS thumbnailUrl
+        FROM trainings t
+                 JOIN users u ON t.trainer_id = u.user_id
+        WHERE t.training_id = #{trainingId}
+          AND t.approval_status = '승인'
+    </select>
+
+
 
 </mapper>
