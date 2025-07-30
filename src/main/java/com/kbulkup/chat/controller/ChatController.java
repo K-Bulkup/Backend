@@ -22,6 +22,9 @@ public class ChatController {
         chatMessageDTO.setSendAt(LocalDateTime.now());
         ChatSummaryDTO chatSummary = chatService.saveChatMessage(chatMessageDTO);
 
+        // 만료된 방이면 아무것도 하지 않음
+        if (chatSummary == null) return;
+
         //채팅방에 메시지 실시간 전송
         messagingTemplate.convertAndSend("/topic/room/" + chatMessageDTO.getRoomId(), chatMessageDTO);
 

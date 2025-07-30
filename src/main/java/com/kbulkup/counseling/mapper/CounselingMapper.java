@@ -20,4 +20,6 @@ public interface CounselingMapper {
     void insertCounseling(Counseling counseling);
 
     void updateLatestMessage(@Param("roomId") String roomId, @Param("latestMessage") String latestMessage, @Param("latestAt") LocalDateTime latestAt);
+
+    void updateStatusToExpired(@Param("roomId") String roomId, @Param("status") String status);
 }
