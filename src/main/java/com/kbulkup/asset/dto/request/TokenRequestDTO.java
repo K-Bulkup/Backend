@@ -1,6 +1,5 @@
 package com.kbulkup.asset.dto.request;
 
-import com.mysql.cj.jdbc.StatementImpl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

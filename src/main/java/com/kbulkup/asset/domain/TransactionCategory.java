@@ -1,5 +1,8 @@
 package com.kbulkup.asset.domain;
 
+import com.kbulkup.common.exception.EnumException;
+import com.kbulkup.common.response.ResponseCode;
+
 public enum TransactionCategory {
     주거_공과금("주거/공과금"),
     문화생활_여가("문화생활/여가"),
@@ -28,6 +31,6 @@ public enum TransactionCategory {
                 return tc;
             }
         }
-        throw new IllegalArgumentException("Unknown category: " + dbValue);
+        throw new EnumException(ResponseCode.INVALID_ENUM);
     }
 }
