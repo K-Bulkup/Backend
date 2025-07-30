@@ -68,6 +68,10 @@ dependencies {
     implementation 'org.springframework:spring-websocket:5.3.30'
     implementation 'org.springframework:spring-messaging:5.3.30'
 
+    // MongoDB Core
+    implementation 'org.springframework.data:spring-data-mongodb:3.4.13'
+    implementation 'org.mongodb:mongodb-driver-sync:4.10.2'
+
     // 테스트
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
