@@ -70,4 +70,10 @@
             latest_at = #{latestAt}
         WHERE room_id = #{roomId}
     </update>
+
+    <update id="updateStatusToExpired">
+        UPDATE counselings
+        SET status = #{status}
+        WHERE room_id = #{roomId}
+    </update>
 </mapper>

@@ -65,6 +65,6 @@ public class CounselingServiceImpl implements CounselingService {
 
         User user = userMapper.findById(targetId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
         //상대방 정보 조회
-        return CounselingDetailResponseDTO.create(user.getUsername(), user.getUserProfileUrl(), counseling.getExpiresAt());
+        return CounselingDetailResponseDTO.create(user.getUsername(), user.getUserProfileUrl(), counseling.getStatus(), counseling.getExpiresAt());
     }
 }

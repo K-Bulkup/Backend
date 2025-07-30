@@ -15,12 +15,14 @@ public class CounselingDetailResponseDTO {
 
     private String userName;
     private String userProfileUrl;
+    private String status;
     private LocalDateTime expiresAt;
 
-    public static CounselingDetailResponseDTO create(String userName, String userProfileUrl, LocalDateTime expiresAt) {
+    public static CounselingDetailResponseDTO create(String userName, String userProfileUrl, String status, LocalDateTime expiresAt) {
         return CounselingDetailResponseDTO.builder()
                 .userName(userName)
                 .userProfileUrl(userProfileUrl)
+                .status(status)
                 .expiresAt(expiresAt)
                 .build();
     }

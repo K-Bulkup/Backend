@@ -5,11 +5,13 @@ import com.kbulkup.chat.domain.MongoChatMessage;
 import com.kbulkup.chat.dto.ChatSummaryDTO;
 import com.kbulkup.chat.repository.ChatMongoRepository;
 import com.kbulkup.counseling.domain.Counseling;
+import com.kbulkup.counseling.domain.CounselingStatus;
 import com.kbulkup.counseling.mapper.CounselingMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,22 +23,29 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public ChatSummaryDTO saveChatMessage(ChatMessageDTO chatMessageDTO) {
+    public ChatSummaryDTO saveChatMessage(ChatMessageDTO dto) {
 
-        Counseling counseling = counselingMapper.findByRoomId(chatMessageDTO.getRoomId());
-        String receiverId = chatMessageDTO.getSenderId().equals(counseling.getUserId().toString())
+        Counseling counseling = counselingMapper.findByRoomId(dto.getRoomId());
+
+        //만료된 채팅방에서 채팅시 CounselingStatus 수정 및 에러 메시지 반환
+        if (counseling.getExpiresAt().isBefore(LocalDateTime.now())) {
+            counselingMapper.updateStatusToExpired(dto.getRoomId(), CounselingStatus.EXPIRED.getName());
+            return null;
+        }
+
+        String receiverId = dto.getSenderId().equals(counseling.getUserId().toString())
                 ? counseling.getTrainerId().toString() : counseling.getUserId().toString();
 
         //mongodb 채팅 내역 저장
-        MongoChatMessage document = MongoChatMessage.create(chatMessageDTO, receiverId);
+        MongoChatMessage document = MongoChatMessage.create(dto, receiverId);
         chatMongoRepository.save(document);
 
         //mysql 마지막 채팅 시간, 마지막 채팅 업데이트
-        counselingMapper.updateLatestMessage(chatMessageDTO.getRoomId(), chatMessageDTO.getMessage(), chatMessageDTO.getSendAt());
+        counselingMapper.updateLatestMessage(dto.getRoomId(), dto.getMessage(), dto.getSendAt());
 
         //채팅방 요약 정보 전송 위함
-        int unreadCount = (int) chatMongoRepository.countUnreadMessages(chatMessageDTO.getRoomId(), receiverId);
-        return ChatSummaryDTO.create(chatMessageDTO, unreadCount, receiverId);
+        int unreadCount = (int) chatMongoRepository.countUnreadMessages(dto.getRoomId(), receiverId);
+        return ChatSummaryDTO.create(dto, unreadCount, receiverId);
     }
 
     @Override
