@@ -14,14 +14,22 @@ public class LoginResponseDTO {
     private String accessToken; // 최종 인증 JWT
     private Long userId;        // 사용자의 고유 ID
     private String username;    // 사용자의 닉네임
+    private String email;       // 사용자의 이메일
     private List<String> roles; // 사용자가 가진 모든 역할 목록
+    private boolean isNewUser;
+    private String loginType; // loginType 필드 추가
+    private String providerId; // providerId 필드 추가
 
-    public static LoginResponseDTO toDTO(User user, String accessToken, String requestedRole) {
+    public static LoginResponseDTO toDTO(User user, String accessToken, String requestedRole, boolean isNewUser, String loginType, String providerId) {
         return LoginResponseDTO.builder().
                 accessToken(accessToken).
                 userId(user.getUserId()).
                 username(user.getUsername()).
+                email(user.getEmail()).
                 roles(Collections.singletonList(requestedRole)).
+                isNewUser(isNewUser).
+                loginType(loginType).
+                providerId(providerId).
                 build();
     }
 }

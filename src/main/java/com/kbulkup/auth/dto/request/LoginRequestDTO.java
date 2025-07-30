@@ -9,9 +9,9 @@ import lombok.*;
 
 
 public class LoginRequestDTO {
-    private String loginType;
     private String email;
     private String password;
     private String code;
     private String role;
+    private String loginType;
 }

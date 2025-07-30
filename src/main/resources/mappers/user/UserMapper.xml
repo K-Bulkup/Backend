@@ -25,50 +25,92 @@
 
     <select id="findByEmail" parameterType="string" resultMap="userResultMap">
         SELECT
-            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id, u.birthdate, u.user_profile_url,
-            u.is_deleted, u.growth_score, u.created_at, u.updated_at, r.role
+            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id,
+            u.birthdate, u.user_profile_url, u.is_deleted, u.growth_score,
+            u.created_at, u.updated_at, r.role
         FROM users u
-        LEFT JOIN user_roles ur ON u.user_id = ur.FK1
-        LEFT JOIN roles r ON ur.FK2 = r.role_id
+                 LEFT JOIN user_roles ur ON u.user_id = ur.user_id
+                 LEFT JOIN roles r ON ur.role_id = r.role_id
         WHERE u.email = #{email}
     </select>
 
     <select id="findByEmailAndLoginType" resultMap="userResultMap">
         SELECT
-            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id, u.birthdate, u.user_profile_url,
-            u.is_deleted, u.growth_score, u.created_at, u.updated_at, r.role
+            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id,
+            u.birthdate, u.user_profile_url, u.is_deleted, u.growth_score,
+            u.created_at, u.updated_at, r.role
         FROM users u
-        LEFT JOIN user_roles ur ON u.user_id = ur.FK1
-        LEFT JOIN roles r ON ur.FK2 = r.role_id
+                 LEFT JOIN user_roles ur ON u.user_id = ur.user_id
+                 LEFT JOIN roles r ON ur.role_id = r.role_id
         WHERE u.email = #{email} AND u.login_type = #{loginType}
     </select>
 
     <select id="findByProviderIdAndLoginType" resultMap="userResultMap">
         SELECT
-            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id, u.birthdate, u.user_profile_url,
-            u.is_deleted, u.growth_score, u.created_at, u.updated_at, r.role
+            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id,
+            u.birthdate, u.user_profile_url, u.is_deleted, u.growth_score,
+            u.created_at, u.updated_at, r.role
         FROM users u
-        LEFT JOIN user_roles ur ON u.user_id = ur.FK1
-        LEFT JOIN roles r ON ur.FK2 = r.role_id
+                 LEFT JOIN user_roles ur ON u.user_id = ur.user_id
+                 LEFT JOIN roles r ON ur.role_id = r.role_id
         WHERE u.provider_id = #{providerId} AND u.login_type = #{loginType}
     </select>
 
+    <select id="findById" parameterType="long" resultMap="userResultMap">
+        SELECT
+            u.user_id, u.email, u.password, u.username, u.login_type, u.provider_id,
+            u.birthdate, u.user_profile_url, u.is_deleted, u.growth_score,
+            u.created_at, u.updated_at, r.role
+        FROM users u
+                 LEFT JOIN user_roles ur ON u.user_id = ur.user_id
+                 LEFT JOIN roles r ON ur.role_id = r.role_id
+        WHERE u.user_id = #{userId}
+    </select>
+
     <insert id="saveUser" parameterType="com.kbulkup.user.domain.User" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO users (email, password, username, login_type, provider_id, birthdate, user_profile_url)
-        VALUES (#{email}, #{password}, #{username}, #{loginType}, #{providerId}, #{birthdate}, #{userProfileUrl})
+        INSERT INTO users (
+            email,
+            password,
+            username,
+            login_type,
+            provider_id,
+            birthdate,
+            user_profile_url
+        ) VALUES (
+            <choose>
+                <when test="loginType.toString() == 'KAKAO'">
+                    CONCAT(#{providerId}, '@kakao.com'),
+                </when>
+                <when test="loginType.toString() == 'NAVER'">
+                    CONCAT(#{providerId}, '@naver.com'),
+                </when>
+                <otherwise>
+                    #{email},
+                </otherwise>
+            </choose>
+            #{password},
+            #{username},
+            #{loginType},
+            #{providerId},
+            #{birthdate},
+            #{userProfileUrl}
+        )
     </insert>
 
     <insert id="saveUserRole">
-        INSERT INTO user_roles (FK1, FK2)
-        VALUES (#{userId}, (SELECT role_id FROM roles WHERE role = #{role}))
+        INSERT INTO user_roles (user_id, role_id)
+        VALUES (
+                   #{userId},
+                   (SELECT role_id FROM roles WHERE role = #{role})
+               )
     </insert>
 
     <select id="existsUserRole" resultType="boolean">
         SELECT EXISTS(
             SELECT 1
             FROM user_roles ur
-            JOIN roles r ON ur.FK2 = r.role_id
-            WHERE ur.FK1 = #{userId} AND r.role = #{role}
+                     JOIN roles r ON ur.role_id = r.role_id
+            WHERE ur.user_id = #{userId} AND r.role = #{role}
         )
     </select>
 
