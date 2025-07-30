@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,9 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
 
+    @Value("${jwt.secret}")
+    private String secretKey;
+
     private byte[] secretKeyBytes;
 
     // 최종 인증 토큰 유효시간: 30분
@@ -29,7 +33,7 @@ public class JwtTokenProvider {
 
     @PostConstruct
     protected void init() {
-        secretKeyBytes = io.jsonwebtoken.security.Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded();
+        secretKeyBytes = java.util.Base64.getDecoder().decode(secretKey);
     }
 
     // 최종 인증 JWT 생성
