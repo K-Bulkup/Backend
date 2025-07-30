@@ -2,9 +2,11 @@ package com.kbulkup.training.controller;
 
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.training.dto.request.TraineeTrainingDetailRequestDTO;
 import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import com.kbulkup.training.dto.request.TrainingSearchListRequestDTO;
 import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
+import com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.dto.response.TrainingSearchListResponseDTO;
 import com.kbulkup.training.service.TraineeTrainingService;
@@ -57,6 +59,14 @@ public class TrainingController {
         return CustomResponse.success(
                 ResponseCode.SUCCESS,
                 traineeTrainingService.getAllApprovedTrainings()
+        );
+    }
+    /** [수강생] 트레이닝 상세 조회 (결제 전) */
+    @GetMapping("/trainee/trainings/{trainingId}")
+    public CustomResponse<TraineeTrainingDetailResponseDTO> getTrainingDetail(@PathVariable Long trainingId) {
+        return CustomResponse.success(
+                ResponseCode.SUCCESS,
+                traineeTrainingService.getTrainingDetail(new TraineeTrainingDetailRequestDTO(trainingId))
         );
     }
 
