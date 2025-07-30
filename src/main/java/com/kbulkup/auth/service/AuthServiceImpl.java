@@ -4,7 +4,7 @@ import com.kbulkup.auth.dto.request.SocialSignUpRequestDTO;
 import com.kbulkup.auth.dto.request.SignupRequestDTO;
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
 import com.kbulkup.auth.dto.response.SignupResponseDTO;
-import com.kbulkup.common.exception.BaseException;
+import com.kbulkup.common.exception.AuthException;
 import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.common.security.JwtTokenProvider;
 import com.kbulkup.user.domain.User;
@@ -88,12 +88,12 @@ public class AuthServiceImpl implements AuthService {
         // 임시 토큰에서 사용자 ID 추출 및 유효성 검증
         Long userId = jwtTokenProvider.getUserIdFromTempToken(dto.getTempAccessToken());
         if (userId == null) {
-            throw new BaseException(ResponseCode.VALIDATION_ERROR);
+            throw new AuthException(ResponseCode.AUTH_VALIDATION_ERROR);
         }
 
         // DB에서 사용자 정보 조회
         User user = userMapper.findById(userId)
-                .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new AuthException(ResponseCode.AUTH_USER_NOT_FOUND));
 
         // 사용자가 선택한 역할을 이미 가지고 있는지 확인하고, 없는 경우에만 새로 저장
         if (!userMapper.existsUserRole(user.getUserId(), dto.getRole())) {

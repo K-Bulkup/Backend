@@ -19,7 +19,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
     @Override
     public TrainerProfileDetailResponseDTO getTrainerProfile(Long trainerId) {
-        return trainerProfileMapper.getTrainerProfile(trainerId).orElseThrow(() -> new ProfileException(ResponseCode.NOT_FOUND_TRAINER_PROFILE));
+        return trainerProfileMapper.getTrainerProfile(trainerId).orElseThrow(() -> new ProfileException(ResponseCode.AUTH_NOT_FOUND_TRAINER_PROFILE));
     }
 
     @Override
@@ -33,8 +33,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
         if (isUpdated) {
             return CustomResponse.success(ResponseCode.SUCCESS);
-        }
-        else{
+        } else {
             throw new ProfileException(ResponseCode.TRAINER_CAREER_UPDATE_FAILED);
         }
     }
@@ -50,8 +49,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
         if (isUpdated) {
             return CustomResponse.success(ResponseCode.SUCCESS);
-        }
-        else{
+        } else {
             throw new ProfileException(ResponseCode.TRAINER_PROFILE_IMAGE_UPDATE_FAILED);
         }
     }

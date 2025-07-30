@@ -2,14 +2,19 @@ package com.kbulkup.auth.service;
 
 import com.kbulkup.auth.domain.LoginType;
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
+import com.kbulkup.auth.naver.NaverApiClient;
+import com.kbulkup.auth.naver.dto.NaverProfile;
+import com.kbulkup.common.exception.AuthException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.common.security.JwtTokenProvider;
 import com.kbulkup.user.domain.User;
 import com.kbulkup.user.mapper.UserMapper;
-import com.kbulkup.auth.naver.NaverApiClient;
-import com.kbulkup.auth.naver.dto.NaverProfile;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 
 @Component
 public class NaverLoginStrategy implements LoginStrategy {
@@ -44,7 +49,7 @@ public class NaverLoginStrategy implements LoginStrategy {
         } else {
             // 기존 사용자의 경우 DB에서 최신 정보 조회
             user = userMapper.findById(userOptional.get().getUserId())
-                    .orElseThrow(() -> new com.kbulkup.common.exception.BaseException(com.kbulkup.common.response.ResponseCode.USER_NOT_FOUND));
+                    .orElseThrow(() -> new AuthException(ResponseCode.AUTH_USER_NOT_FOUND));
         }
 
         // 항상 임시 토큰을 발급하여 역할 선택 화면으로 유도
@@ -56,7 +61,7 @@ public class NaverLoginStrategy implements LoginStrategy {
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .roles(user.getRoles() != null ? user.getRoles() : java.util.Collections.emptyList()) // 현재 역할 목록
+                .roles(user.getRoles() != null ? user.getRoles() : emptyList()) // 현재 역할 목록
                 .isNewUser(true) // 역할 선택이 필요하다는 플래그
                 .loginType(LoginType.NAVER.toString())
                 .providerId(user.getProviderId())

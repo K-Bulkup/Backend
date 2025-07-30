@@ -3,6 +3,8 @@ package com.kbulkup.auth.service;
 import com.kbulkup.auth.domain.LoginType;
 import com.kbulkup.auth.dto.request.LoginRequestDTO;
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
+import com.kbulkup.common.exception.AuthException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.common.security.JwtTokenProvider;
 import com.kbulkup.user.mapper.UserMapper;
 import com.kbulkup.user.domain.User;
@@ -10,8 +12,6 @@ import com.kbulkup.user.domain.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 @Component
 public class LocalLoginStrategy implements LoginStrategy {
@@ -31,13 +31,13 @@ public class LocalLoginStrategy implements LoginStrategy {
         LoginRequestDTO requestDTO = (LoginRequestDTO) request;
         // 1. 이메일로 사용자(User)를 찾음 (Mapper 사용)
         User user = userMapper.findByEmail(requestDTO.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+                .orElseThrow(() -> new AuthException(ResponseCode.AUTH_EMAIL_NOT_FOUND));
 
         // 2. 사용자가 존재하지 않는 경우 예외 발생 // 이미 위에서 처리
 
         // 3. 비밀번호 일치 여부 확인
         if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new AuthException(ResponseCode.AUTH_INVALID_PASSWORD);
         }
 
         // 4. JWT 토큰 생성

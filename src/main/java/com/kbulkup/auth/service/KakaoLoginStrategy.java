@@ -5,15 +5,17 @@ import com.kbulkup.auth.dto.response.LoginResponseDTO;
 import com.kbulkup.auth.kakao.KakaoApiClient;
 import com.kbulkup.auth.kakao.dto.KakaoProfileResponse;
 import com.kbulkup.auth.kakao.dto.KakaoTokenResponse; // 추가
+import com.kbulkup.common.exception.AuthException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.common.security.JwtTokenProvider;
 import com.kbulkup.user.domain.User;
 import com.kbulkup.user.mapper.UserMapper;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 
 @Component
 @RequiredArgsConstructor
@@ -50,7 +52,7 @@ public class KakaoLoginStrategy implements LoginStrategy {
         } else {
             // 기존 사용자의 경우 DB에서 최신 정보 조회
             user = userMapper.findById(userOptional.get().getUserId())
-                    .orElseThrow(() -> new com.kbulkup.common.exception.BaseException(com.kbulkup.common.response.ResponseCode.USER_NOT_FOUND));
+                    .orElseThrow(() -> new AuthException(ResponseCode.AUTH_USER_NOT_FOUND));
         }
 
         // 항상 임시 토큰을 발급하여 역할 선택 화면으로 유도
@@ -62,7 +64,7 @@ public class KakaoLoginStrategy implements LoginStrategy {
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .roles(user.getRoles() != null ? user.getRoles() : java.util.Collections.emptyList()) // 현재 역할 목록
+                .roles(user.getRoles() != null ? user.getRoles() : emptyList()) // 현재 역할 목록
                 .isNewUser(true) // 역할 선택이 필요하다는 플래그
                 .loginType(LoginType.KAKAO.toString())
                 .providerId(user.getProviderId())

@@ -1,5 +1,8 @@
 package com.kbulkup.auth.domain;
 
+import com.kbulkup.common.exception.AuthException;
+import com.kbulkup.common.response.ResponseCode;
+
 public final class Role {
 
     public static final String TRAINER = "TRAINER";
@@ -10,6 +13,6 @@ public final class Role {
 
     // 인스턴스 생성을 막기 위한 private 생성자
     private Role() {
-        throw new IllegalStateException("Utility class");
+        throw new AuthException(ResponseCode.AUTH_INVALID_ROLE);
     }
 }
