@@ -1,6 +1,7 @@
 package com.kbulkup.training.service;
 
 import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
+import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.mapper.TraineeTrainingMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,4 +55,8 @@ public class TraineeTrainingService {
                 routines
         );
     }
+    public List<TraineeTrainingListResponseDTO> getAllApprovedTrainings() {
+        return traineeTrainingMapper.findAllApprovedTrainings();
+    }
+
 }

@@ -10,6 +10,7 @@ import lombok.*;
 
 public class SignupResponseDTO {
 
+    private boolean success;
     private Long userId;
     private String email;
     private String username;

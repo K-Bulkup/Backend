@@ -33,8 +33,8 @@ public class JwtTokenProvider {
     }
 
     // 최종 인증 JWT 생성
-    public String createToken(String userPk, Long userId, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userPk);
+    public String createAccessToken(Long userId, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(userId)); // userId를 subject로 사용
         claims.put("userId", userId);
         claims.put("roles", roles);
         Date now = new Date();
@@ -46,13 +46,18 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public Long getUserId(String token) {
+        return Jwts.parserBuilder().setSigningKey(secretKeyBytes).build()
+                .parseClaimsJws(token).getBody().get("userId", Long.class);
+    }
+
     // 최종 인증 JWT에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // 최종 인증 JWT에서 회원 정보 추출 (userPk = email)
+    // 최종 인증 JWT에서 회원 정보 추출 (userPk = userId)
     public String getUserPk(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKeyBytes).build()
                 .parseClaimsJws(token).getBody().getSubject();
@@ -75,13 +80,34 @@ public class JwtTokenProvider {
         }
     }
 
-    public Long getUserId(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKeyBytes)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.get("userId", Long.class);
+    // 임시 토큰 유효시간: 5분
+    private final long tempTokenValidTime = 5 * 60 * 1000L;
+
+    // 임시 JWT 생성 (소셜 로그인 시 추가 정보 입력 화면으로 넘어갈 때 사용)
+    public String createTempAccessToken(Long userId) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
+        claims.put("userId", userId);
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tempTokenValidTime))
+                .signWith(SignatureAlgorithm.HS256, secretKeyBytes)
+                .compact();
+    }
+
+    public Long getUserIdFromTempToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKeyBytes)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.get("userId", Long.class);
+        } catch (Exception e) {
+            // 토큰 파싱 실패 시 null 또는 예외 처리
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -93,4 +119,5 @@ public class JwtTokenProvider {
                 .getBody();
         return (List<String>) claims.get("roles");
     }
+
 }

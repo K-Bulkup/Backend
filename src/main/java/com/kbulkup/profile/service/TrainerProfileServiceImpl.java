@@ -30,6 +30,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
         trainerProfileDetailResponseDTO.setCertificates(certificatesMapper.findByTrainerId(trainerId));
 
         return trainerProfileDetailResponseDTO;
+
     }
 
     @Override
@@ -43,8 +44,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
         if (isUpdated) {
             return CustomResponse.success(ResponseCode.SUCCESS);
-        }
-        else{
+        } else {
             throw new ProfileException(ResponseCode.TRAINER_CAREER_UPDATE_FAILED);
         }
     }
@@ -60,8 +60,7 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
         if (isUpdated) {
             return CustomResponse.success(ResponseCode.SUCCESS);
-        }
-        else{
+        } else {
             throw new ProfileException(ResponseCode.TRAINER_PROFILE_IMAGE_UPDATE_FAILED);
         }
     }
