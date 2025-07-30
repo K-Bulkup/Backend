@@ -114,12 +114,6 @@
         )
     </select>
 
-    <select id="findById" parameterType="long" resultType="com.kbulkup.user.domain.User">
-        SELECT username, user_profile_url
-        FROM users
-        WHERE user_id = #{userId}
-    </select>
-
     <update id="updateUserProviderId">
         UPDATE users
         SET provider_id = #{providerId}
