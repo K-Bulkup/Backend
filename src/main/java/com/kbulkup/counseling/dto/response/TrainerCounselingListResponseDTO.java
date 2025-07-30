@@ -1,25 +1,24 @@
 package com.kbulkup.counseling.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class TrainerCounselingListResponseDTO {
 
     private String traineeName;
     private String traineeProfileUrl;
-    //    private CounselingStatus status;
     private String roomId;
     private String status;
+
+    @Setter
+    private int unreadCount;
     private String trainingTitle;
     private String latestMessage;
     private LocalDateTime latestAt;
-
+    private LocalDateTime expiresAt;
 }

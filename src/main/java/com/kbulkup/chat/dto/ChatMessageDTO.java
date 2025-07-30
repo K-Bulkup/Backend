@@ -1,4 +1,4 @@
-package com.kbulkup.chat.domain;
+package com.kbulkup.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
-public class ChatMessage {
+public class ChatMessageDTO {
 
     private String roomId;
     private String senderId;

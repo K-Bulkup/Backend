@@ -11,6 +11,8 @@ public interface UserMapper {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findById(@Param("userId") Long userId);
+
     Optional<User> findByEmailAndLoginType(@Param("email") String email, @Param("loginType") String loginType);
 
     Optional<User> findByProviderIdAndLoginType(@Param("providerId") String providerId, @Param("loginType") String loginType);

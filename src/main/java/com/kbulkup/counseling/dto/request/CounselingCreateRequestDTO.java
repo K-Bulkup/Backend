@@ -6,6 +6,5 @@ import lombok.Getter;
 public class CounselingCreateRequestDTO {
 
     private Long traineeId;
-    private Long trainerId;
     private Long trainingId;
 }
