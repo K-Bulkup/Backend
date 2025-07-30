@@ -5,6 +5,7 @@ import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import com.kbulkup.training.dto.request.TrainingSearchListRequestDTO;
 import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
+import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.dto.response.TrainingSearchListResponseDTO;
 import com.kbulkup.training.service.TraineeTrainingService;
 import com.kbulkup.training.service.TrainingSearchService;
@@ -50,4 +51,13 @@ public class TrainingController {
                 traineeTrainingService.getTrainingDetail(trainingId, userId)
         );
     }
+    /** [수강생] 트레이닝 탭 전체 목록 조회 */
+    @GetMapping("/trainee/trainings/training")
+    public CustomResponse<List<TraineeTrainingListResponseDTO>> getAllTrainings() {
+        return CustomResponse.success(
+                ResponseCode.SUCCESS,
+                traineeTrainingService.getAllApprovedTrainings()
+        );
+    }
+
 }

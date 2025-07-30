@@ -47,4 +47,22 @@
           AND user_id = #{userId}
     </update>
 
+    <select id="findAllApprovedTrainings"
+            resultType="com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO">
+        SELECT t.training_id      AS trainingId,
+               t.title            AS title,
+               u.username         AS trainerName,
+               t.average_rating   AS averageRating,
+               t.trainee_count    AS traineeCount,
+               t.price            AS price,
+               t.thumbnail_url    AS thumbnailUrl,
+               t.level            AS level,
+               t.category         AS category
+        FROM trainings t
+                 JOIN users u ON t.trainer_id = u.user_id
+        WHERE t.approval_status = '승인'
+        ORDER BY t.created_at DESC
+    </select>
+
+
 </mapper>
