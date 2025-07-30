@@ -1,6 +1,8 @@
 package com.kbulkup.training.service;
 
 import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
+import com.kbulkup.training.dto.request.TraineeTrainingDetailRequestDTO;
+import com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.mapper.TraineeTrainingMapper;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +60,10 @@ public class TraineeTrainingService {
     public List<TraineeTrainingListResponseDTO> getAllApprovedTrainings() {
         return traineeTrainingMapper.findAllApprovedTrainings();
     }
+    public TraineeTrainingDetailResponseDTO getTrainingDetail(TraineeTrainingDetailRequestDTO request) {
+        return traineeTrainingMapper.findTrainingDetail(request.getTrainingId());
+    }
+
+
 
 }
