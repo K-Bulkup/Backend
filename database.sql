@@ -224,7 +224,7 @@ CREATE TABLE `counselings`
     `trainer_id`    BIGINT                        NOT NULL,
     `training_id`   BIGINT                        NOT NULL,
     `room_id` 		VARCHAR(100) 				  NOT NULL UNIQUE,
-    `status`        ENUM ('대기', '승인', '거절', '완료') NOT NULL DEFAULT '대기',
+    `status`        ENUM ('진행중', '만료')         NOT NULL DEFAULT '진행중',
     `latest_message`TEXT,
     `latest_at`		DATETIME,
     `start_at`      TIMESTAMP                     NULL,
