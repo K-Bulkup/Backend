@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.training.mapper.TraineeEnrollmentMapper">
+
+    <!-- 수강생 수강 목록 DTO 매핑 -->
+    <select id="findTraineeEnrollments" parameterType="long"
+            resultType="com.kbulkup.training.dto.response.TraineeEnrollmentResponseDTO">
+        SELECT
+            t.training_id   AS trainingId,
+            t.title         AS title,
+            t.thumbnail_url AS thumbnailUrl,
+            e.progress      AS progress,
+            e.created_at    AS createdAt
+        FROM enrollments e
+                 JOIN trainings t ON e.training_id = t.training_id
+        WHERE e.user_id = #{userId}
+    </select>
+
+    <!-- 전체 루틴 수 -->
+    <select id="countTotalRoutines" resultType="int">
+        SELECT COUNT(*) FROM routines WHERE training_id = #{trainingId}
+    </select>
+
+    <!-- 완료된 루틴 수 -->
+    <select id="countCompletedRoutines" resultType="int">
+        SELECT COUNT(*)
+        FROM routine_results rr
+                 JOIN enrollments e ON rr.enrollment_id = e.enrollment_id
+        WHERE e.training_id = #{trainingId}
+          AND e.user_id = #{userId}
+          AND rr.status = TRUE
+    </select>
+
+    <!-- 진행률 업데이트 -->
+    <update id="updateTrainingProgress">
+        UPDATE enrollments
+        SET progress = #{progress}
+        WHERE training_id = #{trainingId}
+          AND user_id = #{userId}
+    </update>
+
+</mapper>
