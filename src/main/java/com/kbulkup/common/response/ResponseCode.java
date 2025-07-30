@@ -19,6 +19,8 @@ public enum ResponseCode {
     UNSUPPORTED_LOGIN_TYPE(BAD_REQUEST, "지원하지 않는 로그인 타입입니다."),
     NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST,"트레이너 프로필 정보를 찾을 수 없습니다."),
     USER_NOT_FOUND(BAD_REQUEST, "사용자를 찾을 수 없습니다."),
+    INVALID_ENUM(BAD_REQUEST, "유효하지 않은 ENUM 값입니다."),
+    INVALID_SQL_QUERY(BAD_REQUEST, "올바르지 않은 SQL 쿼리문입니다."),
 
     //500 InternalServerError
     TRAINER_CAREER_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 소개 업데이트에 실패했습니다."),
