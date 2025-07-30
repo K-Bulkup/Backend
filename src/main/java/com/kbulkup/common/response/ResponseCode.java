@@ -18,6 +18,7 @@ public enum ResponseCode {
     AUTH_USER_NOT_FOUND(BAD_REQUEST,"없는 사용자 입니다"),
     AUTH_UNSUPPORTED_LOGIN_TYPE(BAD_REQUEST, "지원하지 않는 로그인 타입입니다."),
     AUTH_NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST,"트레이너 프로필 정보를 찾을 수 없습니다."),
+    VALIDATION_ERROR(BAD_REQUEST, "요청값의 형식이 올바르지 않습니다."),
 
 
     //500 InternalServerError
