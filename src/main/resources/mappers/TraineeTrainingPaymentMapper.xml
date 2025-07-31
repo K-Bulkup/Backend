@@ -1,20 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kbulkup.payment.mapper.TraineeTrainingPaymentMapper">
 
-    <insert id="insertTraineeTrainingPayment" parameterType="com.kbulkup.payment.domain.TraineeTrainingPayment">
-        INSERT INTO training_payment
-        (user_id, training_id, imp_uid, merchant_uid, amount, method, status, paid_at, created_at)
-        VALUES
-        (#{userId}, #{trainingId}, #{impUid}, #{merchantUid}, #{amount}, #{method}, #{status}, #{paidAt}, NOW());
+    <!-- 결제 성공 시 enrollments 테이블에 신규 수강 등록 (중복 방지) -->
+    <insert id="insertEnrollment">
+        INSERT INTO enrollments (user_id, training_id, progress, created_at)
+        SELECT #{userId}, #{trainingId}, 0, NOW()
+            WHERE NOT EXISTS (
+            SELECT 1 FROM enrollments
+            WHERE user_id = #{userId} AND training_id = #{trainingId}
+                )
     </insert>
 
-    <update id="enrollUserToTraining">
-        UPDATE trainee_trainings
-        SET status = 'ENROLLED', updated_at = NOW()
-        WHERE user_id = #{userId} AND training_id = #{trainingId};
-    </update>
 </mapper>
+
