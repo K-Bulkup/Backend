@@ -1,6 +1,5 @@
 package com.kbulkup.payment.dto.response;
 
-import com.kbulkup.payment.client.PortOneClient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +15,15 @@ public class TraineeTrainingPaymentResponseDTO {
     private String method;
     private String transactionId;
 
-    public static TraineeTrainingPaymentResponseDTO ofSuccess(PortOneClient.PaymentResult result, String impUid) {
-        return new TraineeTrainingPaymentResponseDTO(true, "결제 성공", result.getPaidAt(), result.getMethod(), impUid);
+    public static TraineeTrainingPaymentResponseDTO ofSuccess(String paidAt, String method, String transactionId) {
+        return new TraineeTrainingPaymentResponseDTO(true, "결제 성공", paidAt, method, transactionId);
     }
 
     public static TraineeTrainingPaymentResponseDTO ofFailure(String message) {
         return new TraineeTrainingPaymentResponseDTO(false, message, null, null, null);
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 }
