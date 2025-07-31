@@ -24,12 +24,8 @@ public class PortOneClient {
      *  AccessToken 발급 및 캐싱
      */
     private String getAccessToken() {
-        System.out.println("[DEBUG] PortOne Key: " + config.getApiKey());
-        System.out.println("[DEBUG] PortOne Secret: " + config.getApiSecret());
-
         // 캐싱된 토큰이 유효하면 그대로 사용
         if (cachedToken != null && Instant.now().isBefore(tokenExpiry)) {
-            System.out.println("[DEBUG] Using cached AccessToken");
             return cachedToken;
         }
 
@@ -48,8 +44,6 @@ public class PortOneClient {
                     TokenResponse.class
             );
 
-            System.out.println(" [DEBUG] Raw Response: " + response);
-
             TokenResponse.TokenData data = response.getBody() != null ? response.getBody().getResponse() : null;
             if (data == null || data.getAccessToken() == null) {
                 throw new IllegalStateException("PortOne returned null AccessToken (response parsing failed)");
@@ -57,17 +51,12 @@ public class PortOneClient {
 
             cachedToken = data.getAccessToken();
             tokenExpiry = Instant.now().plusSeconds(data.getExpiredAt());
-            System.out.println("[DEBUG] New AccessToken issued: " + cachedToken);
             return cachedToken;
 
         } catch (org.springframework.web.client.HttpClientErrorException e) {
-            System.err.println("[ERROR] PortOne API 401 Unauthorized");
-            System.err.println("[ERROR] Response Body: " + e.getResponseBodyAsString());
-            throw e;
+            throw e; // 포트원 API 인증 오류 그대로 전파
         } catch (Exception e) {
-            System.err.println("[ERROR] Unknown error while requesting AccessToken");
-            e.printStackTrace();
-            throw e;
+            throw new RuntimeException("Unknown error while requesting AccessToken", e);
         }
     }
 
@@ -100,7 +89,6 @@ public class PortOneClient {
     private static class TokenResponse {
         @JsonProperty("response")
         private TokenData response;
-
         public TokenData getResponse() { return response; }
 
         private static class TokenData {
@@ -120,7 +108,6 @@ public class PortOneClient {
     private static class PaymentVerificationResponse {
         @JsonProperty("response")
         private PaymentData response;
-
         public PaymentData getResponse() { return response; }
 
         private static class PaymentData {
