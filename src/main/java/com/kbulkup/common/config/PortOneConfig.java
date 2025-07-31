@@ -14,6 +14,6 @@ public class PortOneConfig {
     @Value("${portone.api.secret}")
     private String apiSecret;
 
-    @Value("${portone.api.url:https://api.iamport.kr}")
+    @Value("${portone.api.url}")
     private String baseUrl;
 }

@@ -6,6 +6,7 @@ import com.kbulkup.payment.dto.request.TraineeTrainingPaymentRequestDTO;
 import com.kbulkup.payment.dto.response.TraineeTrainingPaymentResponseDTO;
 import com.kbulkup.payment.service.TraineeTrainingPaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,9 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/trainee/trainings")
 public class TraineeTrainingPaymentController {
 
+    //  @Qualifier로 구현체 지정
+    @Qualifier("traineeTrainingPaymentServiceImpl")
     private final TraineeTrainingPaymentService paymentService;
 
-    /** [수강생] 트레이닝 결제 요청 */
     @PostMapping("/payment")
     public CustomResponse<TraineeTrainingPaymentResponseDTO> processPayment(
             @RequestBody TraineeTrainingPaymentRequestDTO requestDTO) {

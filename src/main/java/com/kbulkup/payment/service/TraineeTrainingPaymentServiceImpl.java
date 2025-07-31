@@ -1,7 +1,6 @@
 package com.kbulkup.payment.service;
 
 import com.kbulkup.payment.client.PortOneClient;
-import com.kbulkup.payment.domain.TraineeTrainingPayment;
 import com.kbulkup.payment.dto.request.TraineeTrainingPaymentRequestDTO;
 import com.kbulkup.payment.dto.response.TraineeTrainingPaymentResponseDTO;
 import com.kbulkup.payment.mapper.TraineeTrainingPaymentMapper;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TraineeTrainingPaymentServiceImpl implements TraineeTrainingPaymentService {
 
@@ -17,9 +17,7 @@ public class TraineeTrainingPaymentServiceImpl implements TraineeTrainingPayment
     private final TraineeTrainingPaymentMapper paymentMapper;
 
     @Override
-    @Transactional
     public TraineeTrainingPaymentResponseDTO processPayment(TraineeTrainingPaymentRequestDTO requestDTO) {
-
         //  1. 포트원 결제 검증
         var result = portOneClient.verifyPayment(requestDTO.getImpUid());
 
@@ -27,27 +25,14 @@ public class TraineeTrainingPaymentServiceImpl implements TraineeTrainingPayment
             return TraineeTrainingPaymentResponseDTO.ofFailure("결제 검증 실패");
         }
 
-        //  2. 결제 엔티티 생성
-        TraineeTrainingPayment payment = TraineeTrainingPayment.of(
-                requestDTO.getUserId(),
-                requestDTO.getTrainingId(),
-                requestDTO.getImpUid(),
-                requestDTO.getMerchantUid(),
-                result.getAmount(),
-                result.getMethod(),
+        //  2. enrollments 테이블에 신규 등록
+        paymentMapper.insertEnrollment(requestDTO.getUserId(), requestDTO.getTrainingId());
+
+        //  3. 성공 응답 반환
+        return TraineeTrainingPaymentResponseDTO.ofSuccess(
                 result.getPaidAt(),
-                "PAID"
+                result.getMethod(),
+                requestDTO.getImpUid()
         );
-
-        try {
-            //  3. DB 저장
-            paymentMapper.insertTraineeTrainingPayment(payment);
-            paymentMapper.enrollUserToTraining(requestDTO.getUserId(), requestDTO.getTrainingId());
-        } catch (Exception e) {
-            return TraineeTrainingPaymentResponseDTO.ofFailure("DB 저장 중 오류");
-        }
-
-        //  4. 성공 응답
-        return TraineeTrainingPaymentResponseDTO.ofSuccess(result, requestDTO.getImpUid());
     }
 }
