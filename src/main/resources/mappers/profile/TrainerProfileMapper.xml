@@ -35,4 +35,9 @@
         SET user_profile_url = #{profileImageUrl}
         WHERE user_id = #{trainerId}
     </update>
+
+    <insert id="insertInitialProfile" parameterType="long">
+        INSERT INTO trainer_profiles (trainer_id, career, total_average_rating, total_trainee_count)
+        VALUES (#{trainerId}, '안녕하세요! 잘 부탁드립니다.', 0.0, 0)
+    </insert>
 </mapper>
