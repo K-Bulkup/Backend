@@ -54,4 +54,4 @@ public class JwtTokenProvider {
     public java.util.List<String> getRoles(String token) {
         return jwtUtil.getRoles(token);
     }
-}
+} 

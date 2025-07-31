@@ -8,10 +8,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerCounselingListResponseDTO {
+public class CounselingListResponseDTO {
 
-    private String traineeName;
-    private String traineeProfileUrl;
+    private String opponentName;
+    private String opponentProfileUrl;
+
     private String roomId;
     private String status;
 

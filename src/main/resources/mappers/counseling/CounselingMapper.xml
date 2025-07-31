@@ -7,21 +7,22 @@
 
     <select id="findByUserId"
             parameterType="long"
-            resultType="com.kbulkup.counseling.dto.response.TrainerCounselingListResponseDTO">
+            resultType="com.kbulkup.counseling.dto.response.CounselingListResponseDTO">
             SELECT
-                u.username AS traineeName,
-                u.user_profile_url AS traineeProfileUrl,
                 c.room_id,
                 c.status,
-                t.title AS trainingTitle,
-                c.latest_message AS latestMessage,
-                c.latest_at AS latestAt,
-                c.expires_at AS expiresAt
+                c.latest_message,
+                c.latest_at,
+                c.expires_at,
+                t.title AS training_title,
+                CASE WHEN #{userId} = c.user_id THEN trainer.username ELSE trainee.username END AS opponent_name,
+                CASE WHEN #{userId} = c.user_id THEN trainer.user_profile_url ELSE trainee.user_profile_url END AS opponent_profile_url
             FROM counselings c
-            JOIN users u ON c.user_id = u.user_id
-            JOIN trainings t ON c.training_id = t.training_id
-            WHERE c.user_id = #{userId}
-               OR c.trainer_id = #{userId}
+            JOIN users trainee ON trainee.user_id = c.user_id
+            JOIN users trainer ON trainer.user_id = c.trainer_id
+            JOIN trainings t ON t.training_id = c.training_id
+
+            WHERE #{userId} IN (c.user_id, c.trainer_id)
             ORDER BY c.latest_at DESC
     </select>
 
