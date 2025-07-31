@@ -1,5 +1,7 @@
 package com.kbulkup.common.security;
 
+import com.kbulkup.common.exception.AuthException;
+import com.kbulkup.common.response.ResponseCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -47,6 +49,9 @@ public class JwtTokenProvider {
     }
 
     public Long getUserId(String token) {
+        if (!validateToken(token)) {
+            throw new AuthException(ResponseCode.AUTH_TOKEN_INVALID_OR_EXPIRED);
+        }
         return Jwts.parserBuilder().setSigningKey(secretKeyBytes).build()
                 .parseClaimsJws(token).getBody().get("userId", Long.class);
     }
