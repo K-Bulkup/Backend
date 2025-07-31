@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponseDTO socialSignUp(SocialSignUpRequestDTO dto) {
         // 임시 토큰에서 사용자 ID 추출 및 유효성 검증
-        Long userId = jwtTokenProvider.getUserIdFromTempToken(dto.getTempAccessToken());
+        Long userId = jwtTokenProvider.getUserId(dto.getTempAccessToken());
         if (userId == null) {
             throw new AuthException(ResponseCode.AUTH_VALIDATION_ERROR);
         }
