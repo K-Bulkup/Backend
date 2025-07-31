@@ -3,7 +3,6 @@ package com.kbulkup.common.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
 import static org.springframework.http.HttpStatus.*;
 
 @Getter
@@ -26,27 +25,26 @@ public enum ResponseCode {
     AUTH_JWT_MALFORMED(BAD_REQUEST, "잘못된 JWT 형식입니다."),
 
 
-    VALIDATION_ERROR(BAD_REQUEST, "요청값의 형식이 올바르지 않습니다."),
-    INVALID_LOGIN_REQUEST(BAD_REQUEST, "가입되지 않은 이메일이거나 소셜 로그인 계정입니다."),
-    NO_ROLE_ASSIGNED(BAD_REQUEST, "사용자에게 할당된 역할이 없습니다."),
-    DUPLICATE_ROLE(BAD_REQUEST, "이미 해당 역할로 가입된 사용자입니다."),
-    NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST, "트레이너 프로필 정보를 찾을 수 없습니다."), // 메시지 중복 있어서 위에 하나 있음
-    USER_NOT_FOUND(BAD_REQUEST, "사용자를 찾을 수 없습니다."), // AUTH_USER_NOT_FOUND 와 의미 중복
-    INVALID_ENUM(BAD_REQUEST, "유효하지 않은 ENUM 값입니다."),
-    INVALID_SQL_QUERY(BAD_REQUEST, "올바르지 않은 SQL 쿼리문입니다."),
-
-    // 401 Unauthorized
-    AUTH_JWT_INVALID_SIGNATURE(UNAUTHORIZED, "JWT 서명이 유효하지 않습니다."),
-
-
+  VALIDATION_ERROR(BAD_REQUEST, "요청값의 형식이 올바르지 않습니다."),
+  INVALID_LOGIN_REQUEST(BAD_REQUEST, "가입되지 않은 이메일이거나 소셜 로그인 계정입니다."),
+  NO_ROLE_ASSIGNED(BAD_REQUEST, "사용자에게 할당된 역할이 없습니다."),
+  DUPLICATE_ROLE(BAD_REQUEST, "이미 해당 역할로 가입된 사용자입니다."),
+  NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST,"트레이너 프로필 정보를 찾을 수 없습니다."), // 메시지 중복 있어서 위에 하나 있음
+  USER_NOT_FOUND(BAD_REQUEST, "사용자를 찾을 수 없습니다."), // AUTH_USER_NOT_FOUND 와 의미 중복
+  INVALID_ENUM(BAD_REQUEST, "유효하지 않은 ENUM 값입니다."),
+  INVALID_SQL_QUERY(BAD_REQUEST, "올바르지 않은 SQL 쿼리문입니다."),
+  PAYMENT_VERIFICATION_FAILED(BAD_REQUEST, "결제 검증에 실패했습니다."),
 
   // 401 Unauthorized
+  AUTH_JWT_INVALID_SIGNATURE(UNAUTHORIZED, "JWT 서명이 유효하지 않습니다."),
   AUTH_TOKEN_INVALID_OR_EXPIRED(UNAUTHORIZED, "유효하지 않거나 만료된 토큰입니다."),
 
   //500 InternalServerError
   TRAINER_CAREER_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 소개 업데이트에 실패했습니다."),
   TRAINER_PROFILE_IMAGE_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 프로필 이미지 업데이트에 실패했습니다."),
   TRAINER_CERTIFICATES_VALIDATION_FAILED(INTERNAL_SERVER_ERROR, "유효하지 않은 자격정보 입니다."),
+  PAYMENT_PROCESS_FAILED(INTERNAL_SERVER_ERROR, "결제 처리 중 오류가 발생했습니다."),
+  PAYMENT_SAVE_FAILED(INTERNAL_SERVER_ERROR, "결제 정보 저장 중 오류가 발생했습니다."),
 
   //200 OK
   SUCCESS(OK,"성공했습니다.");
