@@ -11,6 +11,7 @@ import com.kbulkup.user.domain.User;
 import com.kbulkup.user.mapper.UserMapper;
 import com.kbulkup.auth.domain.Role;
 import com.kbulkup.user.event.UserRegisteredEvent;
+import com.kbulkup.user.event.dto.UserRegisteredEventDataDTO; // DTO 임포트
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,7 +72,12 @@ public class AuthServiceImpl implements AuthService {
 
         // 사용자의 역할이 트레이너일 경우, 프로필 생성을 위한 이벤트 발행
         if (dto.getRole().equals(Role.TRAINER)) {
-            eventPublisher.publishEvent(new UserRegisteredEvent(this, user));
+            UserRegisteredEventDataDTO eventData = UserRegisteredEventDataDTO.builder()
+                    .userId(user.getUserId())
+                    .email(user.getEmail())
+                    .role(dto.getRole())
+                    .build();
+            eventPublisher.publishEvent(new UserRegisteredEvent(this, eventData));
         }
 
         return SignupResponseDTO.builder()
@@ -102,7 +108,12 @@ public class AuthServiceImpl implements AuthService {
 
         // 사용자의 역할이 트레이너일 경우, 프로필 생성을 위한 이벤트 발행
         if (dto.getRole().equals(Role.TRAINER)) {
-            eventPublisher.publishEvent(new UserRegisteredEvent(this, user));
+            UserRegisteredEventDataDTO eventData = UserRegisteredEventDataDTO.builder()
+                    .userId(user.getUserId())
+                    .email(user.getEmail())
+                    .role(dto.getRole())
+                    .build();
+            eventPublisher.publishEvent(new UserRegisteredEvent(this, eventData));
         }
 
         // 최종 액세스 토큰은 *선택된 역할 하나*에 대해서만 발급

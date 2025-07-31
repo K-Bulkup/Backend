@@ -336,29 +336,15 @@ ALTER TABLE transactions
 -- admin_approval_logs 의 admin_id 외래키 생략 주석 유지
 -- ALTER TABLE admin_approval_logs ADD CONSTRAINT FK_admin_approval_logs_admins FOREIGN KEY (admin_id)
 -- REFERENCES admins (admin_id) ON DELETE CASCADE ON UPDATE CASCADE;
-
- SELECT
-           u.user_id,
-           u.username,
-           u.email,
-           tp.trainer_id IS NOT NULL AS has_trainer_profile, -- 트레이너 프로필이 있으면 true, 없으면 false
-           tp.career,
-          tp.total_average_rating
-     FROM
-           users u
-       LEFT JOIN
-           trainer_profiles tp ON u.user_id = tp.trainer_id;
-
- SELECT
-           u.user_id,
-          u.username,
-          u.email,
-          tp.career,
-          tp.total_average_rating,
-          tp.total_trainee_count
-    FROM
-         users u
-       INNER JOIN
-           trainer_profiles tp ON u.user_id = tp.trainer_id
-       WHERE
-           u.user_id = 3; -- 예: u.user_id = 1;
+SELECT
+    u.user_id,
+    u.username,
+    u.email,
+    tp.career,
+    tp.total_average_rating,
+    tp.total_trainee_count
+FROM
+    users u
+        INNER JOIN
+    trainer_profiles tp ON u.user_id = tp.trainer_id
+ -- 예: u.user_id = 1;

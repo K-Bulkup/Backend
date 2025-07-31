@@ -14,6 +14,6 @@ public class TrainerProfileEventListener {
 
     @EventListener
     public void handleUserRegisteredEvent(UserRegisteredEvent event) {
-        trainerProfileService.createInitialProfile(event.getUser().getUserId());
+        trainerProfileService.createInitialProfile(event.getUserEventDataDTO().getUserId());
     }
 }
