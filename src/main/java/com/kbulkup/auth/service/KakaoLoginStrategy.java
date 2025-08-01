@@ -56,7 +56,7 @@ public class KakaoLoginStrategy implements LoginStrategy {
         }
 
         // 항상 임시 토큰을 발급하여 역할 선택 화면으로 유도
-        String tempAccessToken = jwtTokenProvider.createTempAccessToken(user.getUserId());
+        String tempAccessToken = jwtTokenProvider.createTempAccessToken(user.getEmail(), user.getUserId());
 
         // 프론트엔드에서 역할 선택 화면을 렌더링할 수 있도록 필요한 정보를 모두 담아 전달
         return LoginResponseDTO.builder()
