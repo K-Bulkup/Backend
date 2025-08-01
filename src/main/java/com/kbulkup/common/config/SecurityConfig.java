@@ -41,7 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/ws/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/api/common/auth/login", "/api/common/auth/signup").permitAll()
+                .antMatchers(
+                        "/api/common/auth/login",
+                        "/api/common/auth/signup",
+                        "/api/common/auth/naver/**", // 네이버 OAuth 로그인 시작 및 콜백
+                        "/api/common/auth/kakao/**", // 카카오 OAuth 로그인 시작 및 콜카오
+                        "/api/common/auth/social-signup-complete" // 소셜 회원가입 완료 엔드포인트
+                ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/api/common/auth/**").permitAll()
                 .antMatchers("/api/trainer/**").hasAuthority("TRAINER")
                 .antMatchers("/api/trainee/**").hasAuthority("TRAINEE")
