@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CertificateCreateRequestDTO {
 
-    private Long trainerID;
+    private Long trainerId;
     private String certType;
     private String certNumber;
 
     public static CertificateCreateRequestDTO create(Long trainerId, CertificateVertifyRequestDTO dto) {
         return CertificateCreateRequestDTO.builder()
-                .trainerID(trainerId)
+                .trainerId(trainerId)
                 .certType(dto.getCertType())
                 .certNumber(dto.getSuccessDocNo())
                 .build();
