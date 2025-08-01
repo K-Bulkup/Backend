@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@PropertySource("classpath:application-secret.properties")
+@PropertySource("classpath:/config/application-dev.properties")
 public class JwtUtil {
 
     @Value("${jwt.secret}")
