@@ -26,4 +26,9 @@ public class GptController { //테스트용 컨트롤러입니다.
         return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }
 
+    @PostMapping("/consulting/{userId}")
+    public CustomResponse<GPTResponseDTO> requestConsultAsset(@RequestParam String question, @PathVariable String userId) {
+        GPTResponseDTO dto = gptService.requestCounseling(userId, question);
+        return CustomResponse.success(ResponseCode.SUCCESS, dto);
+    }
 }
