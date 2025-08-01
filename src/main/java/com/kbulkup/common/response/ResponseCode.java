@@ -9,16 +9,21 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ResponseCode {
 
-  // 400 BadRequest
-  AUTH_VALIDATION_ERROR(BAD_REQUEST, "사용자 입력값이 올바르지 않습니다."),
-  AUTH_INVALID_PASSWORD(BAD_REQUEST, "잘못된 비밀번호입니다."),
-  AUTH_INVALID_ROLE(BAD_REQUEST, "잘못된 역할입니다."),
-  AUTH_INVALID_LOGIN_TYPE(BAD_REQUEST,"잘못된 로그인 형식입니다."),
-  AUTH_EMAIL_NOT_FOUND(BAD_REQUEST,"존재하지 않는 이메일입니다."),
-  AUTH_USER_NOT_FOUND(BAD_REQUEST,"없는 사용자 입니다"),
-  AUTH_UNSUPPORTED_LOGIN_TYPE(BAD_REQUEST, "지원하지 않는 로그인 타입입니다."),
-  AUTH_NAVER_TOKEN_FAILURE(BAD_REQUEST, "네이버 액세스 토큰 발급에 실패했습니다."),
-  AUTH_NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST,"트레이너 프로필 정보를 찾을 수 없습니다."),
+    // 400 BadRequest
+    AUTH_VALIDATION_ERROR(BAD_REQUEST, "사용자 입력값이 올바르지 않습니다."),
+    AUTH_INVALID_PASSWORD(BAD_REQUEST, "잘못된 비밀번호입니다."),
+    AUTH_INVALID_ROLE(BAD_REQUEST, "잘못된 역할입니다."),
+    AUTH_INVALID_LOGIN_TYPE(BAD_REQUEST, "잘못된 로그인 형식입니다."),
+    AUTH_EMAIL_NOT_FOUND(BAD_REQUEST, "존재하지 않는 이메일입니다."),
+    AUTH_USER_NOT_FOUND(BAD_REQUEST, "없는 사용자 입니다"),
+    AUTH_UNSUPPORTED_LOGIN_TYPE(BAD_REQUEST, "지원하지 않는 로그인 타입입니다."),
+    AUTH_NAVER_TOKEN_FAILURE(BAD_REQUEST, "네이버 액세스 토큰 발급에 실패했습니다."),
+    AUTH_NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST, "트레이너 프로필 정보를 찾을 수 없습니다."),
+    AUTH_JWT_PARSING_FAILED(BAD_REQUEST, "JWT 파싱 중 오류 발생"),
+    AUTH_JWT_EXPIRED(BAD_REQUEST, "JWT 토큰이 만료되었습니다."),
+    AUTH_JWT_UNSUPPORTED(BAD_REQUEST, "지원하지 않는 JWT 형식입니다."),
+    AUTH_JWT_MALFORMED(BAD_REQUEST, "잘못된 JWT 형식입니다."),
+
 
   VALIDATION_ERROR(BAD_REQUEST, "요청값의 형식이 올바르지 않습니다."),
   INVALID_LOGIN_REQUEST(BAD_REQUEST, "가입되지 않은 이메일이거나 소셜 로그인 계정입니다."),
@@ -28,15 +33,18 @@ public enum ResponseCode {
   USER_NOT_FOUND(BAD_REQUEST, "사용자를 찾을 수 없습니다."), // AUTH_USER_NOT_FOUND 와 의미 중복
   INVALID_ENUM(BAD_REQUEST, "유효하지 않은 ENUM 값입니다."),
   INVALID_SQL_QUERY(BAD_REQUEST, "올바르지 않은 SQL 쿼리문입니다."),
+  PAYMENT_VERIFICATION_FAILED(BAD_REQUEST, "결제 검증에 실패했습니다."),
 
   // 401 Unauthorized
+  AUTH_JWT_INVALID_SIGNATURE(UNAUTHORIZED, "JWT 서명이 유효하지 않습니다."),
   AUTH_TOKEN_INVALID_OR_EXPIRED(UNAUTHORIZED, "유효하지 않거나 만료된 토큰입니다."),
 
   //500 InternalServerError
   TRAINER_CAREER_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 소개 업데이트에 실패했습니다."),
   TRAINER_PROFILE_IMAGE_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 프로필 이미지 업데이트에 실패했습니다."),
   TRAINER_CERTIFICATES_VALIDATION_FAILED(INTERNAL_SERVER_ERROR, "유효하지 않은 자격정보 입니다."),
-
+  PAYMENT_PROCESS_FAILED(INTERNAL_SERVER_ERROR, "결제 처리 중 오류가 발생했습니다."),
+  PAYMENT_SAVE_FAILED(INTERNAL_SERVER_ERROR, "결제 정보 저장 중 오류가 발생했습니다."),
 
   //200 OK
   SUCCESS(OK,"성공했습니다.");
