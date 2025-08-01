@@ -6,7 +6,9 @@ import com.kbulkup.profile.dto.request.TrainerProfileCareerUpdateRequestDTO;
 import com.kbulkup.profile.dto.request.TrainerProfileImageUpdateRequestDTO;
 import com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO;
 import com.kbulkup.profile.service.TrainerProfileService;
+import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,23 +18,23 @@ public class TrainerProfileController {
 
     private final TrainerProfileService trainerProfileService;
 
-    @GetMapping("/me/{trainerId}")
-    public CustomResponse<TrainerProfileDetailResponseDTO> getTrainerProfile(@PathVariable Long trainerId) {
-        TrainerProfileDetailResponseDTO dto = trainerProfileService.getTrainerProfile(trainerId);
+    @GetMapping("/me")
+    public CustomResponse<TrainerProfileDetailResponseDTO> getTrainerProfile(@AuthenticationPrincipal(expression = "user") User user) {
+        TrainerProfileDetailResponseDTO dto = trainerProfileService.getTrainerProfile(user.getUserId());
         return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }
 
-    @PutMapping("/career/{trainerId}")
-    public CustomResponse<Void> putTrainerProfile(@PathVariable Long trainerId,
+    @PutMapping("/career")
+    public CustomResponse<Void> putTrainerProfile(@AuthenticationPrincipal(expression = "user") User user,
                                                   @RequestBody TrainerProfileCareerUpdateRequestDTO dto){
-        return trainerProfileService.updateTrainerProfileCareer(trainerId,dto);
+        return trainerProfileService.updateTrainerProfileCareer(user.getUserId(),dto);
     }
 
-    @PutMapping("/profile-image/{trainerId}")
+    @PutMapping("/profile-image")
     public CustomResponse<Void> updateTrainerProfileImage(
-            @PathVariable Long trainerId,
+            @AuthenticationPrincipal(expression = "user") User user,
             @RequestBody TrainerProfileImageUpdateRequestDTO dto) {
-        return trainerProfileService.updateTrainerProfileImage(trainerId, dto);
+        return trainerProfileService.updateTrainerProfileImage(user.getUserId(), dto);
     }
 
 }

@@ -4,7 +4,9 @@ import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.training.dto.response.TraineeEnrollmentResponseDTO;
 import com.kbulkup.training.service.TraineeEnrollmentService;
+import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,13 +24,12 @@ public class TraineeEnrollmentController {
     /**
      *  수강생의 전체 수강 목록 조회
      * - 진행률 계산 및 DB 업데이트 포함
-     * - RequestParam userId 사용 (JWT 추후 리팩토링 가능)
      */
     @GetMapping
-    public CustomResponse<List<TraineeEnrollmentResponseDTO>> getEnrollments(@RequestParam Long userId) {
+    public CustomResponse<List<TraineeEnrollmentResponseDTO>> getEnrollments(@AuthenticationPrincipal(expression = "user") User user) {
         return CustomResponse.success(
                 ResponseCode.SUCCESS,
-                traineeEnrollmentService.getEnrollments(userId)
+                traineeEnrollmentService.getEnrollments(user.getUserId())
         );
     }
 }

@@ -5,7 +5,9 @@ import com.kbulkup.asset.dto.response.TraineeAssetDetailResponseDTO;
 import com.kbulkup.asset.service.TraineeAssetService;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,9 +17,9 @@ public class TraineeAssetController {
 
     private final TraineeAssetService traineeAssetService;
 
-    @GetMapping("/{traineeId}")
-    public CustomResponse<TraineeAssetDetailResponseDTO> getTraineeAsset(@PathVariable Long traineeId) {
-        TraineeAssetDetailResponseDTO dto = traineeAssetService.getTraineeAsset(traineeId);
+    @GetMapping
+    public CustomResponse<TraineeAssetDetailResponseDTO> getTraineeAsset(@AuthenticationPrincipal(expression = "user") User user) {
+        TraineeAssetDetailResponseDTO dto = traineeAssetService.getTraineeAsset(user.getUserId());
 
         if (dto.getTransactions().isEmpty() && dto.getSnapshots().isEmpty() && dto.getComposition() == null) {
             return CustomResponse.success(ResponseCode.SUCCESS);
@@ -25,10 +27,11 @@ public class TraineeAssetController {
         return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }
 
-    @PostMapping("/account/{traineeId}")
-    public CustomResponse<Void> postTraineeAccount(@RequestBody TokenRequestDTO dto, @PathVariable Long traineeId) {
-        traineeAssetService.createUserPortfolio(dto.getBank(), traineeId);
+    @PostMapping("/account")
+    public CustomResponse<Void> postTraineeAccount(@RequestBody TokenRequestDTO dto, @AuthenticationPrincipal(expression = "user") User user) {
+        traineeAssetService.createUserPortfolio(dto.getBank(), user.getUserId());
 
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
 }
+
