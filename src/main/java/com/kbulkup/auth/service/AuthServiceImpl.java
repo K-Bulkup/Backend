@@ -117,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 최종 액세스 토큰은 *선택된 역할 하나*에 대해서만 발급
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), java.util.Collections.singletonList(dto.getRole()));
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId(), java.util.Collections.singletonList(dto.getRole()));
 
         // 응답 DTO에는 *선택된 역할 하나*만 담아서 반환
         return LoginResponseDTO.toDTO(user, accessToken, dto.getRole(), false, user.getLoginType(), user.getProviderId());

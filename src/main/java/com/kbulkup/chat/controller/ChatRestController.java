@@ -7,7 +7,9 @@ import com.kbulkup.chat.service.AiChatService;
 import com.kbulkup.chat.service.ChatService;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +22,9 @@ public class ChatRestController {
     private final ChatService chatService;
     private final AiChatService aiChatService;
 
-    @GetMapping("/{roomId}/{userId}")
-    public CustomResponse<List<MongoChatMessage>> getChatHistory(@PathVariable String roomId, @PathVariable String userId) {
-        return CustomResponse.success(ResponseCode.SUCCESS, chatService.getMessagesByRoomId(roomId, userId));
+    @GetMapping("/{roomId}")
+    public CustomResponse<List<MongoChatMessage>> getChatHistory(@PathVariable String roomId, @AuthenticationPrincipal(expression = "user") User user) {
+        return CustomResponse.success(ResponseCode.SUCCESS, chatService.getMessagesByRoomId(roomId, String.valueOf(user.getUserId())));
     }
 
     @PostMapping("/read")

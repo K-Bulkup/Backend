@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Primary
 @RequiredArgsConstructor
-@PropertySource("classpath:application-secret.properties")
+@PropertySource("classpath:/config/application-dev.properties")
 public class GPTServiceImpl implements GPTService {
 
     @Value("${openai.model}")

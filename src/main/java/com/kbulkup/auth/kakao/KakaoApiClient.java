@@ -2,8 +2,8 @@ package com.kbulkup.auth.kakao;
 
 import com.kbulkup.auth.kakao.dto.KakaoProfileResponse;
 import com.kbulkup.auth.kakao.dto.KakaoTokenResponse; // 추가
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient; // WebClient 사용 예시
 
 @Component
+@PropertySource("classpath:/config/application-dev.properties")
 public class KakaoApiClient {
 
     @Value("${oauth2.kakao.client.id}")

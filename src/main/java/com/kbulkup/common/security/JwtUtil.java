@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-@PropertySource("classpath:application-secret.properties")
+@PropertySource("classpath:/config/application-dev.properties")
 public class JwtUtil {
 
     @Value("${jwt.secret}")
@@ -31,10 +31,10 @@ public class JwtUtil {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(Long userId, List<String> roles, boolean isTemp) {
+    public String createToken(String email, Long userId, List<String> roles, boolean isTemp) {
         long validity = isTemp ? tempTokenValidity : accessTokenValidity;
         Date now = new Date();
-        Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
+        Claims claims = Jwts.claims().setSubject(email);
         claims.put("userId", userId);
         claims.put("roles", roles);
 

@@ -12,8 +12,10 @@ import com.kbulkup.training.dto.response.TrainingSearchListResponseDTO;
 import com.kbulkup.training.service.TraineeTrainingService;
 import com.kbulkup.training.service.TrainingSearchService;
 import com.kbulkup.training.service.TrainingService;
+import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,10 +30,10 @@ public class TrainingController {
     private final TraineeTrainingService traineeTrainingService;
 
     /** [트레이너] 트레이닝 생성 */
-    @PostMapping("/trainer/trainings/{trainerId}")
-    public ResponseEntity<String> createTraining(@PathVariable Long trainerId,
+    @PostMapping("/trainer/trainings")
+    public ResponseEntity<String> createTraining(@AuthenticationPrincipal(expression = "user") User user,
                                                  @RequestBody TrainerTrainingCreateRequestDTO dto) {
-        trainingService.createTraining(trainerId, dto);
+        trainingService.createTraining(user.getUserId(), dto);
         return ResponseEntity.ok("Training created successfully");
     }
 
@@ -46,11 +48,11 @@ public class TrainingController {
     @GetMapping("/trainee/trainings/running/{trainingId}")
     public CustomResponse<TraineeRoutineSummaryResponseDTO> getRunningTrainingDetail(
             @PathVariable Long trainingId,
-            @RequestParam Long userId) {
+            @AuthenticationPrincipal(expression = "user") User user) {
 
         return CustomResponse.success(
                 ResponseCode.SUCCESS,
-                traineeTrainingService.getTrainingDetail(trainingId, userId)
+                traineeTrainingService.getTrainingDetail(trainingId, user.getUserId())
         );
     }
     /** [수강생] 트레이닝 탭 전체 목록 조회 */
