@@ -21,6 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userMapper.findByEmail(email)
                 .orElseThrow(() -> new AuthException(ResponseCode.USER_NOT_FOUND));
 
+
         return new CustomUserDetails(user);
     }
 }

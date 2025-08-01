@@ -12,12 +12,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 @Configuration
@@ -41,11 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/api/common/auth/login", "/api/common/auth/signup").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/api/common/auth/**").permitAll()
-                .antMatchers("/api/trainer/**").hasRole("TRAINER")
-                .antMatchers("/api/trainee/**").hasRole("TRAINEE")
-                .antMatchers("/api/common/**").hasAnyRole("TRAINER", "TRAINEE")
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/trainer/**").hasAuthority("TRAINER")
+                .antMatchers("/api/trainee/**").hasAuthority("TRAINEE")
+                .antMatchers("/api/common/**").hasAnyAuthority("TRAINER", "TRAINEE")
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint())
                 .and()
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenProvider),
@@ -56,6 +61,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: " + authException.getMessage());
+        };
     }
 
     @Bean

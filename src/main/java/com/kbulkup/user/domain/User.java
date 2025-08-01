@@ -20,7 +20,7 @@ public class User {
     private String loginType;
     private String providerId;
     private LocalDateTime birthdate;
-    
+
     private String userProfileUrl;
     private boolean isDeleted;
     private int growthScore;
@@ -39,5 +39,13 @@ public class User {
                 createdAt(LocalDateTime.now()).
                 updatedAt(LocalDateTime.now()).
                 build();
+    }
+
+    private static User getIdandRoleUser(Long userId, List<String> roles) {
+        return User.builder().
+                userId(userId).
+                roles(roles).
+                build();
+
     }
 }
