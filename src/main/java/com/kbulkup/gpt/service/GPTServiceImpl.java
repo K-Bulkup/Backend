@@ -31,7 +31,7 @@ public class GPTServiceImpl implements GPTService {
 
     @Override
     public GPTResponseDTO requestImageAnalysis(String mission, String imageUrl) {
-        String prompt = buildImagePrompt(mission);
+        String prompt = PromptBuilder.buildImagePrompt(mission);
         GPTRequestDTO gptRequestDTO = GPTRequestDTO.createWithTextAndImage(apiModel, "user",  prompt, imageUrl, 500);
         return restTemplate.postForObject(apiUrl, gptRequestDTO, GPTResponseDTO.class);
     }
