@@ -333,6 +333,10 @@ ALTER TABLE transactions
         FOREIGN KEY (user_id) REFERENCES portfolios (user_id)
             ON DELETE CASCADE;
 
+-- trainer_certificates certType 변경
+ALTER TABLE trainer_certificates
+    MODIFY cert_type ENUM('투자자산운용사', '금융투자분석사', '재무위험관리사', '투자권유자문인력', '투자권유대행인') NULL;
+
 -- admin_approval_logs 의 admin_id 외래키 생략 주석 유지
 -- ALTER TABLE admin_approval_logs ADD CONSTRAINT FK_admin_approval_logs_admins FOREIGN KEY (admin_id)
 -- REFERENCES admins (admin_id) ON DELETE CASCADE ON UPDATE CASCADE;
