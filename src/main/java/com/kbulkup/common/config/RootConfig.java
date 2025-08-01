@@ -1,6 +1,7 @@
 package com.kbulkup.common.config;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -16,8 +17,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:/application.properties")
-@PropertySource("classpath:application-secret.properties")
+@PropertySources({@PropertySource("classpath:/config/application-dev.properties"),
+        @PropertySource("classpath:/application.properties")})
 // 1. 일반 컴포넌트를 스캔할 때는 Mapper 인터페이스를 제외시킵니다.
 @ComponentScan(
         basePackages = "com.kbulkup",
@@ -45,11 +46,23 @@ public class RootConfig {
 
     @Bean
     public DataSource dataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        // HikariCP 설정 객체 생성
+        HikariConfig config = new HikariConfig();
+
+        // 데이터베이스 연결 정보 설정
+        config.setDriverClassName(driverClassName);          // JDBC 드라이버 클래스
+        config.setJdbcUrl(url);                    // 데이터베이스 URL
+        config.setUsername(username);              // 사용자명
+        config.setPassword(password);              // 비밀번호
+
+        // 커넥션 풀 추가 설정 (선택사항)
+        config.setMaximumPoolSize(10);             // 최대 커넥션 수
+        config.setMinimumIdle(5);                  // 최소 유지 커넥션 수
+        config.setConnectionTimeout(30000);       // 연결 타임아웃 (30초)
+        config.setIdleTimeout(600000);            // 유휴 타임아웃 (10분)
+
+        // HikariDataSource 생성 및 반환
+        HikariDataSource dataSource = new HikariDataSource(config);
         return dataSource;
     }
 

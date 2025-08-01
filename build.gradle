@@ -36,7 +36,7 @@ dependencies {
 
     // 데이터베이스 관련
     implementation 'mysql:mysql-connector-java:8.0.33'
-    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
+    implementation 'com.zaxxer:HikariCP:3.4.5'
 
     // MyBatis
     implementation 'org.mybatis:mybatis:3.5.16'
