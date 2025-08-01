@@ -24,7 +24,7 @@ public class GPTServiceImpl implements GPTService {
 
     @Override
     public GPTResponseDTO requestOnlyText(String mission, String userAnswer) {
-        String prompt = buildTextPrompt(mission, userAnswer);
+        String prompt = PromptBuilder.buildTextPrompt(mission, userAnswer);
         GPTRequestDTO gptRequestDTO = GPTRequestDTO.createOnlyText(apiModel, "user", prompt, 300);
         return restTemplate.postForObject(apiUrl, gptRequestDTO, GPTResponseDTO.class);
     }
