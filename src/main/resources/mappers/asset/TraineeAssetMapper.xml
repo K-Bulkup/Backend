@@ -95,5 +95,8 @@
                 #{composition.assetComposition, typeHandler=com.kbulkup.asset.typehandler.JsonToMapTypeHandler})
     </insert>
 
+    <select id="findUserIdByRoomID" resultType="java.lang.Long">
+        SELECT user_id FROM counselings WHERE room_id = #{roomId}
+    </select>
 
 </mapper>

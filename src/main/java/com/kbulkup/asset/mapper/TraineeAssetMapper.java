@@ -24,4 +24,6 @@ public interface TraineeAssetMapper {
     void insertSnapshots(@Param("traineeId") Long traineeId, @Param("snapshots") List<Snapshot> snapshots);
 
     void insertComposition(@Param("traineeId") Long traineeId, @Param("composition") Composition composition);
+
+    Long findUserIdByRoomID(@Param("roomId") Long roomId);
 }
