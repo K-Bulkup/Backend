@@ -14,5 +14,4 @@ import java.util.List;
 public class GPTResponseDTO {
     private String id;
     private List<ChoiceDTO> choices;
-    private UsageDTO usage;
 }
