@@ -31,4 +31,10 @@ public class TraineeAssetController {
 
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
+
+    @GetMapping("/trainer-share/{roomId}")
+    public CustomResponse<TraineeAssetDetailResponseDTO> getTraineeAssetToTrainer(@PathVariable Long roomId) {
+        TraineeAssetDetailResponseDTO dto = traineeAssetService.findTraineeAssetDetailByRoomID(roomId);
+        return CustomResponse.success(ResponseCode.SUCCESS, dto);
+    }
 }
