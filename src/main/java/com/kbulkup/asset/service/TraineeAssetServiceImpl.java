@@ -73,4 +73,10 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
                 .bodyToMono(ExternalAssetResponseDTO.class)
                 .block();
     }
+
+    @Override
+    public TraineeAssetDetailResponseDTO findTraineeAssetDetailByRoomID(Long roomId) {
+        Long userId = traineeAssetMapper.findUserIdByRoomID(roomId);
+        return getTraineeAsset(userId);
+    }
 }

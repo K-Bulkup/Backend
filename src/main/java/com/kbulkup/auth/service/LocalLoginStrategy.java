@@ -41,7 +41,7 @@ public class LocalLoginStrategy implements LoginStrategy {
         }
 
         // 4. JWT 토큰 생성
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRoles());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId(), user.getRoles());
 
         // 5. 응답 DTO 반환
         return LoginResponseDTO.builder()
