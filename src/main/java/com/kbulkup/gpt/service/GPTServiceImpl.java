@@ -49,8 +49,9 @@ public class GPTServiceImpl implements GPTService {
         String prompt = PromptBuilder.buildAssetConsultingPrompt(question);
         GPTRequestDTO gptRequestDTO = GPTRequestDTO.createOnlyText(apiModel, "user", prompt, 300);
 
-        aiChatService.saveAiChatMessage(userId, gptRequestDTO.getMessages().get(0).getContent().toString(), "assistant");
+        GPTResponseDTO gptResponseDTO = restTemplate.postForObject(apiUrl, gptRequestDTO, GPTResponseDTO.class);
+        aiChatService.saveAiChatMessage(userId, gptResponseDTO.getChoices().get(0).getMessage().getContent().toString(), "assistant");
 
-        return restTemplate.postForObject(apiUrl, gptRequestDTO, GPTResponseDTO.class);
+        return gptResponseDTO;
     }
 }
