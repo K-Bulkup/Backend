@@ -50,8 +50,9 @@ public class GPTServiceImpl implements GPTService {
         GPTRequestDTO gptRequestDTO = GPTRequestDTO.createOnlyText(apiModel, "user", prompt, 300);
 
         GPTResponseDTO gptResponseDTO = restTemplate.postForObject(apiUrl, gptRequestDTO, GPTResponseDTO.class);
-        aiChatService.saveAiChatMessage(userId, gptResponseDTO.getChoices().get(0).getMessage().getContent().toString(), "assistant");
+        int remainingChats = aiChatService.saveAiChatMessage(userId, gptResponseDTO.getChoices().get(0).getMessage().getContent().toString(), "assistant");
 
+        gptResponseDTO.setRemainingChats(remainingChats);
         return gptResponseDTO;
     }
 }
