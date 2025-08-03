@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +30,8 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         String userPk = jwtUtil.getSubject(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(userPk);
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return authentication;
     }
 
     // 유효한 토큰인지 판단
@@ -38,20 +40,20 @@ public class JwtTokenProvider {
     }
 
     // access token 생성
-    public String createAccessToken(Long userId, java.util.List<String> roles) {
-        return jwtUtil.createToken(userId, roles, false);
+    public String createAccessToken(String email, Long userId, List<String> roles) {
+        return jwtUtil.createToken(email, userId, roles, false);
     }
 
     // 임시 토큰 생성
-    public String createTempAccessToken(Long userId) {
-        return jwtUtil.createToken(userId, null, true);
+    public String createTempAccessToken(String email, Long userId) {
+        return jwtUtil.createToken(email, userId, null, true);
     }
 
     public Long getUserId(String token) {
         return jwtUtil.getUserId(token);
     }
 
-    public java.util.List<String> getRoles(String token) {
+    public List<String> getRoles(String token) {
         return jwtUtil.getRoles(token);
     }
-} 
+}

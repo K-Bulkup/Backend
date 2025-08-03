@@ -15,6 +15,7 @@ public enum ResponseCode {
     AUTH_INVALID_ROLE(BAD_REQUEST, "잘못된 역할입니다."),
     AUTH_INVALID_LOGIN_TYPE(BAD_REQUEST, "잘못된 로그인 형식입니다."),
     AUTH_EMAIL_NOT_FOUND(BAD_REQUEST, "존재하지 않는 이메일입니다."),
+    AUTH_INVALID_TOKEN(BAD_REQUEST,"토큰이 올바르지 않습니다."),
     AUTH_USER_NOT_FOUND(BAD_REQUEST, "없는 사용자 입니다"),
     AUTH_UNSUPPORTED_LOGIN_TYPE(BAD_REQUEST, "지원하지 않는 로그인 타입입니다."),
     AUTH_NAVER_TOKEN_FAILURE(BAD_REQUEST, "네이버 액세스 토큰 발급에 실패했습니다."),
