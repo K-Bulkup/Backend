@@ -1,12 +1,10 @@
 package com.kbulkup.chat.service;
 
-import com.kbulkup.chat.domain.MongoAiChatMessage;
-
-import java.util.List;
+import com.kbulkup.chat.dto.AiChatHistoryResponseDTO;
 
 public interface AiChatService {
 
-    void saveAiChatMessage(String userId, String message, String role);
+    int saveAiChatMessage(String userId, String message, String role);
 
-    List<MongoAiChatMessage> getAiMessagesByUserId(String userId);
+    AiChatHistoryResponseDTO getAiMessagesByUserId(String userId);
 }

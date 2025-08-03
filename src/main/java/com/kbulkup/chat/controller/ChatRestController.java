@@ -2,6 +2,7 @@ package com.kbulkup.chat.controller;
 
 import com.kbulkup.chat.domain.MongoAiChatMessage;
 import com.kbulkup.chat.domain.MongoChatMessage;
+import com.kbulkup.chat.dto.AiChatHistoryResponseDTO;
 import com.kbulkup.chat.dto.ReadMessageDTO;
 import com.kbulkup.chat.service.AiChatService;
 import com.kbulkup.chat.service.ChatService;
@@ -33,8 +34,8 @@ public class ChatRestController {
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
 
-    @GetMapping("/ai/{userId}")
-    public CustomResponse<List<MongoAiChatMessage>> getAiChatHistory(@PathVariable String userId) {
-        return CustomResponse.success(ResponseCode.SUCCESS, aiChatService.getAiMessagesByUserId(userId));
+    @GetMapping("/ai")
+    public CustomResponse<AiChatHistoryResponseDTO> getAiChatHistory(@AuthenticationPrincipal(expression = "user") User user) {
+        return CustomResponse.success(ResponseCode.SUCCESS, aiChatService.getAiMessagesByUserId(String.valueOf(user.getUserId())));
     }
 }
