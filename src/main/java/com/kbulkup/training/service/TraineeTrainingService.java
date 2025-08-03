@@ -16,11 +16,6 @@ public class TraineeTrainingService {
 
     private final TraineeTrainingMapper traineeTrainingMapper;
 
-    /** 난이도별 고정 리워드 값 */
-    private static final int REWARD_BEGINNER = 2;
-    private static final int REWARD_INTERMEDIATE = 3;
-    private static final int REWARD_ADVANCED = 5;
-
     /**
      * 트레이닝 상세 조회 (수강생 전용)
      */
@@ -28,14 +23,18 @@ public class TraineeTrainingService {
         // 1. 트레이닝 기본 정보 조회
         var training = traineeTrainingMapper.findTrainingById(trainingId, userId);
 
-        // 2. 루틴 목록 조회 → 난이도별 리워드 직접 세팅
+        if (training == null) {
+            throw new IllegalArgumentException("존재하지 않는 트레이닝이거나 수강권한이 없습니다.");
+        }
+
+        // 2. 루틴 목록 조회 (score는 DB 값 그대로 사용)
         List<TraineeRoutineSummaryResponseDTO.RoutineSummaryResponseDTO> routines =
                 traineeTrainingMapper.findRoutinesByTraining(trainingId, userId).stream()
                         .map(r -> TraineeRoutineSummaryResponseDTO.RoutineSummaryResponseDTO.of(
                                 r.getRoutineId(),
                                 r.getTitle(),
                                 r.isCompleted(),
-                                resolveRewardByLevel(training.getLevel()), // 난이도별 고정 리워드 적용
+                                r.getRewardPoint(), // ✅ DB 점수 그대로 사용
                                 r.getCompletedAt()
                         ))
                         .toList();
@@ -45,10 +44,10 @@ public class TraineeTrainingService {
         int totalCount = traineeTrainingMapper.countTotalRoutines(trainingId);
         float progress = (totalCount == 0) ? 0 : ((float) completedCount / totalCount) * 100;
 
-        // 4. DB에 진행률 갱신
+        // 4. 진행률 DB 업데이트
         traineeTrainingMapper.updateTrainingProgress(trainingId, userId, (int) progress);
 
-        // 5. 팩토리 메서드로 DTO 생성 후 반환
+        // 5. DTO 반환
         return TraineeRoutineSummaryResponseDTO.of(
                 training.getTitle(),
                 training.getDescription(),
@@ -61,16 +60,6 @@ public class TraineeTrainingService {
                 progress,
                 routines
         );
-    }
-
-    /** 난이도 → 고정 리워드 매핑 */
-    private int resolveRewardByLevel(String level) {
-        return switch (level) {
-            case "초급" -> REWARD_BEGINNER;
-            case "중급" -> REWARD_INTERMEDIATE;
-            case "고급" -> REWARD_ADVANCED;
-            default -> 0;
-        };
     }
 
     /** 승인된 트레이닝 전체 목록 조회 */
