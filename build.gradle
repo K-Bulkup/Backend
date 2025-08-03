@@ -82,7 +82,6 @@ dependencies {
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.100.Final:osx-aarch_64' //MAC의 경우
 
     //S3
-    implementation 'io.awspring.cloud:spring-cloud-aws-starter:3.1.1' //AWS의 통합을 도와주는 라이브러리
     /**
      * S3 버킷에 접근할 수 있게 해주는 라이브러리
      * 해당 라이브러리는 v1이고, 251231에 만료됨
