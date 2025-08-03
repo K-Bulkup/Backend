@@ -1,5 +1,7 @@
 package com.kbulkup.training.service;
 
+import com.kbulkup.common.exception.BaseException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
 import com.kbulkup.training.dto.request.TraineeTrainingDetailRequestDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO;
@@ -23,8 +25,9 @@ public class TraineeTrainingService {
         // 1. 트레이닝 기본 정보 조회
         var training = traineeTrainingMapper.findTrainingById(trainingId, userId);
 
+        // 존재하지 않는 트레이닝이거나 수강권한 없는 경우 예외 처리
         if (training == null) {
-            throw new IllegalArgumentException("존재하지 않는 트레이닝이거나 수강권한이 없습니다.");
+            throw new BaseException(ResponseCode.TRAINING_NOT_FOUND);
         }
 
         // 2. 루틴 목록 조회 (score는 DB 값 그대로 사용)
@@ -34,12 +37,12 @@ public class TraineeTrainingService {
                                 r.getRoutineId(),
                                 r.getTitle(),
                                 r.isCompleted(),
-                                r.getRewardPoint(), // ✅ DB 점수 그대로 사용
+                                r.getRewardPoint(),
                                 r.getCompletedAt()
                         ))
                         .toList();
 
-        // 3. 진행률 계산 (완료 루틴 / 전체 루틴)
+        // 3. 진행률 계산
         int completedCount = traineeTrainingMapper.countCompletedRoutines(trainingId, userId);
         int totalCount = traineeTrainingMapper.countTotalRoutines(trainingId);
         float progress = (totalCount == 0) ? 0 : ((float) completedCount / totalCount) * 100;
