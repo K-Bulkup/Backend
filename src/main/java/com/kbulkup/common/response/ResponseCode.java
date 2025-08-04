@@ -25,7 +25,7 @@ public enum ResponseCode {
     AUTH_JWT_EXPIRED(BAD_REQUEST, "JWT 토큰이 만료되었습니다."),
     AUTH_JWT_UNSUPPORTED(BAD_REQUEST, "지원하지 않는 JWT 형식입니다."),
     AUTH_JWT_MALFORMED(BAD_REQUEST, "잘못된 JWT 형식입니다."),
-
+    AI_CHAT_LIMIT_EXCEEDED(BAD_REQUEST, "하루 AI 채팅 횟수를 초과했습니다. 내일 다시 시도해주세요."),
 
     VALIDATION_ERROR(BAD_REQUEST, "요청값의 형식이 올바르지 않습니다."),
     INVALID_LOGIN_REQUEST(BAD_REQUEST, "가입되지 않은 이메일이거나 소셜 로그인 계정입니다."),

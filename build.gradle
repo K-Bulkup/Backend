@@ -81,6 +81,10 @@ dependencies {
     implementation 'io.projectreactor.netty:reactor-netty:1.0.24'
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.100.Final:osx-aarch_64' //MAC의 경우
 
+    // Spring Redis 의존성 추가
+    implementation 'org.springframework.data:spring-data-redis:2.6.0'
+    implementation 'redis.clients:jedis:3.6.3'
+
     //S3
     /**
      * S3 버킷에 접근할 수 있게 해주는 라이브러리
