@@ -24,13 +24,13 @@
         WHERE tp.trainer_id = #{trainerId};
     </select>
     
-    <update id="updateTrainerCareer" parameterType="map">
+    <update id="updateTrainerCareer">
         UPDATE trainer_profiles
         SET career = #{career}
         WHERE trainer_id = #{trainerId}
     </update>
 
-    <update id="updateTrainerProfileImage" parameterType="map">
+    <update id="updateTrainerProfileImage">
         UPDATE users
         SET user_profile_url = #{profileImageUrl}
         WHERE user_id = #{trainerId}

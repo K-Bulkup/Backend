@@ -1,9 +1,6 @@
 package com.kbulkup.gpt.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,6 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 public class GPTResponseDTO {
     private String id;
+
+    @Setter
+    private int remainingChats;
     private List<ChoiceDTO> choices;
-    private UsageDTO usage;
 }
