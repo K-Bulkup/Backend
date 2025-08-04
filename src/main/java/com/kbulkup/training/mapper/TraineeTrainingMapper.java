@@ -4,6 +4,7 @@ import com.kbulkup.routine.dto.RoutineSummaryResponseDTO;
 import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
+import com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,4 +31,8 @@ public interface TraineeTrainingMapper {
     List<TraineeTrainingListResponseDTO> findAllApprovedTrainings();
 
     TraineeTrainingDetailResponseDTO findTrainingDetail(@Param("trainingId") Long trainingId);
+
+    TraineeTrainingReviewResponseDTO findTrainingTitleByTrainingId(@Param("trainingId") Long trainingId);
+
+    void insertReview(@Param("userId") Long userId, @Param("trainingId") Long trainingId, @Param("rating") int rating, @Param("content") String content);
 }
