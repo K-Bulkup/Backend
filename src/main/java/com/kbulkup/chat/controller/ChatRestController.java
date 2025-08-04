@@ -1,7 +1,10 @@
 package com.kbulkup.chat.controller;
 
+import com.kbulkup.chat.domain.MongoAiChatMessage;
 import com.kbulkup.chat.domain.MongoChatMessage;
+import com.kbulkup.chat.dto.AiChatHistoryResponseDTO;
 import com.kbulkup.chat.dto.ReadMessageDTO;
+import com.kbulkup.chat.service.AiChatService;
 import com.kbulkup.chat.service.ChatService;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
@@ -18,6 +21,7 @@ import java.util.List;
 public class ChatRestController {
 
     private final ChatService chatService;
+    private final AiChatService aiChatService;
 
     @GetMapping("/{roomId}")
     public CustomResponse<List<MongoChatMessage>> getChatHistory(@PathVariable String roomId, @AuthenticationPrincipal(expression = "user") User user) {
@@ -28,5 +32,10 @@ public class ChatRestController {
     public CustomResponse<Void> readMessages(@RequestBody ReadMessageDTO dto) {
         chatService.MarkMessagesAsRead(dto.getRoomId(), dto.getUserId());
         return CustomResponse.success(ResponseCode.SUCCESS);
+    }
+
+    @GetMapping("/ai")
+    public CustomResponse<AiChatHistoryResponseDTO> getAiChatHistory(@AuthenticationPrincipal(expression = "user") User user) {
+        return CustomResponse.success(ResponseCode.SUCCESS, aiChatService.getAiMessagesByUserId(String.valueOf(user.getUserId())));
     }
 }

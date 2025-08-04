@@ -9,7 +9,7 @@ public interface TrainerProfileService {
 
     TrainerProfileDetailResponseDTO getTrainerProfile(Long trainerId);
     CustomResponse<Void> updateTrainerProfileCareer(Long trainerId, TrainerProfileCareerUpdateRequestDTO dto);
-    CustomResponse<Void> updateTrainerProfileImage(Long trainerId, TrainerProfileImageUpdateRequestDTO dto);
+    void updateTrainerProfileImage(Long trainerId, TrainerProfileImageUpdateRequestDTO dto);
     void createInitialProfile(Long trainerId);
 
 }

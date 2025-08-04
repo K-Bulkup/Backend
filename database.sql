@@ -340,3 +340,9 @@ ALTER TABLE trainer_certificates
 -- admin_approval_logs 의 admin_id 외래키 생략 주석 유지
 -- ALTER TABLE admin_approval_logs ADD CONSTRAINT FK_admin_approval_logs_admins FOREIGN KEY (admin_id)
 -- REFERENCES admins (admin_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- 이미지 url 문자 길이 수정
+ALTER TABLE `users`
+    MODIFY COLUMN `user_profile_url` VARCHAR(255);
+
+
