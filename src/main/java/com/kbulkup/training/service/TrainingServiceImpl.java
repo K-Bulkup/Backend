@@ -25,7 +25,7 @@ public class TrainingServiceImpl implements TrainingService {
 
     private final TrainingMapper trainingMapper;
     private final TrainingRoutineMapper trainingRoutineMapper;
-    private final AmazonS3 amazonS3; // AmazonS3 클라이언트 직접 주입
+    private final AmazonS3 amazonS3;
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
@@ -36,7 +36,7 @@ public class TrainingServiceImpl implements TrainingService {
 
         String thumbnailUrl = null;
 
-        // 1. 썸네일 파일이 존재하면 S3에 업로드
+        // 썸네일 파일이 존재하면 S3에 업로드
         if (thumbnail != null && !thumbnail.isEmpty()) {
             // S3에 저장될 파일의 고유한 이름 생성
             String originalFilename = thumbnail.getOriginalFilename();
@@ -54,14 +54,14 @@ public class TrainingServiceImpl implements TrainingService {
             thumbnailUrl = amazonS3.getUrl(bucket, storedFileName).toString();
         }
 
-        // 2. 업로드된 파일 URL을 DTO에 설정
+        // 업로드된 파일 URL을 DTO에 설정
         dto.setThumbnailUrl(thumbnailUrl);
 
-        // 3. DB에 트레이닝 정보 저장
+        // DB에 트레이닝 정보 저장
         Training training = Training.from(trainerId, dto);
         trainingMapper.createTraining(training);
 
-        // 4. DB에 루틴 정보 저장
+        // DB에 루틴 정보 저장
         List<TrainerTrainingCreateRequestDTO.RoutineDTO> routines = dto.getRoutines();
         if (routines != null && !routines.isEmpty()) {
             // 새로 생성된 트레이닝의 ID를 가져옴
