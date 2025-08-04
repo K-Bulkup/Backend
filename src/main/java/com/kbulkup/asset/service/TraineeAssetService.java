@@ -8,5 +8,5 @@ public interface TraineeAssetService {
 
     void createUserPortfolio(String bank, Long id);
 
-    TraineeAssetDetailResponseDTO findTraineeAssetDetailByRoomID(Long roomId);
+    TraineeAssetDetailResponseDTO findTraineeAssetDetailByRoomID(String roomId);
 }
