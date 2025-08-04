@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.review.mapper.ReviewMapper">
+
+    <select id="findReviewsByTrainingId"
+            resultType="com.kbulkup.review.dto.response.TrainerTrainingReviewDetailResponseDTO">
+        SELECT u.username,
+               r.rating,
+               r.content
+        FROM reviews r
+                 JOIN users u ON r.user_id = u.user_id
+        WHERE r.training_id = #{trainingId}
+    </select>
+</mapper>
