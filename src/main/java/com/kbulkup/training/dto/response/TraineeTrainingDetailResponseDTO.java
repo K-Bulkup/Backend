@@ -21,11 +21,13 @@ public class TraineeTrainingDetailResponseDTO {
     private String trainerNickname;
     private String trainerProfileUrl;
     private String thumbnailUrl;
+    private int totalRoutineScore; // 루틴 총점수
 
     public static TraineeTrainingDetailResponseDTO of(String title, String description, int price,
                                                       String category, String level, float averageRating,
                                                       int traineeCount, String trainerNickname,
-                                                      String trainerProfileUrl, String thumbnailUrl) {
+                                                      String trainerProfileUrl, String thumbnailUrl,
+                                                      int totalRoutineScore) {
         return TraineeTrainingDetailResponseDTO.builder()
                 .title(title)
                 .description(description)
@@ -37,6 +39,7 @@ public class TraineeTrainingDetailResponseDTO {
                 .trainerNickname(trainerNickname)
                 .trainerProfileUrl(trainerProfileUrl)
                 .thumbnailUrl(thumbnailUrl)
+                .totalRoutineScore(totalRoutineScore)
                 .build();
     }
 }

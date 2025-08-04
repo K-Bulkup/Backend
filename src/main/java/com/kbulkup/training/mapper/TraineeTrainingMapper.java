@@ -11,29 +11,28 @@ import java.util.List;
 @Mapper
 public interface TraineeTrainingMapper {
 
-    /** 트레이닝 기본 정보 조회 */
+    /**  결제 후 트레이닝 기본 정보 조회 */
     TraineeRoutineSummaryResponseDTO findTrainingById(@Param("trainingId") Long trainingId,
                                                       @Param("userId") Long userId);
 
-    /** 루틴 목록 조회 (routines.score 사용) */
+    /** 루틴 목록 조회 */
     List<RoutineSummaryResponseDTO> findRoutinesByTraining(@Param("trainingId") Long trainingId,
                                                            @Param("userId") Long userId);
 
-    /** 완료된 루틴 수 */
     int countCompletedRoutines(@Param("trainingId") Long trainingId,
                                @Param("userId") Long userId);
 
-    /** 전체 루틴 수 */
     int countTotalRoutines(@Param("trainingId") Long trainingId);
 
-    /** 진행률 갱신 */
     void updateTrainingProgress(@Param("trainingId") Long trainingId,
                                 @Param("userId") Long userId,
                                 @Param("progress") int progress);
 
-    /** 승인된 트레이닝 목록 조회 */
     List<TraineeTrainingListResponseDTO> findAllApprovedTrainings();
 
-    /** 트레이닝 상세 정보 */
+    /**  결제 전 트레이닝 상세 조회 (루틴 총점수 포함) */
     TraineeTrainingDetailResponseDTO findTrainingDetail(@Param("trainingId") Long trainingId);
+
+    /**  루틴 총점수 합산 (결제 후 totalScore 계산용) */
+    int sumRoutineScore(@Param("trainingId") Long trainingId);
 }
