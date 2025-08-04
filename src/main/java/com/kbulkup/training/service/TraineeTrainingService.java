@@ -9,6 +9,7 @@ import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.mapper.TraineeTrainingMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -19,8 +20,7 @@ public class TraineeTrainingService {
 
     /**
      *  결제 후 트레이닝 상세 조회
-     * - 루틴별 점수는 routines.score 사용
-     * - totalScore는 sumRoutineScore()로 계산
+     * - Mapper에서 받은 데이터를 DTO로 변환 후 반환
      */
     public TraineeRoutineSummaryResponseDTO getTrainingDetail(Long trainingId, Long userId) {
         var training = traineeTrainingMapper.findTrainingById(trainingId, userId);
@@ -41,10 +41,8 @@ public class TraineeTrainingService {
         int totalCount = traineeTrainingMapper.countTotalRoutines(trainingId);
         float progress = (totalCount == 0) ? 0 : ((float) completedCount / totalCount) * 100;
 
-        // 총점수 계산: sumRoutineScore()
+        //  총점수 DB에서 합산
         int totalRoutineScore = traineeTrainingMapper.sumRoutineScore(trainingId);
-
-        traineeTrainingMapper.updateTrainingProgress(trainingId, userId, (int) progress);
 
         return TraineeRoutineSummaryResponseDTO.of(
                 training.getTitle(),
@@ -52,7 +50,7 @@ public class TraineeTrainingService {
                 training.getPrice(),
                 training.getCategory(),
                 training.getLevel(),
-                totalRoutineScore,   //  루틴 점수 합산 반영
+                totalRoutineScore,
                 training.getAverageRating(),
                 training.getTraineeCount(),
                 progress,
@@ -62,7 +60,7 @@ public class TraineeTrainingService {
 
     /**
      *  결제 전 트레이닝 상세 조회
-     * - totalRoutineScore는 findTrainingDetail 쿼리에서 SUM(score) 계산됨
+     * - Mapper 반환을 그대로 DTO로 사용
      */
     public TraineeTrainingDetailResponseDTO getTrainingDetail(TraineeTrainingDetailRequestDTO request) {
         return traineeTrainingMapper.findTrainingDetail(request.getTrainingId());
