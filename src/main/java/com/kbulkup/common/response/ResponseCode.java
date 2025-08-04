@@ -27,15 +27,16 @@ public enum ResponseCode {
     AUTH_JWT_MALFORMED(BAD_REQUEST, "잘못된 JWT 형식입니다."),
     AI_CHAT_LIMIT_EXCEEDED(BAD_REQUEST, "하루 AI 채팅 횟수를 초과했습니다. 내일 다시 시도해주세요."),
 
-    VALIDATION_ERROR(BAD_REQUEST, "요청값의 형식이 올바르지 않습니다."),
-    INVALID_LOGIN_REQUEST(BAD_REQUEST, "가입되지 않은 이메일이거나 소셜 로그인 계정입니다."),
-    NO_ROLE_ASSIGNED(BAD_REQUEST, "사용자에게 할당된 역할이 없습니다."),
-    DUPLICATE_ROLE(BAD_REQUEST, "이미 해당 역할로 가입된 사용자입니다."),
-    NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST, "트레이너 프로필 정보를 찾을 수 없습니다."), // 메시지 중복 있어서 위에 하나 있음
-    USER_NOT_FOUND(BAD_REQUEST, "사용자를 찾을 수 없습니다."), // AUTH_USER_NOT_FOUND 와 의미 중복
-    INVALID_ENUM(BAD_REQUEST, "유효하지 않은 ENUM 값입니다."),
-    INVALID_SQL_QUERY(BAD_REQUEST, "올바르지 않은 SQL 쿼리문입니다."),
-    PAYMENT_VERIFICATION_FAILED(BAD_REQUEST, "결제 검증에 실패했습니다."),
+  VALIDATION_ERROR(BAD_REQUEST, "요청값의 형식이 올바르지 않습니다."),
+  INVALID_LOGIN_REQUEST(BAD_REQUEST, "가입되지 않은 이메일이거나 소셜 로그인 계정입니다."),
+  NO_ROLE_ASSIGNED(BAD_REQUEST, "사용자에게 할당된 역할이 없습니다."),
+  DUPLICATE_ROLE(BAD_REQUEST, "이미 해당 역할로 가입된 사용자입니다."),
+  NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST,"트레이너 프로필 정보를 찾을 수 없습니다."), // 메시지 중복 있어서 위에 하나 있음
+  USER_NOT_FOUND(BAD_REQUEST, "사용자를 찾을 수 없습니다."), // AUTH_USER_NOT_FOUND 와 의미 중복
+  INVALID_ENUM(BAD_REQUEST, "유효하지 않은 ENUM 값입니다."),
+  INVALID_SQL_QUERY(BAD_REQUEST, "올바르지 않은 SQL 쿼리문입니다."),
+  PAYMENT_VERIFICATION_FAILED(BAD_REQUEST, "결제 검증에 실패했습니다."),
+  TRAINING_NOT_FOUND(BAD_REQUEST, "존재하지 않는 트레이닝이거나 수강권한이 없습니다."),
 
 
 

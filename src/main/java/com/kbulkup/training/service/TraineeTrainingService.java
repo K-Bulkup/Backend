@@ -1,5 +1,7 @@
 package com.kbulkup.training.service;
 
+import com.kbulkup.common.exception.BaseException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
 import com.kbulkup.training.dto.request.TraineeTrainingDetailRequestDTO;
@@ -21,53 +23,56 @@ public class TraineeTrainingService {
     private final TraineeTrainingMapper traineeTrainingMapper;
 
     /**
-     * 트레이닝 상세 조회 (수강생 전용)
+     *  결제 후 트레이닝 상세 조회
+     * - Mapper에서 받은 데이터를 DTO로 변환 후 반환
      */
     public TraineeRoutineSummaryResponseDTO getTrainingDetail(Long trainingId, Long userId) {
-        // 1. 트레이닝 기본 정보 조회
         var training = traineeTrainingMapper.findTrainingById(trainingId, userId);
+        if (training == null) {
+            throw new BaseException(ResponseCode.TRAINING_NOT_FOUND);
+        }
 
-        // 2. 루틴 목록 조회 후 DTO 변환
-        List<TraineeRoutineSummaryResponseDTO.RoutineSummaryResponseDTO> routines =
-                traineeTrainingMapper.findRoutinesByTraining(trainingId, userId).stream()
-                        .map(r -> TraineeRoutineSummaryResponseDTO.RoutineSummaryResponseDTO.of(
-                                r.getRoutineId(),
-                                r.getTitle(),
-                                r.isCompleted(),
-                                r.getRewardPoint(),
-                                r.getCompletedAt()
-                        ))
-                        .toList();
+        var routines = traineeTrainingMapper.findRoutinesByTraining(trainingId, userId).stream()
+                .map(r -> TraineeRoutineSummaryResponseDTO.RoutineSummaryResponseDTO.of(
+                        r.getRoutineId(),
+                        r.getTitle(),
+                        r.isCompleted(),
+                        r.getRewardPoint(),
+                        r.getCompletedAt()
+                )).toList();
 
-        // 3. 진행률 계산
         int completedCount = traineeTrainingMapper.countCompletedRoutines(trainingId, userId);
         int totalCount = traineeTrainingMapper.countTotalRoutines(trainingId);
         float progress = (totalCount == 0) ? 0 : ((float) completedCount / totalCount) * 100;
 
-        // 4. DB에 진행률 갱신
-        traineeTrainingMapper.updateTrainingProgress(trainingId, userId, (int) progress);
+        //  총점수 DB에서 합산
+        int totalRoutineScore = traineeTrainingMapper.sumRoutineScore(trainingId);
 
-        // 5. 팩토리 메서드를 이용해 DTO 생성 및 반환
         return TraineeRoutineSummaryResponseDTO.of(
                 training.getTitle(),
                 training.getDescription(),
                 training.getPrice(),
                 training.getCategory(),
                 training.getLevel(),
-                training.getTotalScore(),
+                totalRoutineScore,
                 training.getAverageRating(),
                 training.getTraineeCount(),
                 progress,
                 routines
         );
     }
-    public List<TraineeTrainingListResponseDTO> getAllApprovedTrainings() {
-        return traineeTrainingMapper.findAllApprovedTrainings();
-    }
+
+    /**
+     *  결제 전 트레이닝 상세 조회
+     * - Mapper 반환을 그대로 DTO로 사용
+     */
     public TraineeTrainingDetailResponseDTO getTrainingDetail(TraineeTrainingDetailRequestDTO request) {
         return traineeTrainingMapper.findTrainingDetail(request.getTrainingId());
     }
 
+    public List<TraineeTrainingListResponseDTO> getAllApprovedTrainings() {
+        return traineeTrainingMapper.findAllApprovedTrainings();
+    }
     public TraineeTrainingReviewResponseDTO getTrainingTitle (Long trainingId) {
         return traineeTrainingMapper.findTrainingTitleByTrainingId(trainingId);
     }
