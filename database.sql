@@ -77,7 +77,7 @@ CREATE TABLE `trainings`
     `title`           VARCHAR(100)                                                         NULL,
     `description`     TEXT                                                                 NULL,
     `price`           INT                                                                  NULL,
-    `category`        ENUM ('재무 설계', '현금 관리', '신용과 부채 관리', '위험 관리와 보험 설계','투자 설계','세금 설계') NOT NULL,
+    `category`        ENUM ('재무 설계', '현금 관리', '신용과 부채 관리', '위험 관리와 보험 설계','투자 설계','세금 설계','기타') NOT NULL,
     `level`           ENUM ('초급', '중급', '고급')                                              NOT NULL,
     `thumbnail_url`   VARCHAR(255)                                                         NULL,
     `total_score`     INT                                                                  NULL,
