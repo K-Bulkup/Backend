@@ -33,8 +33,8 @@ public class TrainerProfileController {
     @PutMapping("/profile-image")
     public CustomResponse<Void> updateTrainerProfileImage(
             @AuthenticationPrincipal(expression = "user") User user,
-            @RequestBody TrainerProfileImageUpdateRequestDTO dto) {
-        return trainerProfileService.updateTrainerProfileImage(user.getUserId(), dto);
+            @ModelAttribute TrainerProfileImageUpdateRequestDTO dto) {
+        trainerProfileService.updateTrainerProfileImage(user.getUserId(), dto);
+        return CustomResponse.success(ResponseCode.SUCCESS);
     }
-
 }
