@@ -1,14 +1,12 @@
 package com.kbulkup.profile.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainerProfileImageUpdateRequestDTO {
-    private String profileImageUrl;
+    private MultipartFile profileImage;
 }
