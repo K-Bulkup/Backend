@@ -219,17 +219,17 @@ CREATE TABLE compositions
 -- counselings
 CREATE TABLE `counselings`
 (
-    `counseling_id` BIGINT                        NOT NULL AUTO_INCREMENT,
-    `user_id`       BIGINT                        NOT NULL,
-    `trainer_id`    BIGINT                        NOT NULL,
-    `training_id`   BIGINT                        NOT NULL,
-    `room_id` 		VARCHAR(100) 				  NOT NULL UNIQUE,
-    `status`        ENUM ('진행중', '만료')         NOT NULL DEFAULT '진행중',
-    `latest_message`TEXT,
-    `latest_at`		DATETIME,
-    `start_at`      TIMESTAMP                     NULL,
-    `expires_at`    TIMESTAMP                     NULL,
-    `message_count` INT                           NULL,
+    `counseling_id`  BIGINT             NOT NULL AUTO_INCREMENT,
+    `user_id`        BIGINT             NOT NULL,
+    `trainer_id`     BIGINT             NOT NULL,
+    `training_id`    BIGINT             NOT NULL,
+    `room_id`        VARCHAR(100)       NOT NULL UNIQUE,
+    `status`         ENUM ('진행중', '만료') NOT NULL DEFAULT '진행중',
+    `latest_message` TEXT,
+    `latest_at`      DATETIME,
+    `start_at`       TIMESTAMP          NULL,
+    `expires_at`     TIMESTAMP          NULL,
+    `message_count`  INT                NULL,
     PRIMARY KEY (`counseling_id`)
 );
 
@@ -335,7 +335,7 @@ ALTER TABLE transactions
 
 -- trainer_certificates certType 변경
 ALTER TABLE trainer_certificates
-    MODIFY cert_type ENUM('투자자산운용사', '금융투자분석사', '재무위험관리사', '투자권유자문인력', '투자권유대행인') NULL;
+    MODIFY cert_type ENUM ('투자자산운용사', '금융투자분석사', '재무위험관리사', '투자권유자문인력', '투자권유대행인') NULL;
 
 -- admin_approval_logs 의 admin_id 외래키 생략 주석 유지
 -- ALTER TABLE admin_approval_logs ADD CONSTRAINT FK_admin_approval_logs_admins FOREIGN KEY (admin_id)
@@ -344,5 +344,39 @@ ALTER TABLE trainer_certificates
 -- 이미지 url 문자 길이 수정
 ALTER TABLE `users`
     MODIFY COLUMN `user_profile_url` VARCHAR(255);
+
+-- 1. 'admin@gmail.com' 사용자를 'users' 테이블에 추가합니다.
+-- '여기에_암호화된_비밀번호_붙여넣기' 부분에 테스트 실행 후 콘솔에 출력된 값을 넣어주세요.
+INSERT INTO users (email, password, username, login_type)
+VALUES ('admin@gmail.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', '관리자', 'LOCAL');
+
+-- 2. 방금 추가한 사용자의 user_id를 찾습니다.
+SET @last_user_id = LAST_INSERT_ID();
+
+-- 3. 'ADMIN' 역할의 role_id를 찾습니다. (roles 테이블에 'ADMIN'이 이미 있다고 가정)
+SET @admin_role_id = (SELECT role_id
+                      FROM roles
+                      WHERE role = 'ADMIN');
+
+-- 4. user_roles 테이블에 사용자 ID와 역할 ID를 매핑하여 관리자 권한을 부여합니다.
+INSERT INTO user_roles (user_id, role_id)
+VALUES (@last_user_id, @admin_role_id);
+
+
+
+SELECT
+         u.user_id,
+          u.email,
+          u.username,
+          r.role
+    FROM
+           users u
+       JOIN
+           user_roles ur ON u.user_id = ur.user_id
+       JOIN
+           roles r ON ur.role_id = r.role_id
+       WHERE
+           u.email = 'admin@gmail.com';
+
 
 

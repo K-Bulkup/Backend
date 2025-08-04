@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kbulkup.admin.mapper.AdminTrainingMapper">
+
+    <sql id="adminTrainingColumns">
+        SELECT
+            t.training_id AS trainingId,
+            t.training_name AS trainingName,
+            t.trainer_id AS trainerId,
+            t.approval_status AS approvalStatus,
+            (SELECT COUNT(*) FROM trainee_enrollment te WHERE te.training_id = t.training_id) AS totalStudents
+        FROM
+            training t
+    </sql>
+
+    <select id="findAllTrainings" resultType="com.kbulkup.admin.dto.AdminTrainingResponseDto">
+        <include refid="adminTrainingColumns" />
+        ORDER BY t.created_at DESC
+    </select>
+
+    <select id="findApprovedTrainings" resultType="com.kbulkup.admin.dto.AdminTrainingResponseDto">
+        <include refid="adminTrainingColumns" />
+        WHERE t.approval_status = 'APPROVED'
+        ORDER BY t.created_at DESC
+    </select>
+
+    <select id="findPendingTrainings" resultType="com.kbulkup.admin.dto.AdminTrainingResponseDto">
+        <include refid="adminTrainingColumns" />
+        WHERE t.approval_status = 'PENDING'
+        ORDER BY t.created_at DESC
+    </select>
+
+</mapper>

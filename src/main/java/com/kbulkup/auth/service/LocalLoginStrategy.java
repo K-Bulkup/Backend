@@ -11,8 +11,10 @@ import com.kbulkup.user.domain.User;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @Component
 public class LocalLoginStrategy implements LoginStrategy {
 
@@ -36,7 +38,17 @@ public class LocalLoginStrategy implements LoginStrategy {
         // 2. 사용자가 존재하지 않는 경우 예외 발생 // 이미 위에서 처리
 
         // 3. 비밀번호 일치 여부 확인
-        if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+        String plainPassword = requestDTO.getPassword();
+        String hashedPasswordFromDB = user.getPassword();
+        boolean matches = passwordEncoder.matches(plainPassword, hashedPasswordFromDB);
+
+        log.info("--- 비밀번호 비교 로깅 ---");
+        log.info("사용자 입력 비밀번호: {}", plainPassword);
+        log.info("DB 저장된 해시: {}", hashedPasswordFromDB);
+        log.info("비교 결과: {}", matches);
+        log.info("----------------------");
+
+        if (!matches) {
             throw new AuthException(ResponseCode.AUTH_INVALID_PASSWORD);
         }
 
