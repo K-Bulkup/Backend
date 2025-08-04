@@ -2,11 +2,14 @@ package com.kbulkup.payment.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kbulkup.common.config.PortOneConfig;
+import com.kbulkup.common.exception.BaseException;
+import com.kbulkup.common.response.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
@@ -24,12 +27,7 @@ public class PortOneClient {
      *  AccessToken 발급 및 캐싱
      */
     private String getAccessToken() {
-        System.out.println("[DEBUG] PortOne Key: " + config.getApiKey());
-        System.out.println("[DEBUG] PortOne Secret: " + config.getApiSecret());
-
-        // 캐싱된 토큰이 유효하면 그대로 사용
         if (cachedToken != null && Instant.now().isBefore(tokenExpiry)) {
-            System.out.println("[DEBUG] Using cached AccessToken");
             return cachedToken;
         }
 
@@ -48,26 +46,21 @@ public class PortOneClient {
                     TokenResponse.class
             );
 
-            System.out.println(" [DEBUG] Raw Response: " + response);
-
             TokenResponse.TokenData data = response.getBody() != null ? response.getBody().getResponse() : null;
             if (data == null || data.getAccessToken() == null) {
-                throw new IllegalStateException("PortOne returned null AccessToken (response parsing failed)");
+                throw new BaseException(ResponseCode.PAYMENT_VERIFICATION_FAILED);
             }
 
             cachedToken = data.getAccessToken();
             tokenExpiry = Instant.now().plusSeconds(data.getExpiredAt());
-            System.out.println("[DEBUG] New AccessToken issued: " + cachedToken);
             return cachedToken;
 
-        } catch (org.springframework.web.client.HttpClientErrorException e) {
-            System.err.println("[ERROR] PortOne API 401 Unauthorized");
-            System.err.println("[ERROR] Response Body: " + e.getResponseBodyAsString());
-            throw e;
+        } catch (HttpClientErrorException e) {
+            //  포트원 인증 오류를 CustomResponse 대응 예외로 변환
+            throw new BaseException(ResponseCode.PAYMENT_VERIFICATION_FAILED);
         } catch (Exception e) {
-            System.err.println("[ERROR] Unknown error while requesting AccessToken");
-            e.printStackTrace();
-            throw e;
+            //  기타 예외도 CustomResponse 대응 예외로 변환
+            throw new BaseException(ResponseCode.PAYMENT_PROCESS_FAILED);
         }
     }
 
@@ -75,32 +68,35 @@ public class PortOneClient {
      *  결제 검증 API 호출
      */
     public PaymentResult verifyPayment(String impUid) {
-        String token = getAccessToken();
+        try {
+            String token = getAccessToken();
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+            ResponseEntity<PaymentVerificationResponse> response = restTemplate.exchange(
+                    config.getBaseUrl() + "/payments/" + impUid,
+                    HttpMethod.GET,
+                    entity,
+                    PaymentVerificationResponse.class
+            );
 
-        ResponseEntity<PaymentVerificationResponse> response = restTemplate.exchange(
-                config.getBaseUrl() + "/payments/" + impUid,
-                HttpMethod.GET,
-                entity,
-                PaymentVerificationResponse.class
-        );
+            var res = response.getBody().getResponse();
+            return new PaymentResult(res.getStatus().equals("paid"), res.getAmount(), res.getPayMethod(), res.getPaidAt());
 
-        var res = response.getBody().getResponse();
-        return new PaymentResult(res.getStatus().equals("paid"), res.getAmount(), res.getPayMethod(), res.getPaidAt());
+        } catch (HttpClientErrorException e) {
+            throw new BaseException(ResponseCode.PAYMENT_VERIFICATION_FAILED);
+        } catch (Exception e) {
+            throw new BaseException(ResponseCode.PAYMENT_PROCESS_FAILED);
+        }
     }
 
-    /**
-     *  Token API 응답 DTO
-     */
+    /**  Token API 응답 DTO */
     private static class TokenResponse {
         @JsonProperty("response")
         private TokenData response;
-
         public TokenData getResponse() { return response; }
 
         private static class TokenData {
@@ -114,13 +110,10 @@ public class PortOneClient {
         }
     }
 
-    /**
-     *  결제 검증 응답 DTO
-     */
+    /** 결제 검증 응답 DTO */
     private static class PaymentVerificationResponse {
         @JsonProperty("response")
         private PaymentData response;
-
         public PaymentData getResponse() { return response; }
 
         private static class PaymentData {
@@ -138,9 +131,7 @@ public class PortOneClient {
         }
     }
 
-    /**
-     *  Service에서 사용되는 결과 DTO
-     */
+    /**  서비스에서 사용되는 결과 DTO */
     @Getter
     @AllArgsConstructor
     public static class PaymentResult {
