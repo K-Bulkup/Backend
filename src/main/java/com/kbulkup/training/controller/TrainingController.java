@@ -33,7 +33,7 @@ public class TrainingController {
 
     /** [트레이너] 트레이닝 생성 */
     @PostMapping("/trainer/trainings")
-    public ResponseEntity<String> createTraining(
+    public ResponseEntity<CustomResponse<Void>> createTraining(
             @AuthenticationPrincipal(expression = "user") User user, // 로그인한 사용자 정보
             @RequestPart("dto") TrainerTrainingCreateRequestDTO dto,       // JSON 데이터 부분
             @RequestPart("thumbnail") MultipartFile thumbnail           // 파일 데이터 부분
@@ -41,7 +41,7 @@ public class TrainingController {
 
         trainingService.createTraining(user.getUserId(), dto, thumbnail);
 
-        return ResponseEntity.ok("Training created successfully.");
+        return ResponseEntity.ok(CustomResponse.success(ResponseCode.SUCCESS));
     }
 
     /** [공용] 트레이닝 검색 */
