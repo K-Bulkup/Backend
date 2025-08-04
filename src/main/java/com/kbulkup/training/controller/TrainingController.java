@@ -17,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -31,10 +33,15 @@ public class TrainingController {
 
     /** [트레이너] 트레이닝 생성 */
     @PostMapping("/trainer/trainings")
-    public ResponseEntity<String> createTraining(@AuthenticationPrincipal(expression = "user") User user,
-                                                 @RequestBody TrainerTrainingCreateRequestDTO dto) {
-        trainingService.createTraining(user.getUserId(), dto);
-        return ResponseEntity.ok("Training created successfully");
+    public ResponseEntity<String> createTraining(
+            @AuthenticationPrincipal(expression = "user") User user, // 로그인한 사용자 정보
+            @RequestPart("dto") TrainerTrainingCreateRequestDTO dto,       // JSON 데이터 부분
+            @RequestPart("thumbnail") MultipartFile thumbnail           // 파일 데이터 부분
+    ) throws IOException {
+
+        trainingService.createTraining(user.getUserId(), dto, thumbnail);
+
+        return ResponseEntity.ok("Training created successfully.");
     }
 
     /** [공용] 트레이닝 검색 */
