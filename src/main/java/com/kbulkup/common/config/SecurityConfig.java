@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/common/auth/social-signup-complete" // 소셜 회원가입 완료 엔드포인트
                 ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/api/common/auth/**").permitAll()
+                .antMatchers("/api/trainee/assets/trainer-share/**").hasAuthority("TRAINER")
                 .antMatchers("/api/trainer/**").hasAuthority("TRAINER")
                 .antMatchers("/api/trainee/**").hasAuthority("TRAINEE")
                 .antMatchers("/api/common/**").hasAnyAuthority("TRAINER", "TRAINEE")
