@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: kbulkup-mongodb
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_DATABASE: chatdb
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - kbulkup-network
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: kbulkup-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - kbulkup-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  kbulkup-network:
+    driver: bridge
