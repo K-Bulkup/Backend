@@ -1,12 +1,13 @@
 package com.kbulkup.asset.service;
 
 import com.kbulkup.asset.dto.response.TraineeAssetDetailResponseDTO;
+import com.kbulkup.user.domain.User;
 
 public interface TraineeAssetService {
 
     TraineeAssetDetailResponseDTO getTraineeAsset(Long id);
 
-    void createUserPortfolio(String bank, Long id);
+    void createUserPortfolio(String bank, User user);
 
     TraineeAssetDetailResponseDTO findTraineeAssetDetailByRoomID(String roomId);
 }
