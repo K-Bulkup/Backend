@@ -364,4 +364,27 @@ INSERT INTO user_roles (user_id, role_id)
 VALUES (@last_user_id, @admin_role_id);
 
 
+-- Dummy User Data (100 records)
+INSERT INTO users (username, email, password, created_at, updated_at) VALUES
+('user_001', 'user_001@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_002', 'user_002@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_003', 'user_003@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_004', 'user_004@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_005', 'user_005@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_006', 'user_006@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_007', 'user_007@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_008', 'user_008@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_009', 'user_009@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_010', 'user_010@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_011', 'user_011@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_012', 'user_012@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_013', 'user_013@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_014', 'user_014@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_015', 'user_015@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_016', 'user_016@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_017', 'user_017@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_018', 'user_018@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_019', 'user_019@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_020', 'user_020@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW());
 
+select * from users;
