@@ -8,6 +8,8 @@ import com.kbulkup.asset.dto.response.ExternalAssetResponseDTO;
 import com.kbulkup.asset.dto.response.ExternalTokenResponseDTO;
 import com.kbulkup.asset.dto.response.TraineeAssetDetailResponseDTO;
 import com.kbulkup.asset.mapper.TraineeAssetMapper;
+import com.kbulkup.common.security.JwtTokenProvider;
+import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import java.util.List;
 public class TraineeAssetServiceImpl implements TraineeAssetService {
 
     private final TraineeAssetMapper traineeAssetMapper;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public TraineeAssetDetailResponseDTO getTraineeAsset(Long id) {
@@ -32,10 +35,11 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
 
     @Override
     @Transactional
-    public void createUserPortfolio(String bank, Long id) {
-        ExternalTokenResponseDTO externalTokenResponseDTO = getAccessToken(bank, id);
+    public void createUserPortfolio(String bank, User user) {
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId(), user.getRoles());
+        ExternalTokenResponseDTO externalTokenResponseDTO = getAccessToken(bank, accessToken);
         ExternalAssetResponseDTO externalAssetResponseDTO = getUserAssetData(externalTokenResponseDTO.getAccessToken());
-        insertTraineeAsset(id, externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
+        insertTraineeAsset(user.getUserId(), externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
     }
 
     @Transactional
@@ -46,14 +50,14 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
         traineeAssetMapper.insertComposition(id, dto.getComposition());
     }
 
-    private ExternalTokenResponseDTO getAccessToken(String bank, Long id) {
+    private ExternalTokenResponseDTO getAccessToken(String bank, String accessToken) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("http://localhost:9080")
                 .build();
         return webClient.post()
                 .uri("/external-api/token")
-                .header("X-User-Id", String.valueOf(id))
+                .header("Authorization", "Bearer " + accessToken)
                 .bodyValue(TokenRequestDTO.create(bank))
                 .retrieve()
                 .bodyToMono(ExternalTokenResponseDTO.class)
