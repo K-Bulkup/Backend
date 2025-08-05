@@ -33,95 +33,63 @@ public class TrainingController {
     private final TrainingSearchService trainingSearchService;
     private final TraineeTrainingService traineeTrainingService;
 
-    /**
-     * [트레이너] 트레이닝 생성
-     */
+    /** [트레이너] 트레이닝 생성 */
     @PostMapping("/trainer/trainings")
     public ResponseEntity<CustomResponse<Void>> createTraining(
             @AuthenticationPrincipal(expression = "user") User user,
             @RequestPart("dto") TrainerTrainingCreateRequestDTO dto,
             @RequestPart("thumbnail") MultipartFile thumbnail
     ) throws IOException {
-
         trainingService.createTraining(user.getUserId(), dto, thumbnail);
         return ResponseEntity.ok(CustomResponse.success(ResponseCode.SUCCESS));
     }
 
-    /**
-     * [공용] 트레이닝 검색
-     */
+    /** [공용] 트레이닝 검색 */
     @GetMapping("/trainings/search")
     public CustomResponse<List<TrainingSearchListResponseDTO>> searchTrainings(
             @ModelAttribute TrainingSearchListRequestDTO dto) {
         return CustomResponse.success(ResponseCode.SUCCESS, trainingSearchService.searchTrainings(dto));
     }
 
-    /**
-     * [수강생] 트레이닝 실행(결제 후) 상세 조회 (기존 API, 유지)
-     */
+    /** [수강생] 트레이닝 실행(결제 후) 상세 조회 */
     @GetMapping("/trainee/trainings/running/{trainingId}")
     public CustomResponse<TraineeRoutineSummaryResponseDTO> getRunningTrainingDetail(
             @PathVariable Long trainingId,
             @AuthenticationPrincipal(expression = "user") User user) {
-
-        // request DTO 생성
         var request = new TraineeTrainingDetailRequestDTO(trainingId);
-
-        // 서비스의 공개 메서드 getTrainingDetail 호출 후 캐스팅
         TraineeRoutineSummaryResponseDTO detail =
                 (TraineeRoutineSummaryResponseDTO) traineeTrainingService.getTrainingDetail(request, user.getUserId());
-
         return CustomResponse.success(ResponseCode.SUCCESS, detail);
     }
 
-    /**
-     * [수강생] 트레이닝 탭 전체 목록 조회
-     */
-    @GetMapping("/trainee/trainings/training")
-    public CustomResponse<List<TraineeTrainingListResponseDTO>> getAllTrainings(
-            @AuthenticationPrincipal(expression = "user") User user) {
-        return CustomResponse.success(
-                ResponseCode.SUCCESS,
-                traineeTrainingService.getAllApprovedTrainings(user.getUserId())
-        );
-    }
-
-    /**
-     * [수강생] 트레이닝 상세 조회
-     * - 서비스에서 결제 여부를 판별하도록 변경
-     * - 반환 타입은 Object (결제 여부에 따라 DTO가 다르므로)
-     */
+    /** [수강생] 트레이닝 상세 조회 (결제 여부 서비스에서 판별) */
     @GetMapping("/trainee/trainings/{trainingId}")
     public CustomResponse<Object> getTrainingDetail(
             @PathVariable Long trainingId,
             @AuthenticationPrincipal(expression = "user") User user) {
-
-        var dto = new TraineeTrainingDetailRequestDTO(trainingId);
-        Object detailResponse = traineeTrainingService.getTrainingDetail(dto, user.getUserId());
-
-        return CustomResponse.success(ResponseCode.SUCCESS, detailResponse);
+        var request = new TraineeTrainingDetailRequestDTO(trainingId);
+        return CustomResponse.success(ResponseCode.SUCCESS, traineeTrainingService.getTrainingDetail(request, user.getUserId()));
     }
 
-    /**
-     * [수강생] 트레이닝 리뷰 조회
-     */
+    /** [수강생] 트레이닝 탭 전체 목록 조회 */
+    @GetMapping("/trainee/trainings/training")
+    public CustomResponse<List<TraineeTrainingListResponseDTO>> getAllTrainings(
+            @AuthenticationPrincipal(expression = "user") User user) {
+        return CustomResponse.success(ResponseCode.SUCCESS, traineeTrainingService.getAllApprovedTrainings(user.getUserId()));
+    }
+
+    /** [수강생] 트레이닝 리뷰 조회 */
     @GetMapping("/trainee/trainings/reviews/{trainingId}")
     public CustomResponse<TraineeTrainingReviewResponseDTO> getTrainingReview(@PathVariable Long trainingId) {
-        return CustomResponse.success(
-                ResponseCode.SUCCESS,
-                traineeTrainingService.getTrainingTitle(trainingId)
-        );
+        return CustomResponse.success(ResponseCode.SUCCESS, traineeTrainingService.getTrainingTitle(trainingId));
     }
 
-    /**
-     * [수강생] 트레이닝 리뷰 작성
-     */
+    /** [수강생] 트레이닝 리뷰 작성 */
     @PostMapping("/trainee/trainings/reviews/{trainingId}")
     public CustomResponse<Void> createTrainingReview(
             @AuthenticationPrincipal(expression = "user") User user,
             @PathVariable Long trainingId,
             @RequestBody TraineeTrainingReviewCreateDTO dto) {
-
         traineeTrainingService.createReview(user.getUserId(), trainingId, dto);
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
