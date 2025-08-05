@@ -96,7 +96,7 @@ CREATE TABLE `routines`
     `training_id`  BIGINT                               NOT NULL,
     `title`        VARCHAR(100)                         NULL,
     `description`  TEXT                                 NULL,
-    `routine_type` ENUM ('VIDEO', 'QUIZ', 'TEXT')       NULL,
+    `routine_type` ENUM ('스트레칭', '근력', '유산소')       NULL,
     `quiz_type`    ENUM ('OX', 'PHOTO', 'SHORT_ANSWER') NULL,
     `order_number` INT                                  NULL,
     `score`        INT                                  NULL,
