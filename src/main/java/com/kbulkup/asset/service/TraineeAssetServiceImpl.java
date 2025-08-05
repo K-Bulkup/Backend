@@ -38,7 +38,7 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     public void createUserPortfolio(String bank, User user) {
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId(), user.getRoles());
         ExternalTokenResponseDTO externalTokenResponseDTO = getAccessToken(bank, accessToken);
-        ExternalAssetResponseDTO externalAssetResponseDTO = getUserAssetData(externalTokenResponseDTO.getAccessToken());
+        ExternalAssetResponseDTO externalAssetResponseDTO = getUserAssetData(externalTokenResponseDTO.getAccessToken(), externalTokenResponseDTO.getFintechUseNum());
         insertTraineeAsset(user.getUserId(), externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
     }
 
@@ -64,14 +64,18 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
                 .block();
     }
 
-    private ExternalAssetResponseDTO getUserAssetData(String token) {
+    private ExternalAssetResponseDTO getUserAssetData(String token, String fintechUseNum) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("http://localhost:9080")
                 .build();
 
         return webClient.post()
-                .uri("/external-api/user-data")
+                .uri(uriBuilder -> uriBuilder
+                        .path("/external-api/user-data")
+                        .queryParam("fintechUseNum", fintechUseNum)
+                        .build()
+                )
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(ExternalAssetResponseDTO.class)
