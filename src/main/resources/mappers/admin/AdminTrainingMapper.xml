@@ -5,29 +5,42 @@
     <sql id="adminTrainingColumns">
         SELECT
             t.training_id AS trainingId,
-            t.training_name AS trainingName,
+            t.title AS trainingName,  -- training_name 대신 title 사용
             t.trainer_id AS trainerId,
+            u.username AS trainerName, -- 트레이너 이름 추가
             t.approval_status AS approvalStatus,
-            (SELECT COUNT(*) FROM trainee_enrollment te WHERE te.training_id = t.training_id) AS totalStudents
+            (SELECT COUNT(*) FROM enrollments e WHERE e.training_id = t.training_id) AS totalStudents, -- trainee_enrollment 대신 enrollments 사용
+            DATE_FORMAT(t.created_at, '%Y-%m-%d') AS requestDate -- 신청일 추가
         FROM
-            training t
+            trainings t -- training 대신 trainings 사용
+        JOIN
+            trainer_profiles tp ON t.trainer_id = tp.trainer_id
+        JOIN
+            users u ON tp.trainer_id = u.user_id
     </sql>
 
-    <select id="findAllTrainings" resultType="com.kbulkup.admin.dto.AdminTrainingResponseDto">
+    <select id="findAllTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDto">
         <include refid="adminTrainingColumns" />
         ORDER BY t.created_at DESC
     </select>
 
-    <select id="findApprovedTrainings" resultType="com.kbulkup.admin.dto.AdminTrainingResponseDto">
+    <select id="findApprovedTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDto">
         <include refid="adminTrainingColumns" />
-        WHERE t.approval_status = 'APPROVED'
+        WHERE t.approval_status = '승인' -- 'APPROVED' 대신 '승인' 사용
         ORDER BY t.created_at DESC
     </select>
 
-    <select id="findPendingTrainings" resultType="com.kbulkup.admin.dto.AdminTrainingResponseDto">
+    <select id="findPendingTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDto">
         <include refid="adminTrainingColumns" />
-        WHERE t.approval_status = 'PENDING'
+        WHERE t.approval_status = '대기' -- 'PENDING' 대신 '대기' 사용
         ORDER BY t.created_at DESC
     </select>
+
+    <!-- 강좌 승인 상태 업데이트 -->
+    <update id="updateTrainingApprovalStatus">
+        UPDATE trainings
+        SET approval_status = #{status}
+        WHERE training_id = #{trainingId}
+    </update>
 
 </mapper>

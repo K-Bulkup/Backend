@@ -1,7 +1,7 @@
 package com.kbulkup.admin.controller;
 
-import com.kbulkup.admin.dto.AdminTrainingResponseDto;
-import com.kbulkup.admin.service.AdminTrainingService;
+import com.kbulkup.admin.dto.response.AdminTrainingResponseDto;
+import com.kbulkup.admin.service.AdminService;
 import com.kbulkup.auth.dto.request.LoginRequestDTO;
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
 import com.kbulkup.auth.service.LoginContext;
@@ -17,7 +17,7 @@ import java.util.List;
 public class AdminController {
 
     private final LoginContext loginContext;
-    private final AdminTrainingService adminTrainingService;
+    private final AdminService adminTrainingService;
 
     @PostMapping("/auth/login")
     public ResponseEntity<LoginResponseDTO> adminLogin(@RequestBody LoginRequestDTO dto) {

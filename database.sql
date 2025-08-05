@@ -345,6 +345,7 @@ ALTER TABLE trainer_certificates
 ALTER TABLE `users`
     MODIFY COLUMN `user_profile_url` VARCHAR(255);
 
+-- admin 계정 생성
 -- 1. 'admin@gmail.com' 사용자를 'users' 테이블에 추가합니다.
 -- '여기에_암호화된_비밀번호_붙여넣기' 부분에 테스트 실행 후 콘솔에 출력된 값을 넣어주세요.
 INSERT INTO users (email, password, username, login_type)
@@ -361,22 +362,6 @@ SET @admin_role_id = (SELECT role_id
 -- 4. user_roles 테이블에 사용자 ID와 역할 ID를 매핑하여 관리자 권한을 부여합니다.
 INSERT INTO user_roles (user_id, role_id)
 VALUES (@last_user_id, @admin_role_id);
-
-
-
-SELECT
-         u.user_id,
-          u.email,
-          u.username,
-          r.role
-    FROM
-           users u
-       JOIN
-           user_roles ur ON u.user_id = ur.user_id
-       JOIN
-           roles r ON ur.role_id = r.role_id
-       WHERE
-           u.email = 'admin@gmail.com';
 
 
 
