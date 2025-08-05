@@ -43,8 +43,12 @@ public class GPTServiceImpl implements GPTService {
     }
 
     @Override
-    public GPTResponseDTO requestCounseling(String userId, String question) {
-        aiChatService.saveAiChatMessage(userId, question, "user");
+    public GPTResponseDTO requestCounseling(String userId, String question, boolean isAsset) {
+        if (isAsset) {
+            aiChatService.saveAiChatMessage(userId, "자산 정보를 전송했습니다.", "user");
+        } else {
+            aiChatService.saveAiChatMessage(userId, question, "user");
+        }
 
         String prompt = PromptBuilder.buildAssetConsultingPrompt(question);
         GPTRequestDTO gptRequestDTO = GPTRequestDTO.createOnlyText(apiModel, "user", prompt, 300);
