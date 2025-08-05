@@ -36,42 +36,30 @@ public class TrainingServiceImpl implements TrainingService {
 
         String thumbnailUrl = null;
 
-        // 썸네일 파일이 존재하면 S3에 업로드
         if (thumbnail != null && !thumbnail.isEmpty()) {
-            // S3에 저장될 파일의 고유한 이름 생성
             String originalFilename = thumbnail.getOriginalFilename();
             String storedFileName = "trainings/" + UUID.randomUUID() + "-" + originalFilename;
 
-            // 파일 메타데이터 설정
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(thumbnail.getContentType());
             metadata.setContentLength(thumbnail.getSize());
 
-            // S3에 파일 업로드 실행
             amazonS3.putObject(bucket, storedFileName, thumbnail.getInputStream(), metadata);
 
-            // 업로드된 파일의 전체 URL을 가져옴
             thumbnailUrl = amazonS3.getUrl(bucket, storedFileName).toString();
         }
 
-        // 업로드된 파일 URL을 DTO에 설정
-        dto.setThumbnailUrl(thumbnailUrl);
-
-        // DB에 트레이닝 정보 저장
-        Training training = Training.from(trainerId, dto);
+        Training training = Training.from(trainerId, dto, thumbnailUrl);
         trainingMapper.createTraining(training);
 
-        // DB에 루틴 정보 저장
         List<TrainerTrainingCreateRequestDTO.RoutineDTO> routines = dto.getRoutines();
         if (routines != null && !routines.isEmpty()) {
-            // 새로 생성된 트레이닝의 ID를 가져옴
             Long newTrainingId = training.getTrainingId();
 
             for (TrainerTrainingCreateRequestDTO.RoutineDTO routineDto : routines) {
                 Routine routine = Routine.createRoutine(newTrainingId, routineDto);
                 trainingRoutineMapper.createRoutine(routine);
 
-                // 비디오 URL이 있으면 비디오 정보도 저장
                 if (routine.getVideoUrl() != null && !routine.getVideoUrl().isEmpty()) {
                     trainingRoutineMapper.createRoutineVideo(routine.getRoutineId(), routine.getVideoUrl());
                 }
