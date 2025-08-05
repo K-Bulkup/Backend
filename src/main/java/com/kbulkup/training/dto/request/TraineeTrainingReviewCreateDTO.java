@@ -1,4 +1,4 @@
-package com.kbulkup.gpt.dto.response;
+package com.kbulkup.training.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PromptTokensDetailsDTO {
-    private int cached_tokens;
-    private int audio_tokens;
+public class TraineeTrainingReviewCreateDTO {
+    private int rating;
+    private String content;
 }
-
