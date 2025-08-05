@@ -100,4 +100,16 @@
         WHERE training_id = #{trainingId}
     </select>
 
+    <select id="findTrainingTitleByTrainingId"
+            resultType="com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO">
+        SELECT title
+        FROM trainings
+        WHERE training_id = #{trainingId}
+    </select>
+
+    <insert id="insertReview">
+        INSERT INTO reviews (user_id, training_id, rating, content)
+        VALUES (#{userId}, #{trainingId}, #{rating}, #{content})
+    </insert>
+
 </mapper>
