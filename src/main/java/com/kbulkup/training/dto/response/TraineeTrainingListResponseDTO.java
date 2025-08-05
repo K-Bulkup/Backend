@@ -17,4 +17,5 @@ public class TraineeTrainingListResponseDTO {
     private String thumbnailUrl;
     private String level;
     private String category;
+    private boolean purchased;
 }

@@ -29,7 +29,9 @@ public interface TraineeTrainingMapper {
                                 @Param("userId") Long userId,
                                 @Param("progress") int progress);
 
-    List<TraineeTrainingListResponseDTO> findAllApprovedTrainings();
+    boolean isTrainingPurchased(@Param("trainingId") Long trainingId, @Param("userId") Long userId);
+
+    List<TraineeTrainingListResponseDTO> findAllApprovedTrainings(@Param("userId") Long userId);
 
     /**  결제 전 트레이닝 상세 조회 (루틴 총점수 포함) */
     TraineeTrainingDetailResponseDTO findTrainingDetail(@Param("trainingId") Long trainingId);

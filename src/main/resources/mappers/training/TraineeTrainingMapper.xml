@@ -57,19 +57,24 @@
     <select id="findAllApprovedTrainings"
             resultType="com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO">
         SELECT t.training_id AS trainingId,
-               t.title AS title,
-               u.username AS trainerName,
-               t.average_rating AS averageRating,
-               t.trainee_count AS traineeCount,
-               t.price AS price,
-               t.thumbnail_url AS thumbnailUrl,
-               t.level AS level,
-               t.category AS category
+        t.title,
+        u.username AS trainerName,
+        t.average_rating AS averageRating,
+        t.trainee_count AS traineeCount,
+        t.price,
+        t.thumbnail_url AS thumbnailUrl,
+        t.level,
+        t.category,
+        CASE WHEN e.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS purchased
         FROM trainings t
-                 JOIN users u ON t.trainer_id = u.user_id
+        JOIN users u ON t.trainer_id = u.user_id
+        LEFT JOIN enrollments e
+        ON e.training_id = t.training_id
+        AND e.user_id = #{userId}    <!-- 로그인 사용자 기준 -->
         WHERE t.approval_status = '승인'
         ORDER BY t.created_at DESC
     </select>
+
 
     <!-- 결제 전 트레이닝 상세 조회 (루틴 총점수 포함) -->
     <select id="findTrainingDetail" parameterType="long"
@@ -107,9 +112,17 @@
         WHERE training_id = #{trainingId}
     </select>
 
+    <select id="isTrainingPurchased" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM enrollments
+        WHERE training_id = #{trainingId}
+          AND user_id = #{userId}
+    </select>
+
     <insert id="insertReview">
         INSERT INTO reviews (user_id, training_id, rating, content)
         VALUES (#{userId}, #{trainingId}, #{rating}, #{content})
     </insert>
+
 
 </mapper>
