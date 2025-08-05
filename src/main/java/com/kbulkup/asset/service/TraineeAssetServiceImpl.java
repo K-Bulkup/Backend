@@ -75,7 +75,7 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     }
 
     @Override
-    public TraineeAssetDetailResponseDTO findTraineeAssetDetailByRoomID(Long roomId) {
+    public TraineeAssetDetailResponseDTO findTraineeAssetDetailByRoomID(String roomId) {
         Long userId = traineeAssetMapper.findUserIdByRoomID(roomId);
         return getTraineeAsset(userId);
     }
