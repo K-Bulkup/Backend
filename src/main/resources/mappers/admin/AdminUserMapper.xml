@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kbulkup.admin.mapper.AdminUserMapper">
+
+    <resultMap id="userResponseDTOMap" type="com.kbulkup.user.dto.response.UserResponseDTO">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="email" column="email"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <collection property="roles" ofType="string">
+            <result column="role_name"/>
+        </collection>
+    </resultMap>
+
+    <insert id="insertUser" parameterType="com.kbulkup.auth.dto.request.SignupRequestDTO" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO users (username, email, password, created_at, updated_at, login_type)
+        VALUES (#{username}, #{email}, #{password}, NOW(), NOW(), 'LOCAL')
+    </insert>
+
+    <insert id="insertUserRole">
+        INSERT INTO user_roles (user_id, role_id)
+        VALUES (#{userId}, #{roleId})
+    </insert>
+
+    <select id="findRoleIdByRoleName" parameterType="string" resultType="long">
+        SELECT role_id
+        FROM roles
+        WHERE role = #{roleName}
+    </select>
+
+    <select id="findUserById" parameterType="long" resultMap="userResponseDTOMap">
+        SELECT
+            u.user_id,
+            u.username,
+            u.email,
+            u.created_at,
+            u.updated_at,
+            r.role AS role_name
+        FROM users u
+        LEFT JOIN user_roles ur ON u.user_id = ur.user_id
+        LEFT JOIN roles r ON ur.role_id = r.role_id
+        WHERE u.user_id = #{userId}
+    </select>
+
+    <select id="findAllUsers" resultMap="userResponseDTOMap">
+        SELECT
+            u.user_id,
+            u.username,
+            u.email,
+            u.created_at,
+            u.updated_at,
+            r.role AS role_name
+        FROM users u
+        LEFT JOIN user_roles ur ON u.user_id = ur.user_id
+        LEFT JOIN roles r ON ur.role_id = r.role_id
+    </select>
+
+    <update id="updateUser">
+        UPDATE users
+        SET
+            username = #{requestDto.username},
+            email = #{requestDto.email},
+            updated_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="deleteUser" parameterType="long">
+        DELETE FROM users
+        WHERE user_id = #{userId}
+    </delete>
+
+</mapper>

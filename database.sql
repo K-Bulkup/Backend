@@ -219,17 +219,17 @@ CREATE TABLE compositions
 -- counselings
 CREATE TABLE `counselings`
 (
-    `counseling_id` BIGINT                        NOT NULL AUTO_INCREMENT,
-    `user_id`       BIGINT                        NOT NULL,
-    `trainer_id`    BIGINT                        NOT NULL,
-    `training_id`   BIGINT                        NOT NULL,
-    `room_id` 		VARCHAR(100) 				  NOT NULL UNIQUE,
-    `status`        ENUM ('진행중', '만료')         NOT NULL DEFAULT '진행중',
-    `latest_message`TEXT,
-    `latest_at`		DATETIME,
-    `start_at`      TIMESTAMP                     NULL,
-    `expires_at`    TIMESTAMP                     NULL,
-    `message_count` INT                           NULL,
+    `counseling_id`  BIGINT             NOT NULL AUTO_INCREMENT,
+    `user_id`        BIGINT             NOT NULL,
+    `trainer_id`     BIGINT             NOT NULL,
+    `training_id`    BIGINT             NOT NULL,
+    `room_id`        VARCHAR(100)       NOT NULL UNIQUE,
+    `status`         ENUM ('진행중', '만료') NOT NULL DEFAULT '진행중',
+    `latest_message` TEXT,
+    `latest_at`      DATETIME,
+    `start_at`       TIMESTAMP          NULL,
+    `expires_at`     TIMESTAMP          NULL,
+    `message_count`  INT                NULL,
     PRIMARY KEY (`counseling_id`)
 );
 
@@ -335,7 +335,7 @@ ALTER TABLE transactions
 
 -- trainer_certificates certType 변경
 ALTER TABLE trainer_certificates
-    MODIFY cert_type ENUM('투자자산운용사', '금융투자분석사', '재무위험관리사', '투자권유자문인력', '투자권유대행인') NULL;
+    MODIFY cert_type ENUM ('투자자산운용사', '금융투자분석사', '재무위험관리사', '투자권유자문인력', '투자권유대행인') NULL;
 
 -- admin_approval_logs 의 admin_id 외래키 생략 주석 유지
 -- ALTER TABLE admin_approval_logs ADD CONSTRAINT FK_admin_approval_logs_admins FOREIGN KEY (admin_id)
@@ -345,4 +345,46 @@ ALTER TABLE trainer_certificates
 ALTER TABLE `users`
     MODIFY COLUMN `user_profile_url` VARCHAR(255);
 
+-- admin 계정 생성
+-- 1. 'admin@gmail.com' 사용자를 'users' 테이블에 추가합니다.
+-- '여기에_암호화된_비밀번호_붙여넣기' 부분에 테스트 실행 후 콘솔에 출력된 값을 넣어주세요.
+INSERT INTO users (email, password, username, login_type)
+VALUES ('admin@gmail.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', '관리자', 'LOCAL');
 
+-- 2. 방금 추가한 사용자의 user_id를 찾습니다.
+SET @last_user_id = LAST_INSERT_ID();
+
+-- 3. 'ADMIN' 역할의 role_id를 찾습니다. (roles 테이블에 'ADMIN'이 이미 있다고 가정)
+SET @admin_role_id = (SELECT role_id
+                      FROM roles
+                      WHERE role = 'ADMIN');
+
+-- 4. user_roles 테이블에 사용자 ID와 역할 ID를 매핑하여 관리자 권한을 부여합니다.
+INSERT INTO user_roles (user_id, role_id)
+VALUES (@last_user_id, @admin_role_id);
+
+
+-- Dummy User Data (100 records)
+INSERT INTO users (username, email, password, created_at, updated_at) VALUES
+('user_001', 'user_001@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_002', 'user_002@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_003', 'user_003@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_004', 'user_004@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_005', 'user_005@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_006', 'user_006@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_007', 'user_007@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_008', 'user_008@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_009', 'user_009@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_010', 'user_010@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_011', 'user_011@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_012', 'user_012@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_013', 'user_013@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_014', 'user_014@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_015', 'user_015@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_016', 'user_016@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_017', 'user_017@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_018', 'user_018@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_019', 'user_019@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
+('user_020', 'user_020@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW());
+
+select * from users;
