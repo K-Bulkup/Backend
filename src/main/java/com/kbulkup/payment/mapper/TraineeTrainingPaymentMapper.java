@@ -12,4 +12,9 @@ public interface TraineeTrainingPaymentMapper {
      * @param trainingId 결제한 강의 ID
      */
     void insertEnrollment(@Param("userId") Long userId, @Param("trainingId") Long trainingId);
+
+    Long findEnrollmentId(@Param("userId") Long userId, @Param("trainingId") Long trainingId);
+
+    void insertRoutineResultsForEnrollment(@Param("enrollmentId") Long enrollmentId,
+                                           @Param("trainingId") Long trainingId);
 }

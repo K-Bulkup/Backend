@@ -7,6 +7,7 @@ import com.kbulkup.common.response.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PortOneClient {
@@ -31,6 +33,7 @@ public class PortOneClient {
             return cachedToken;
         }
 
+        log.info("[PortOneClient] AccessToken 요청 시도...");
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -46,20 +49,22 @@ public class PortOneClient {
                     TokenResponse.class
             );
 
-            TokenResponse.TokenData data = response.getBody() != null ? response.getBody().getResponse() : null;
+            TokenResponse.TokenData data = (response.getBody() != null) ? response.getBody().getResponse() : null;
             if (data == null || data.getAccessToken() == null) {
+                log.error("[PortOneClient] 토큰 응답 데이터 없음");
                 throw new BaseException(ResponseCode.PAYMENT_VERIFICATION_FAILED);
             }
 
             cachedToken = data.getAccessToken();
-            tokenExpiry = Instant.now().plusSeconds(data.getExpiredAt());
+            tokenExpiry = Instant.ofEpochSecond(data.getExpiredAt());
+            log.info("[PortOneClient] AccessToken 발급 성공, 만료시간={}", tokenExpiry);
             return cachedToken;
 
         } catch (HttpClientErrorException e) {
-            //  포트원 인증 오류를 CustomResponse 대응 예외로 변환
+            log.error("[PortOneClient] 포트원 인증 오류: {}", e.getMessage());
             throw new BaseException(ResponseCode.PAYMENT_VERIFICATION_FAILED);
         } catch (Exception e) {
-            //  기타 예외도 CustomResponse 대응 예외로 변환
+            log.error("[PortOneClient] AccessToken 발급 실패", e);
             throw new BaseException(ResponseCode.PAYMENT_PROCESS_FAILED);
         }
     }
@@ -73,7 +78,7 @@ public class PortOneClient {
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", token);
+            headers.set("Authorization", "Bearer " + token); //  Bearer prefix 추가
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
             ResponseEntity<PaymentVerificationResponse> response = restTemplate.exchange(
@@ -83,12 +88,16 @@ public class PortOneClient {
                     PaymentVerificationResponse.class
             );
 
-            var res = response.getBody().getResponse();
-            return new PaymentResult(res.getStatus().equals("paid"), res.getAmount(), res.getPayMethod(), res.getPaidAt());
+            PaymentVerificationResponse.PaymentData res = response.getBody().getResponse();
+            log.info("[PortOneClient] 결제 검증 성공: impUid={}, status={}", impUid, res.getStatus());
+
+            return new PaymentResult("paid".equals(res.getStatus()), res.getAmount(), res.getPayMethod(), res.getPaidAt());
 
         } catch (HttpClientErrorException e) {
+            log.error("[PortOneClient] 결제 검증 실패(포트원 응답 오류): {}", e.getMessage());
             throw new BaseException(ResponseCode.PAYMENT_VERIFICATION_FAILED);
         } catch (Exception e) {
+            log.error("[PortOneClient] 결제 검증 실패", e);
             throw new BaseException(ResponseCode.PAYMENT_PROCESS_FAILED);
         }
     }
@@ -106,11 +115,11 @@ public class PortOneClient {
             private long expiredAt;
 
             public String getAccessToken() { return accessToken; }
-            public long getExpiredAt() { return expiredAt - Instant.now().getEpochSecond(); }
+            public long getExpiredAt() { return expiredAt; } //  UNIX Timestamp 그대로 반환
         }
     }
 
-    /** 결제 검증 응답 DTO */
+    /**  결제 검증 응답 DTO */
     private static class PaymentVerificationResponse {
         @JsonProperty("response")
         private PaymentData response;

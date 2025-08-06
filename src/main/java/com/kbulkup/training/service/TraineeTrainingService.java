@@ -61,6 +61,8 @@ public class TraineeTrainingService {
                 training.getAverageRating(),
                 training.getTraineeCount(),
                 progress,
+                training.getTrainerNickname(),
+                training.getTrainerProfileUrl(),
                 groupedRoutines
         );
     }

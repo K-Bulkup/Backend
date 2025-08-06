@@ -22,6 +22,9 @@ public class TraineeRoutineSummaryResponseDTO {
     private float averageRating;
     private int traineeCount;
     private float progress;
+    // 트레이너 정보 추가
+    private String trainerNickname;
+    private String trainerProfileUrl;
 
     // 루틴 타입별 Map
     private Map<String, List<RoutineSummaryResponseDTO>> routines;
