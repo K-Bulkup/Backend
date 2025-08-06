@@ -29,7 +29,7 @@ public class TraineeAssetController {
 
     @PostMapping("/account")
     public CustomResponse<Void> postTraineeAccount(@RequestBody TokenRequestDTO dto, @AuthenticationPrincipal(expression = "user") User user) {
-        traineeAssetService.createUserPortfolio(dto.getBank(), user.getUserId());
+        traineeAssetService.createUserPortfolio(dto.getBank(), user);
 
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
