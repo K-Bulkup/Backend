@@ -15,5 +15,23 @@
                 )
     </insert>
 
+    <!-- ✅ 방금 등록한 enrollment_id 조회 -->
+    <select id="findEnrollmentId" resultType="long">
+        SELECT enrollment_id
+        FROM enrollments
+        WHERE user_id = #{userId}
+          AND training_id = #{trainingId}
+        ORDER BY created_at DESC
+            LIMIT 1
+    </select>
+
+    <!-- ✅ routine_results 초기화 (루틴별 기본 결과 생성) -->
+    <insert id="insertRoutineResultsForEnrollment">
+        INSERT INTO routine_results (enrollment_id, routine_id, status, pass_fail_result)
+        SELECT #{enrollmentId}, r.routine_id, FALSE, NULL
+        FROM routines r
+        WHERE r.training_id = #{trainingId}
+    </insert>
+
 </mapper>
 

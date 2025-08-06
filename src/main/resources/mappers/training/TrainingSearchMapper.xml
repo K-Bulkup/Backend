@@ -8,22 +8,21 @@
             parameterType="String"
             resultType="com.kbulkup.training.dto.response.TrainingSearchListResponseDTO">
 
-        SELECT
-            t.training_id AS trainingId,
-            t.title,
-            u.username AS trainerName,
-            t.average_rating,
-            t.trainee_count,
-            t.price,
-            t.thumbnail_url,
-            t.level,
-            t.category
+        SELECT t.training_id AS trainingId,
+               t.title,
+               u.username AS trainerName,
+               t.average_rating AS averageRating,
+               t.trainee_count AS traineeCount,
+               t.price,
+               t.thumbnail_url AS thumbnailUrl,
+               t.level,
+               t.category
         FROM trainings t
                  JOIN users u ON t.trainer_id = u.user_id
         WHERE t.approval_status = '승인'
-          AND t.title LIKE CONCAT('%', #{keyword}, '%')
+          AND ( REPLACE(t.title, ' ', '') LIKE CONCAT('%', REPLACE(#{keyword}, ' ', ''), '%')
+            OR REPLACE(u.username, ' ', '') LIKE CONCAT('%', REPLACE(#{keyword}, ' ', ''), '%') )
         ORDER BY t.created_at DESC
-
     </select>
 
 </mapper>

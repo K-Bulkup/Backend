@@ -28,7 +28,13 @@ public class TraineeTrainingPaymentServiceImpl implements TraineeTrainingPayment
         //  2. enrollments 테이블에 신규 등록
         paymentMapper.insertEnrollment(requestDTO.getUserId(), requestDTO.getTrainingId());
 
-        //  3. 성공 응답 반환
+        //  3. 새로 생성된 enrollment_id 조회
+        Long enrollmentId = paymentMapper.findEnrollmentId(requestDTO.getUserId(), requestDTO.getTrainingId());
+
+        //  4. routine_results 초기화
+        paymentMapper.insertRoutineResultsForEnrollment(enrollmentId, requestDTO.getTrainingId());
+
+        // 5. 성공 응답 반환
         return TraineeTrainingPaymentResponseDTO.ofSuccess(
                 result.getPaidAt(),
                 result.getMethod(),
