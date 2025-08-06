@@ -25,5 +25,5 @@ public interface TraineeAssetMapper {
 
     void insertComposition(@Param("traineeId") Long traineeId, @Param("composition") Composition composition);
 
-    Long findUserIdByRoomID(@Param("roomId") Long roomId);
+    Long findUserIdByRoomID(@Param("roomId") String roomId);
 }

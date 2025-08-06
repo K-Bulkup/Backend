@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/common/auth/signup",
                         "/api/common/auth/naver/**", // 네이버 OAuth 로그인 시작 및 콜백
                         "/api/common/auth/kakao/**", // 카카오 OAuth 로그인 시작 및 콜카오
+                        "/api/common/auth/login/oauth2/code/kakao", // 카카오 OAuth 콜백 엔드포인트 추가
                         "/api/common/auth/social-signup-complete", // 소셜 회원가입 완료 엔드포인트
                         "/api/admin/auth/login" // 관리자 로그인 경로 추가
                 ).permitAll()
@@ -53,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/trainer/**").hasAuthority("TRAINER")
                 .antMatchers("/api/trainee/**").hasAuthority("TRAINEE")
                 .antMatchers("/api/common/**").hasAnyAuthority("TRAINER", "TRAINEE")
-                .antMatchers("/api/admin/**").hasAuthority("ADMIN") // 경로 수정
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

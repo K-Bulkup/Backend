@@ -29,13 +29,13 @@ public class TraineeAssetController {
 
     @PostMapping("/account")
     public CustomResponse<Void> postTraineeAccount(@RequestBody TokenRequestDTO dto, @AuthenticationPrincipal(expression = "user") User user) {
-        traineeAssetService.createUserPortfolio(dto.getBank(), user.getUserId());
+        traineeAssetService.createUserPortfolio(dto.getBank(), user);
 
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
 
     @GetMapping("/trainer-share/{roomId}")
-    public CustomResponse<TraineeAssetDetailResponseDTO> getTraineeAssetToTrainer(@PathVariable Long roomId) {
+    public CustomResponse<TraineeAssetDetailResponseDTO> getTraineeAssetToTrainer(@PathVariable String roomId) {
         TraineeAssetDetailResponseDTO dto = traineeAssetService.findTraineeAssetDetailByRoomID(roomId);
         return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }

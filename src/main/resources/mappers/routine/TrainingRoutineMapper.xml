@@ -26,7 +26,7 @@
     </insert>
 
     <insert id="createRoutineVideo">
-        INSERT INTO RoutineVideos (routine_id, routine_video_url)
+        INSERT INTO routine_videos (routine_id, routine_video_url)
         VALUES (#{routineId}, #{videoUrl})
     </insert>
 
