@@ -48,7 +48,6 @@
 
     <insert id="insertTransactions">
         INSERT INTO transactions (
-        transaction_id,
         user_id,
         transaction_type,
         amount,
@@ -58,7 +57,6 @@
         VALUES
         <foreach collection="transactions" item="transaction" separator=",">
             (
-            #{transaction.transactionId},
             #{transaction.userId},
             #{transaction.transactionType},
             #{transaction.amount},
@@ -70,7 +68,6 @@
 
     <insert id="insertSnapshots">
         INSERT INTO snapshots (
-        snapshot_id,
         user_id,
         balance,
         snapshot_date
@@ -78,7 +75,6 @@
         VALUES
         <foreach collection="snapshots" item="snapshot" separator=",">
             (
-            #{snapshot.snapshotId},
             #{snapshot.userId},
             #{snapshot.balance},
             #{snapshot.snapshotDate}
@@ -87,11 +83,9 @@
     </insert>
 
     <insert id="insertComposition">
-        INSERT INTO compositions (composition_id,
-                                       user_id,
-                                       asset_composition)
-        VALUES (#{composition.compositionId},
-                #{composition.userId},
+        INSERT INTO compositions (user_id,
+                                  asset_composition)
+        VALUES (#{composition.userId},
                 #{composition.assetComposition, typeHandler=com.kbulkup.asset.typehandler.JsonToMapTypeHandler})
     </insert>
 
