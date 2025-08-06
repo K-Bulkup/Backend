@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 
 @Configuration
 @Getter
-@PropertySource("classpath:/config/application-dev.properties")
+@PropertySource("classpath:/application.properties")
 public class GptConfig {
 
     @Value("${openai.api.key}")

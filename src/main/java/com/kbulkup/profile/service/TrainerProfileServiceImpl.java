@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@PropertySource("classpath:/config/application-dev.properties")
+@PropertySource("classpath:/application.properties")
 public class TrainerProfileServiceImpl implements TrainerProfileService {
 
     private final TrainerProfileMapper trainerProfileMapper;
