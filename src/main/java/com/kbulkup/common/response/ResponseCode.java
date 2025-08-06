@@ -46,6 +46,7 @@ public enum ResponseCode {
 
     //500 InternalServerError
     TRAINER_CAREER_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 소개 업데이트에 실패했습니다."),
+    TRAINER_PROFILE_NULL_VALUE_ERROR(INTERNAL_SERVER_ERROR,"프로필 이미지가 전달되지 않았습니다."),
     TRAINER_PROFILE_IMAGE_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 프로필 이미지 업데이트에 실패했습니다."),
     TRAINER_CERTIFICATES_VALIDATION_FAILED(INTERNAL_SERVER_ERROR, "유효하지 않은 자격정보 입니다."),
     PAYMENT_PROCESS_FAILED(INTERNAL_SERVER_ERROR, "결제 처리 중 오류가 발생했습니다."),

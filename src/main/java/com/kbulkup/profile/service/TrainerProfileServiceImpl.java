@@ -10,6 +10,7 @@ import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.profile.dto.request.TrainerProfileCareerUpdateRequestDTO;
 import com.kbulkup.profile.dto.request.TrainerProfileImageUpdateRequestDTO;
 import com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO;
+import com.kbulkup.profile.dto.response.TrainerProfileImgUrlResponseDTO;
 import com.kbulkup.profile.mapper.TrainerProfileMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@PropertySource("classpath:/config/application-dev.properties")
+@PropertySource("classpath:/application.properties")
 public class TrainerProfileServiceImpl implements TrainerProfileService {
 
     private final TrainerProfileMapper trainerProfileMapper;
@@ -65,11 +66,13 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
 
     @Override
     @Transactional
-    public void updateTrainerProfileImage(Long trainerId, TrainerProfileImageUpdateRequestDTO dto) {
+    public TrainerProfileImgUrlResponseDTO updateTrainerProfileImage(Long trainerId, TrainerProfileImageUpdateRequestDTO dto) {
 
         // 트레이너 프로필이 존재하는지 확인
         trainerProfileMapper.findByTrainerId(trainerId)
                 .orElseThrow(() -> new ProfileException(ResponseCode.NOT_FOUND_TRAINER_PROFILE));
+
+        TrainerProfileImgUrlResponseDTO trainerProfileImgUrlResponseDTO;
 
         try{
 
@@ -87,17 +90,25 @@ public class TrainerProfileServiceImpl implements TrainerProfileService {
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucket,"trainerProfile/"+profileImgName,imgFile.getInputStream(),metadata);
             amazonS3.putObject(putObjectRequest);
 
-            System.out.println(getPublicUrl(profileImgName));
-            trainerProfileMapper.updateTrainerProfileImage(trainerId,getPublicUrl(profileImgName));
+            String profileImgUrl = getPublicUrl(profileImgName);
+            trainerProfileMapper.updateTrainerProfileImage(trainerId,profileImgUrl);
+            trainerProfileImgUrlResponseDTO = TrainerProfileImgUrlResponseDTO.create(profileImgUrl);
 
-        }catch (Exception e) {
+        }
+        catch (NullPointerException e) {
+            throw new ProfileException(ResponseCode.TRAINER_PROFILE_NULL_VALUE_ERROR);
+        }
+        catch (Exception e) {
             throw new ProfileException(ResponseCode.TRAINER_PROFILE_IMAGE_UPDATE_FAILED);
         }
+
+        return trainerProfileImgUrlResponseDTO;
+
     }
 
     //이미지 저장 경로
     private String getPublicUrl(String fileName) {
-        return String.format("https://%s.s3.%s.amazonaws.com/trainer/profile/%s", bucket, amazonS3.getRegionName(), fileName);
+        return String.format("https://%s.s3.%s.amazonaws.com/trainerProfile/%s", bucket, amazonS3.getRegionName(), fileName);
     }
 
     @Override

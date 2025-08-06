@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySources({@PropertySource("classpath:/config/application-dev.properties"),
-        @PropertySource("classpath:/application.properties")})
+@PropertySource("classpath:/application.properties")
 // 1. 일반 컴포넌트를 스캔할 때는 Mapper 인터페이스를 제외시킵니다.
 @ComponentScan(
         basePackages = "com.kbulkup",

@@ -5,6 +5,7 @@ import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.profile.dto.request.TrainerProfileCareerUpdateRequestDTO;
 import com.kbulkup.profile.dto.request.TrainerProfileImageUpdateRequestDTO;
 import com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO;
+import com.kbulkup.profile.dto.response.TrainerProfileImgUrlResponseDTO;
 import com.kbulkup.profile.service.TrainerProfileService;
 import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +32,9 @@ public class TrainerProfileController {
     }
 
     @PutMapping("/profile-image")
-    public CustomResponse<Void> updateTrainerProfileImage(
+    public CustomResponse<TrainerProfileImgUrlResponseDTO> updateTrainerProfileImage(
             @AuthenticationPrincipal(expression = "user") User user,
             @ModelAttribute TrainerProfileImageUpdateRequestDTO dto) {
-        trainerProfileService.updateTrainerProfileImage(user.getUserId(), dto);
-        return CustomResponse.success(ResponseCode.SUCCESS);
+        return CustomResponse.success(ResponseCode.SUCCESS,trainerProfileService.updateTrainerProfileImage(user.getUserId(), dto));
     }
 }
