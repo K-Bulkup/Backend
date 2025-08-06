@@ -32,6 +32,7 @@ public enum ResponseCode {
   NO_ROLE_ASSIGNED(BAD_REQUEST, "사용자에게 할당된 역할이 없습니다."),
   DUPLICATE_ROLE(BAD_REQUEST, "이미 해당 역할로 가입된 사용자입니다."),
   NOT_FOUND_TRAINER_PROFILE(BAD_REQUEST,"트레이너 프로필 정보를 찾을 수 없습니다."), // 메시지 중복 있어서 위에 하나 있음
+  NOT_FOUND_TRAINEE_PROFILE(BAD_REQUEST,"트레이니 프로필 정보를 찾을 수 없습니다."),
   USER_NOT_FOUND(BAD_REQUEST, "사용자를 찾을 수 없습니다."), // AUTH_USER_NOT_FOUND 와 의미 중복
   INVALID_ENUM(BAD_REQUEST, "유효하지 않은 ENUM 값입니다."),
   INVALID_SQL_QUERY(BAD_REQUEST, "올바르지 않은 SQL 쿼리문입니다."),
