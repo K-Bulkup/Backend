@@ -9,4 +9,6 @@ public interface QnAService {
     void createTraineeTrainingQuestion(Long userId, Long traingId, String question);
 
     List<CommonTrainingQnAListResponseDTO> getTrainingQnAs(Long trainingId);
+
+    void createTrainerTrainingAnswer(Long qnaId, String answer);
 }

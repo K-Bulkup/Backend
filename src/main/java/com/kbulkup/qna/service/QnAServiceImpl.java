@@ -1,5 +1,7 @@
 package com.kbulkup.qna.service;
 
+import com.kbulkup.common.exception.QnAException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.qna.dto.response.CommonTrainingQnAListResponseDTO;
 import com.kbulkup.qna.mapper.QnAMapper;
 import com.kbulkup.training.mapper.TrainingMapper;
@@ -21,8 +23,17 @@ public class QnAServiceImpl implements QnAService {
     }
 
     @Override
-    public void createTraineeTrainingQuestion(Long traineeId, Long traingId, String question) {
-        Long trainerId = trainingMapper.findTrainerByTrainingId(traingId);
-        qnaMapper.insertQuestion(traingId, traineeId, trainerId, question);
+    public void createTraineeTrainingQuestion(Long traineeId, Long trainingId, String question) {
+        Long trainerId = trainingMapper.findTrainerByTrainingId(trainingId);
+        qnaMapper.insertQnAQuestion(trainingId, traineeId, trainerId, question);
     }
+
+    @Override
+    public void createTrainerTrainingAnswer(Long qnaId, String answer) {
+        int updated = qnaMapper.updateQnAAnswer(qnaId, answer);
+        if (updated == 0) {
+            throw new QnAException(ResponseCode.INVALID_QNA_REQUEST);
+        }
+    }
+
 }
