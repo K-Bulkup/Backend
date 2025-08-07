@@ -3,6 +3,7 @@ package com.kbulkup.training.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.kbulkup.routine.domain.Routine;
+import com.kbulkup.routine.domain.RoutineAnswer;
 import com.kbulkup.training.domain.Training;
 import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import com.kbulkup.training.mapper.TrainingMapper;
@@ -75,6 +76,13 @@ public class TrainingServiceImpl implements TrainingService {
 
                 if (routine.getVideoUrl() != null && !routine.getVideoUrl().isEmpty()) {
                     trainingRoutineMapper.createRoutineVideo(routine.getRoutineId(), routine.getVideoUrl());
+                }
+
+                String answerText = routineDto.getRoutineAnswer();
+                if (answerText != null && !answerText.isBlank()) {
+                    RoutineAnswer routineAnswer = RoutineAnswer.of(routine.getRoutineId(), answerText);
+
+                    trainingRoutineMapper.createRoutineAnswer(routineAnswer);
                 }
             }
         }
