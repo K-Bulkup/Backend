@@ -24,6 +24,7 @@
 
     <select id="getQnAList" resultType="com.kbulkup.qna.dto.response.CommonTrainingQnAListResponseDTO">
         SELECT
+            q.qna_id       AS qnaId,
             q.user_id      AS userId,
             q.question     AS question,
             q.answer       AS answer,
