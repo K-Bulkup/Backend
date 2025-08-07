@@ -11,16 +11,17 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommonTrainingQnAListResponseDTO {
+public class CommonTrainingQnADetailResponseDTO {
     private Long qnaId;
     private Long userId;
+    private String questionTitle;
     private String question;
     private String answer;
     private LocalDateTime createAt;
     private LocalDateTime answeredAt;
 
-    public static CommonTrainingQnAListResponseDTO create(Long qnaId, Long userId, String question, String answer, LocalDateTime createAt, LocalDateTime answeredAt) {
-        return CommonTrainingQnAListResponseDTO.builder()
+    public static CommonTrainingQnADetailResponseDTO create(Long qnaId, Long userId, String question, String answer, LocalDateTime createAt, LocalDateTime answeredAt) {
+        return CommonTrainingQnADetailResponseDTO.builder()
                 .qnaId(qnaId)
                 .userId(userId)
                 .question(question)

@@ -2,8 +2,11 @@ package com.kbulkup.qna.service;
 
 import com.kbulkup.common.exception.QnAException;
 import com.kbulkup.common.response.ResponseCode;
-import com.kbulkup.qna.dto.response.CommonTrainingQnAListResponseDTO;
+import com.kbulkup.qna.dto.response.CommonTrainingQnADetailResponseDTO;
+import com.kbulkup.qna.dto.response.CommonTrainingQnAListDetailResponseDTO;
 import com.kbulkup.qna.mapper.QnAMapper;
+import com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO;
+import com.kbulkup.training.mapper.TraineeTrainingMapper;
 import com.kbulkup.training.mapper.TrainingMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,12 @@ public class QnAServiceImpl implements QnAService {
 
     private final QnAMapper qnaMapper;
     private final TrainingMapper trainingMapper;
+    private final TraineeTrainingMapper traineeTrainingMapper;
 
     @Override
-    public List<CommonTrainingQnAListResponseDTO> getTrainingQnAs(Long trainingId) {
-        return qnaMapper.getQnAList(trainingId);
+    public CommonTrainingQnAListDetailResponseDTO getTrainingQnAs(Long trainingId) {
+        TraineeTrainingReviewResponseDTO dto = traineeTrainingMapper.findTrainingTitleByTrainingId(trainingId);
+        return CommonTrainingQnAListDetailResponseDTO.create(dto.getTitle(), qnaMapper.getQnAList(trainingId));
     }
 
     @Override
