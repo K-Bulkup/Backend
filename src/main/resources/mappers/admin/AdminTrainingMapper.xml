@@ -19,18 +19,18 @@
             users u ON tp.trainer_id = u.user_id
     </sql>
 
-    <select id="findAllTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDto">
+    <select id="findAllTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDTO">
         <include refid="adminTrainingColumns" />
         ORDER BY t.created_at DESC
     </select>
 
-    <select id="findApprovedTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDto">
+    <select id="findApprovedTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDTO">
         <include refid="adminTrainingColumns" />
         WHERE t.approval_status = '승인' -- 'APPROVED' 대신 '승인' 사용
         ORDER BY t.created_at DESC
     </select>
 
-    <select id="findPendingTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDto">
+    <select id="findPendingTrainings" resultType="com.kbulkup.admin.dto.response.AdminTrainingResponseDTO">
         <include refid="adminTrainingColumns" />
         WHERE t.approval_status = '대기' -- 'PENDING' 대신 '대기' 사용
         ORDER BY t.created_at DESC

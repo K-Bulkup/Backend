@@ -1,6 +1,6 @@
 package com.kbulkup.qna.mapper;
 
-import com.kbulkup.qna.dto.response.CommonTrainingQnAListResponseDTO;
+import com.kbulkup.qna.dto.response.CommonTrainingQnADetailResponseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,7 +16,7 @@ public interface QnAMapper {
             @Param("question") String question
     );
 
-    List<CommonTrainingQnAListResponseDTO> getQnAList(@Param("trainingId") Long trainingId);
+    List<CommonTrainingQnADetailResponseDTO> getQnAList(@Param("trainingId") Long trainingId);
 
     int updateQnAAnswer(@Param("qnaId") Long qnaId, @Param("answer") String answer);
 }

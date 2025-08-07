@@ -12,4 +12,8 @@ public interface ReviewMapper {
     List<TrainerTrainingReviewDetailResponseDTO> findReviewsByTrainingId(Long trainingId);
 
     Boolean hasWrittenReview(@Param("userId") Long userId,@Param("trainingId") Long trainingId);
+
+    void updateTrainingReview(@Param("trainingId") Long trainingId);
+
+    void updateTrainerReview(Long trainerId);
 }

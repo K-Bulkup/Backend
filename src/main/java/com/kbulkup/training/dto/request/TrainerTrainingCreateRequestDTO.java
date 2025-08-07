@@ -30,6 +30,7 @@ public class TrainerTrainingCreateRequestDTO {
         private Integer orderNumber;
         private Integer score;
         private String videoUrl;
+        private String routineAnswer;
 
         public static RoutineDTO of(
                 String title,
@@ -38,7 +39,8 @@ public class TrainerTrainingCreateRequestDTO {
                 String quizType,
                 Integer orderNumber,
                 Integer score,
-                String videoUrl
+                String videoUrl,
+                String routineAnswer
         ) {
             RoutineDTO dto = new RoutineDTO();
             dto.title = title;
@@ -48,6 +50,7 @@ public class TrainerTrainingCreateRequestDTO {
             dto.orderNumber = orderNumber;
             dto.score = score;
             dto.videoUrl = videoUrl;
+            dto.routineAnswer = routineAnswer;
             return dto;
         }
     }

@@ -1,6 +1,7 @@
 package com.kbulkup.qna.service;
 
-import com.kbulkup.qna.dto.response.CommonTrainingQnAListResponseDTO;
+import com.kbulkup.qna.dto.response.CommonTrainingQnADetailResponseDTO;
+import com.kbulkup.qna.dto.response.CommonTrainingQnAListDetailResponseDTO;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public interface QnAService {
 
     void createTraineeTrainingQuestion(Long userId, Long traingId, String question);
 
-    List<CommonTrainingQnAListResponseDTO> getTrainingQnAs(Long trainingId);
+    CommonTrainingQnAListDetailResponseDTO getTrainingQnAs(Long trainingId);
 
     void createTrainerTrainingAnswer(Long qnaId, String answer);
 }

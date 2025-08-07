@@ -30,4 +30,9 @@
         VALUES (#{routineId}, #{videoUrl})
     </insert>
 
+    <insert id="createRoutineAnswer" parameterType="com.kbulkup.routine.domain.RoutineAnswer">
+        INSERT INTO routine_answers (routine_id, answer)
+        VALUES (#{routineId}, #{answer})
+    </insert>
+
 </mapper>
