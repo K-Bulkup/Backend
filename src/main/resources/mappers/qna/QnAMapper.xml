@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.qna.mapper.QnAMapper">
+
+    <insert id="insertQnAQuestion">
+
+        INSERT INTO qnas (
+            training_id,
+            user_id,
+            trainer_id,
+            question,
+            created_at
+        ) VALUES (
+                     #{trainingId},
+                     #{traineeId},
+                     #{trainerId},
+                     #{question},
+                     NOW()
+                 )
+    </insert>
+
+    <select id="getQnAList" resultType="com.kbulkup.qna.dto.response.CommonTrainingQnAListResponseDTO">
+        SELECT
+            q.qna_id       AS qnaId,
+            q.user_id      AS userId,
+            q.question     AS question,
+            q.answer       AS answer,
+            q.created_at   AS createAt,
+            q.answered_at  AS answeredAt
+        FROM
+            qnas q
+        WHERE
+            q.training_id = #{trainingId}
+        ORDER BY
+            q.created_at DESC
+    </select>
+
+    <update id="updateQnAAnswer">
+        UPDATE qnas
+        SET answer = #{answer},
+            answered_at = NOW()
+        WHERE qna_id = #{qnaId}
+    </update>
+</mapper>

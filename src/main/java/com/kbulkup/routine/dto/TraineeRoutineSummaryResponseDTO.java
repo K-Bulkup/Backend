@@ -25,6 +25,7 @@ public class TraineeRoutineSummaryResponseDTO {
     // 트레이너 정보 추가
     private String trainerNickname;
     private String trainerProfileUrl;
+    private Long trainerId;
 
     // 루틴 타입별 Map
     private Map<String, List<RoutineSummaryResponseDTO>> routines;

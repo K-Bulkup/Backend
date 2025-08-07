@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Training {
 
     private Long trainingId;
@@ -31,18 +31,18 @@ public class Training {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static Training from(Long trainerId, TrainerTrainingCreateRequestDTO dto, String thumbnailUrl) {
+    public static Training from(Long trainerId, TrainerTrainingCreateRequestDTO dto, String thumbnailUrl, int price, int totalScore) {
         return Training.builder()
                 .trainerId(trainerId)
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .price(dto.getPrice())
+                .price(price) // 파라미터로 받은 계산된 price 사용
                 .category(dto.getCategory())
                 .level(dto.getLevel())
                 .thumbnailUrl(thumbnailUrl)
-                .totalScore(0)
+                .totalScore(totalScore) // 파라미터로 받은 계산된 totalScore 사용
                 .approvalStatus("대기")
-                .averageRating(0.0f)
+                .averageRating(0.0f) // 기존 Float 타입 유지
                 .traineeCount(0)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

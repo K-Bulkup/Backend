@@ -6,17 +6,18 @@
 
     <!-- 결제 후 트레이닝 기본 정보 -->
     <select id="findTrainingById" resultType="com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO">
-        SELECT t.title,
-        t.description,
-        t.price,
-        t.category,
-        t.level,
-        t.total_score AS totalScore,
-        t.average_rating AS averageRating,
-        t.trainee_count AS traineeCount,
-        u.username AS trainerNickname,        <!-- ✅ 트레이너명 -->
-        u.user_profile_url AS trainerProfileUrl, <!-- ✅ 트레이너 프로필 -->
-        e.progress
+        SELECT t.trainer_id AS trainerId,
+               t.title,
+               t.description,
+               t.price,
+               t.category,
+               t.level,
+               t.total_score AS totalScore,
+               t.average_rating AS averageRating,
+               t.trainee_count AS traineeCount,
+               u.username AS trainerNickname,        <!-- ✅ 트레이너명 -->
+               u.user_profile_url AS trainerProfileUrl, <!-- ✅ 트레이너 프로필 -->
+               e.progress
         FROM trainings t
         JOIN enrollments e ON e.training_id = t.training_id
         JOIN users u ON t.trainer_id = u.user_id        <!-- ✅ 트레이너 정보 JOIN -->
@@ -89,7 +90,8 @@
     <!-- 결제 전 트레이닝 상세 조회 (루틴 총점수 포함) -->
     <select id="findTrainingDetail" parameterType="long"
             resultType="com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO">
-        SELECT t.title,
+        SELECT t.trainer_id AS trainerId,
+               t.title,
                t.description,
                t.price,
                t.category,
