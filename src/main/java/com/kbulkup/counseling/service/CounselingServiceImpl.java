@@ -62,10 +62,12 @@ public class CounselingServiceImpl implements CounselingService {
     @Override
     public CounselingDetailResponseDTO getCounselingDetail(String roomId, Long myUserId) {
         Counseling counseling = counselingMapper.findByRoomId(roomId);
-        Long targetId = counseling.getUserId().equals(myUserId) ? counseling.getTrainerId() : counseling.getUserId();
 
-        User user = userMapper.findById(targetId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
-        //상대방 정보 조회
-        return CounselingDetailResponseDTO.create(user.getUsername(), user.getUserProfileUrl(), counseling.getStatus(), counseling.getExpiresAt());
+        User myUser = userMapper.findById(myUserId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+
+        Long opponentUserId = counseling.getUserId().equals(myUserId) ? counseling.getTrainerId() : counseling.getUserId();
+        User opponentUser = userMapper.findById(opponentUserId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+
+        return CounselingDetailResponseDTO.create(opponentUser.getUsername(), opponentUser.getUserProfileUrl(), myUser.getUserProfileUrl(), counseling.getStatus(), counseling.getExpiresAt());
     }
 }

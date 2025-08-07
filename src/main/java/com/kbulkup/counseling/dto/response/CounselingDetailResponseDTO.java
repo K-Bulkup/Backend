@@ -13,15 +13,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CounselingDetailResponseDTO {
 
-    private String userName;
-    private String userProfileUrl;
+    private String opponentUserName;
+    private String opponentProfileUrl;
+    private String myProfileUrl;
     private String status;
     private LocalDateTime expiresAt;
 
-    public static CounselingDetailResponseDTO create(String userName, String userProfileUrl, String status, LocalDateTime expiresAt) {
+    public static CounselingDetailResponseDTO create(String opponentUserName, String opponentProfileUrl, String myProfileUrl, String status, LocalDateTime expiresAt) {
         return CounselingDetailResponseDTO.builder()
-                .userName(userName)
-                .userProfileUrl(userProfileUrl)
+                .opponentUserName(opponentUserName)
+                .opponentProfileUrl(opponentProfileUrl)
+                .myProfileUrl(myProfileUrl)
                 .status(status)
                 .expiresAt(expiresAt)
                 .build();
