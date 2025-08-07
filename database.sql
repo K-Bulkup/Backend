@@ -163,14 +163,15 @@ CREATE TABLE `reviews`
 -- qnas
 CREATE TABLE `qnas`
 (
-    `qna_id`      BIGINT    NOT NULL AUTO_INCREMENT,
-    `user_id`     BIGINT    NOT NULL,
-    `training_id` BIGINT    NOT NULL,
-    `trainer_id`  BIGINT    NOT NULL,
-    `question`    TEXT      NULL,
-    `answer`      TEXT      NULL,
-    `created_at`  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    `answered_at` TIMESTAMP NULL,
+    `qna_id`         BIGINT       NOT NULL AUTO_INCREMENT,
+    `user_id`        BIGINT       NOT NULL,
+    `training_id`    BIGINT       NOT NULL,
+    `trainer_id`     BIGINT       NOT NULL,
+    `question_title` varchar(100) NULL,
+    `question`       TEXT         NULL,
+    `answer`         TEXT         NULL,
+    `created_at`     TIMESTAMP    NULL DEFAULT CURRENT_TIMESTAMP,
+    `answered_at`    TIMESTAMP    NULL,
     PRIMARY KEY (`qna_id`)
 );
 
