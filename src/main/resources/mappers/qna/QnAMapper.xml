@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kbulkup.qna.mapper.QnAMapper">
 
-    <insert id="insertQuestion">
+    <insert id="insertQnAQuestion">
 
         INSERT INTO qnas (
             training_id,
@@ -37,4 +37,11 @@
         ORDER BY
             q.created_at DESC
     </select>
+
+    <update id="updateQnAAnswer">
+        UPDATE qnas
+        SET answer = #{answer},
+            answered_at = NOW()
+        WHERE qna_id = #{qnaId}
+    </update>
 </mapper>

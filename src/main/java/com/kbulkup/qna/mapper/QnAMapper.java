@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface QnAMapper {
 
-    void insertQuestion(
+    void insertQnAQuestion(
             @Param("trainingId") Long trainingId,
             @Param("traineeId") Long traineeId,
             @Param("trainerId") Long trainerId,
@@ -17,4 +17,6 @@ public interface QnAMapper {
     );
 
     List<CommonTrainingQnAListResponseDTO> getQnAList(@Param("trainingId") Long trainingId);
+
+    int updateQnAAnswer(@Param("qnaId") Long qnaId, @Param("answer") String answer);
 }
