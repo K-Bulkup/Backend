@@ -82,10 +82,6 @@ public class TrainingServiceImpl implements TrainingService {
                 if (answerText != null && !answerText.isBlank()) {
                     RoutineAnswer routineAnswer = RoutineAnswer.of(routine.getRoutineId(), answerText);
 
-                    // --- 💡 여기를 추가해서 확인 ---
-                    System.out.println("### 디버깅: routineId = " + routineAnswer.getRoutineId());
-                    System.out.println("### 디버깅: answer = " + routineAnswer.getAnswer());
-
                     trainingRoutineMapper.createRoutineAnswer(routineAnswer);
                 }
             }
