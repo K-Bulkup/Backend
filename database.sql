@@ -387,4 +387,13 @@ INSERT INTO users (username, email, password, created_at, updated_at) VALUES
 ('user_019', 'user_019@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW()),
 ('user_020', 'user_020@example.com', '{bcrypt}$2a$10$kzwNFYFDMNwkRv/8033bN.54k5SPfZk7F8lpUtEVXw.okRTgb2TJK', NOW(), NOW());
 
+ALTER TABLE transactions
+    MODIFY COLUMN transaction_id BIGINT NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE compositions
+    MODIFY COLUMN composition_id BIGINT NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE snapshots
+    MODIFY COLUMN snapshot_id BIGINT NOT NULL AUTO_INCREMENT;
+
 select * from users;
