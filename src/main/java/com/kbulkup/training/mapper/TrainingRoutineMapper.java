@@ -1,6 +1,7 @@
 package com.kbulkup.training.mapper;
 
 import com.kbulkup.routine.domain.Routine;
+import com.kbulkup.routine.domain.RoutineAnswer;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,4 +14,6 @@ public interface TrainingRoutineMapper {
     // RoutineVideos 테이블에 비디오 URL 정보를 저장합니다.
     void createRoutineVideo(@Param("routineId") Long routineId,
                             @Param("videoUrl") String videoUrl);
+
+    void createRoutineAnswer(RoutineAnswer routineAnswer);
 }
