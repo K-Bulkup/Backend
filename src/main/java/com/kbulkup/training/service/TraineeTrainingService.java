@@ -63,6 +63,7 @@ public class TraineeTrainingService {
                 progress,
                 training.getTrainerNickname(),
                 training.getTrainerProfileUrl(),
+                training.getTrainerId(),
                 groupedRoutines
         );
     }
