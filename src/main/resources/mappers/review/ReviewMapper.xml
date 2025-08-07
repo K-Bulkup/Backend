@@ -14,4 +14,25 @@
                  JOIN users u ON r.user_id = u.user_id
         WHERE r.training_id = #{trainingId}
     </select>
+
+    <update id="updateTrainingReview">
+        UPDATE trainings
+        SET average_rating = (
+            SELECT ROUND(AVG(r.rating), 1)
+            FROM reviews r
+            WHERE r.training_id = #{trainingId}
+        )
+        WHERE training_id = #{trainingId}
+    </update>
+
+    <update id="updateTrainerReview">
+        UPDATE trainer_profiles
+        SET total_average_rating = (
+            SELECT ROUND(AVG(r.rating), 1)
+            FROM reviews r
+                     JOIN trainings t ON r.training_id = t.training_id
+            WHERE t.trainer_id = #{trainerId}
+        )
+        WHERE trainer_id = #{trainerId}
+    </update>
 </mapper>
