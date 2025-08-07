@@ -26,4 +26,9 @@ public class ReviewController {
         List<TrainerTrainingReviewDetailResponseDTO> dtos = reviewService.getTrainingReviews(trainingId);
         return CustomResponse.success(ResponseCode.SUCCESS, dtos);
     }
+
+    @GetMapping("/trainee/reveiws/{trainingId}")
+    public CustomResponse<Boolean> hasWrittenReview(@AuthenticationPrincipal(expression = "user") User user, @PathVariable Long trainingId) {
+        return CustomResponse.success(ResponseCode.SUCCESS, reviewService.hasWrittenReview(user.getUserId(), trainingId));
+    }
 }
