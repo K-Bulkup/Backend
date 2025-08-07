@@ -15,6 +15,15 @@
         WHERE r.training_id = #{trainingId}
     </select>
 
+    <select id="hasWrittenReview" resultType="java.lang.Boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM reviews
+            WHERE user_id = #{userId}
+              AND training_id = #{trainingId}
+        )
+    </select>
+
     <update id="updateTrainingReview">
         UPDATE trainings
         SET average_rating = (

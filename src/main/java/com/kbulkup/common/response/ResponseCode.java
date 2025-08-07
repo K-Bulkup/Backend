@@ -38,7 +38,7 @@ public enum ResponseCode {
     INVALID_SQL_QUERY(BAD_REQUEST, "올바르지 않은 SQL 쿼리문입니다."),
     PAYMENT_VERIFICATION_FAILED(BAD_REQUEST, "결제 검증에 실패했습니다."),
     TRAINING_NOT_FOUND(BAD_REQUEST, "존재하지 않는 트레이닝이거나 수강권한이 없습니다."),
-
+    INVALID_QNA_REQUEST(BAD_REQUEST, "올바르지 않은 QnA ID 입니다."),
     ADMIN_INVALID_DATE_VALUE(BAD_REQUEST,"유효하지 않은 날짜입니다." ),
 
 
