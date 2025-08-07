@@ -3,7 +3,7 @@ package com.kbulkup.admin.dto.response;
 import lombok.Getter;
 
 @Getter
-public class AdminTrainingResponseDto {
+public class AdminTrainingResponseDTO {
     private Long trainingId;
     private String trainingName;
     private Long trainerId;
