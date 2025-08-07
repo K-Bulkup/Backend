@@ -11,6 +11,7 @@
         <result property="routineScore" column="routine_score"/>
         <result property="category" column="category"/>
         <result property="level" column="level"/>
+        <result property="routineVideoUrl" column="routine_video_url"/>
     </resultMap>
 
     <select id="findRoutineDetailById" resultMap="RoutineDetailMap" parameterType="long">
@@ -19,9 +20,11 @@
             r.description AS routine_description,
             r.score AS routine_score,
             t.category,
-            t.level
+            t.level,
+            rv.routine_video_url
         FROM routines r
                  JOIN trainings t ON r.training_id = t.training_id
+                 LEFT JOIN routine_videos rv ON r.routine_id = rv.routine_id
         WHERE r.routine_id = #{routineId}
     </select>
 
