@@ -21,4 +21,19 @@
                      NOW()
                  )
     </insert>
+
+    <select id="getQnAList" resultType="com.kbulkup.qna.dto.response.CommonTrainingQnAListResponseDTO">
+        SELECT
+            q.user_id      AS userId,
+            q.question     AS question,
+            q.answer       AS answer,
+            q.created_at   AS createAt,
+            q.answered_at  AS answeredAt
+        FROM
+            qnas q
+        WHERE
+            q.training_id = #{trainingId}
+        ORDER BY
+            q.created_at DESC
+    </select>
 </mapper>
