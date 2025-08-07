@@ -12,8 +12,11 @@
             description,
             price,
             category,
-            level,
+            `level`,
             thumbnail_url,
+            total_score,
+            average_rating,
+            trainee_count,
             approval_status,
             created_at,
             updated_at
@@ -25,9 +28,12 @@
                      #{category},
                      #{level},
                      #{thumbnailUrl},
-                     '대기',
-                     NOW(),
-                     NOW()
+                     #{totalScore},
+                     #{averageRating},
+                     #{traineeCount},
+                     #{approvalStatus},
+                     #{createdAt},
+                     #{updatedAt}
                  )
     </insert>
 
