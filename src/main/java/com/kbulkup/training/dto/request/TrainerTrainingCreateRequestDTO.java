@@ -11,7 +11,6 @@ public class TrainerTrainingCreateRequestDTO {
 
     private String title;
     private String description;
-    private Integer price;
     private String category;
     private String level;
     private String thumbnailUrl;
@@ -56,7 +55,6 @@ public class TrainerTrainingCreateRequestDTO {
     public static TrainerTrainingCreateRequestDTO of(
             String title,
             String description,
-            Integer price,
             String category,
             String level,
             List<RoutineDTO> routines
@@ -64,7 +62,6 @@ public class TrainerTrainingCreateRequestDTO {
         TrainerTrainingCreateRequestDTO dto = new TrainerTrainingCreateRequestDTO();
         dto.title = title;
         dto.description = description;
-        dto.price = price;
         dto.category = category;
         dto.level = level;
         dto.routines = routines;

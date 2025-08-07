@@ -3,11 +3,14 @@ package com.kbulkup.routine.domain;
 import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import lombok.Builder;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Routine {
     private Long routineId;
     private Long trainingId;
@@ -23,7 +26,7 @@ public class Routine {
 
     private String videoUrl;
 
-    public static Routine createRoutine(Long trainingId, TrainerTrainingCreateRequestDTO.RoutineDTO dto) {
+    public static Routine createRoutine(Long trainingId, TrainerTrainingCreateRequestDTO.RoutineDTO dto, int score) {
         return Routine.builder()
                 .trainingId(trainingId)
                 .title(dto.getTitle())
@@ -31,7 +34,7 @@ public class Routine {
                 .routineType(dto.getRoutineType())
                 .quizType(dto.getQuizType())
                 .orderNumber(dto.getOrderNumber())
-                .score(dto.getScore())
+                .score(score) // 파라미터로 받은 계산된 score 사용
                 .videoUrl(dto.getVideoUrl()) // DB 저장 X, video 저장용
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
