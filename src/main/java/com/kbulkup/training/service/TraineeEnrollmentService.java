@@ -56,7 +56,7 @@ public class TraineeEnrollmentService {
     private float calculateAndUpdateProgress(Long trainingId, Long userId) {
         int totalCount = traineeEnrollmentMapper.countTotalRoutines(trainingId);
         int completedCount = traineeEnrollmentMapper.countCompletedRoutines(trainingId, userId);
-        float progress = (totalCount == 0) ? 0 : ((float) completedCount / totalCount) * 100;
+        float progress = (totalCount == 0) ? 0 : Math.round(((float) completedCount / totalCount) * 1000) / 10.0f;
 
         traineeEnrollmentMapper.updateTrainingProgress(trainingId, userId, progress);
         return progress;
