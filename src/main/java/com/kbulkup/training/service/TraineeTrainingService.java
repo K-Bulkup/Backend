@@ -2,6 +2,7 @@ package com.kbulkup.training.service;
 
 import com.kbulkup.common.exception.BaseException;
 import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.review.mapper.ReviewMapper;
 import com.kbulkup.routine.dto.RoutineSummaryResponseDTO;
 import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
 import com.kbulkup.training.dto.request.TraineeTrainingDetailRequestDTO;
@@ -10,6 +11,7 @@ import com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO;
 import com.kbulkup.training.mapper.TraineeTrainingMapper;
+import com.kbulkup.training.mapper.TrainingMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 public class TraineeTrainingService {
 
     private final TraineeTrainingMapper traineeTrainingMapper;
+    private final TrainingMapper trainingMapper;
+    private final ReviewMapper reviewMapper;
 
     /** 결제 여부에 따라 다른 DTO 반환 */
     public Object getTrainingDetail(TraineeTrainingDetailRequestDTO request, Long userId) {
@@ -83,5 +87,8 @@ public class TraineeTrainingService {
     @Transactional
     public void createReview(Long userId, Long trainingId, TraineeTrainingReviewCreateDTO dto) {
         traineeTrainingMapper.insertReview(userId, trainingId, dto.getRating(), dto.getContent());
+        reviewMapper.updateTrainingReview(trainingId);
+        Long trainerId = trainingMapper.findTrainerByTrainingId(trainingId);
+        reviewMapper.updateTrainerReview(trainerId);
     }
 }
