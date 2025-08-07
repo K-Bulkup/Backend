@@ -2,7 +2,6 @@ package com.kbulkup.qna.service;
 
 import com.kbulkup.common.exception.QnAException;
 import com.kbulkup.common.response.ResponseCode;
-import com.kbulkup.qna.dto.response.CommonTrainingQnADetailResponseDTO;
 import com.kbulkup.qna.dto.response.CommonTrainingQnAListDetailResponseDTO;
 import com.kbulkup.qna.mapper.QnAMapper;
 import com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO;
