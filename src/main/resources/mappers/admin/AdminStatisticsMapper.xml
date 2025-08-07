@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kbulkup.admin.mapper.AdminStatisticsMapper">
+
+    <resultMap id="userStatisticsMap" type="com.kbulkup.admin.dto.response.AdminUserStatisticsResponseDTO">
+        <result property="dateLabel" column="date_label"/>
+        <result property="signupCount" column="signup_count"/>
+    </resultMap>
+
+    <!-- 일별 사용자 가입 통계 (최근 30일) -->
+    <select id="findDailyUserSignups" resultMap="userStatisticsMap">
+        SELECT
+            DATE_FORMAT(created_at, '%Y-%m-%d') AS date_label,
+            COUNT(user_id) AS signup_count
+        FROM users
+        WHERE created_at BETWEEN #{startDate} AND #{endDate}
+        GROUP BY date_label
+        ORDER BY date_label ASC
+    </select>
+
+    <!-- 주별 사용자 가입 통계 (최근 12주) -->
+    <select id="findWeeklyUserSignups" resultMap="userStatisticsMap">
+        SELECT
+            CONCAT(YEAR(created_at), '-W', WEEK(created_at, 1)) AS date_label, <!-- WEEK(date, 1) for Monday as first day -->
+            COUNT(user_id) AS signup_count
+        FROM users
+        WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 12 WEEK)
+        GROUP BY date_label
+        ORDER BY date_label ASC
+    </select>
+
+    <!-- 월별 사용자 가입 통계 (최근 12개월) -->
+    <select id="findMonthlyUserSignups" resultMap="userStatisticsMap">
+        SELECT
+            DATE_FORMAT(created_at, '%Y-%m') AS date_label,
+            COUNT(user_id) AS signup_count
+        FROM users
+        WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+        GROUP BY date_label
+        ORDER BY date_label ASC
+    </select>
+
+    <!-- 연도별 사용자 가입 통계 (전체 기간) -->
+    <select id="findYearlyUserSignups" resultMap="userStatisticsMap">
+        SELECT
+            DATE_FORMAT(created_at, '%Y') AS date_label,
+            COUNT(user_id) AS signup_count
+        FROM users
+        GROUP BY date_label
+        ORDER BY date_label ASC
+    </select>
+
+</mapper>
