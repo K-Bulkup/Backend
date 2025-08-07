@@ -3,15 +3,14 @@ package com.kbulkup.routine.domain;
 import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor; // NoArgsConstructor 추가
-import lombok.AllArgsConstructor; // AllArgsConstructor 추가
-
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@NoArgsConstructor // MyBatis 매핑을 위해 기본 생성자 추가
-@AllArgsConstructor // Builder를 위해 전체 생성자 추가
+@NoArgsConstructor
+@AllArgsConstructor
 public class Routine {
     private Long routineId;
     private Long trainingId;
