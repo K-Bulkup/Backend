@@ -48,7 +48,7 @@ public class TraineeTrainingService {
 
         int completedCount = traineeTrainingMapper.countCompletedRoutines(request.getTrainingId(), userId);
         int totalCount = traineeTrainingMapper.countTotalRoutines(request.getTrainingId());
-        float progress = (totalCount == 0) ? 0 : ((float) completedCount / totalCount) * 100;
+        float progress = (totalCount == 0) ? 0 : Math.round(((float) completedCount / totalCount) * 1000) / 10.0f;
         int totalRoutineScore = traineeTrainingMapper.sumRoutineScore(request.getTrainingId());
 
         return TraineeRoutineSummaryResponseDTO.of(
@@ -63,6 +63,7 @@ public class TraineeTrainingService {
                 progress,
                 training.getTrainerNickname(),
                 training.getTrainerProfileUrl(),
+                training.getTrainerId(),
                 groupedRoutines
         );
     }

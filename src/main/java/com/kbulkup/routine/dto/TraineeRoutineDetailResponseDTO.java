@@ -16,4 +16,5 @@ public class TraineeRoutineDetailResponseDTO {
     private int routineScore;            // 루틴 점수
     private String category;             // 트레이닝 카테고리
     private String level;                // 트레이닝 난이도
+    private String routineVideoUrl;      // 루틴 영상 URL
 }
