@@ -10,10 +10,19 @@
     <!-- 일별 사용자 가입 통계 (최근 30일) -->
     <select id="findDailyUserSignups" resultMap="userStatisticsMap">
         SELECT
-            DATE_FORMAT(created_at, '%Y-%m-%d') AS date_label,
-            COUNT(user_id) AS signup_count
-        FROM users
-        WHERE created_at BETWEEN #{startDate} AND #{endDate}
+            DATE_FORMAT(u.created_at, '%Y-%m-%d') AS date_label,
+            COUNT(u.user_id) AS signup_count
+        FROM users u
+        <if test="roleName != null and roleName != 'all'">
+            JOIN user_roles ur ON u.user_id = ur.user_id
+            JOIN roles r ON ur.role_id = r.role_id
+        </if>
+        <where>
+            <if test="roleName != null and roleName != 'all'">
+                r.role = #{roleName}
+            </if>
+            AND u.created_at >= #{startDate} AND u.created_at &lt; #{endDate}
+        </where>
         GROUP BY date_label
         ORDER BY date_label ASC
     </select>
@@ -21,10 +30,19 @@
     <!-- 주별 사용자 가입 통계 (최근 12주) -->
     <select id="findWeeklyUserSignups" resultMap="userStatisticsMap">
         SELECT
-            CONCAT(YEAR(created_at), '-W', WEEK(created_at, 1)) AS date_label, <!-- WEEK(date, 1) for Monday as first day -->
-            COUNT(user_id) AS signup_count
-        FROM users
-        WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 12 WEEK)
+            CONCAT(YEAR(u.created_at), '-W', WEEK(u.created_at, 1)) AS date_label,
+            COUNT(u.user_id) AS signup_count
+        FROM users u
+        <if test="roleName != null and roleName != 'all'">
+            JOIN user_roles ur ON u.user_id = ur.user_id
+            JOIN roles r ON ur.role_id = r.role_id
+        </if>
+        <where>
+            <if test="roleName != null and roleName != 'all'">
+                r.role = #{roleName}
+            </if>
+            AND u.created_at >= DATE_SUB(CURDATE(), INTERVAL 12 WEEK)
+        </where>
         GROUP BY date_label
         ORDER BY date_label ASC
     </select>
@@ -32,10 +50,19 @@
     <!-- 월별 사용자 가입 통계 (최근 12개월) -->
     <select id="findMonthlyUserSignups" resultMap="userStatisticsMap">
         SELECT
-            DATE_FORMAT(created_at, '%Y-%m') AS date_label,
-            COUNT(user_id) AS signup_count
-        FROM users
-        WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+            DATE_FORMAT(u.created_at, '%Y-%m') AS date_label,
+            COUNT(u.user_id) AS signup_count
+        FROM users u
+        <if test="roleName != null and roleName != 'all'">
+            JOIN user_roles ur ON u.user_id = ur.user_id
+            JOIN roles r ON ur.role_id = r.role_id
+        </if>
+        <where>
+            <if test="roleName != null and roleName != 'all'">
+                r.role = #{roleName}
+            </if>
+            AND u.created_at >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+        </where>
         GROUP BY date_label
         ORDER BY date_label ASC
     </select>
@@ -43,11 +70,54 @@
     <!-- 연도별 사용자 가입 통계 (전체 기간) -->
     <select id="findYearlyUserSignups" resultMap="userStatisticsMap">
         SELECT
-            DATE_FORMAT(created_at, '%Y') AS date_label,
-            COUNT(user_id) AS signup_count
-        FROM users
+            DATE_FORMAT(u.created_at, '%Y') AS date_label,
+            COUNT(u.user_id) AS signup_count
+        FROM users u
+        <if test="roleName != null and roleName != 'all'">
+            JOIN user_roles ur ON u.user_id = ur.user_id
+            JOIN roles r ON ur.role_id = r.role_id
+        </if>
+        <where>
+            <if test="roleName != null and roleName != 'all'">
+                r.role = #{roleName}
+            </if>
+        </where>
         GROUP BY date_label
         ORDER BY date_label ASC
+    </select>
+
+    <!-- 총 사용자 요약 통계 -->
+    <select id="findUserSummaryStats" resultType="com.kbulkup.admin.dto.response.AdminUserSummaryStatsResponseDTO">
+        SELECT
+            (SELECT COUNT(user_id) FROM users) AS totalUsers,
+            (SELECT COUNT(u.user_id) FROM users u JOIN user_roles ur ON u.user_id = ur.user_id JOIN roles r ON ur.role_id = r.role_id WHERE r.role = 'TRAINER') AS totalTrainers,
+            (SELECT COUNT(u.user_id) FROM users u JOIN user_roles ur ON u.user_id = ur.user_id JOIN roles r ON ur.role_id = r.role_id WHERE r.role = 'TRAINEE') AS totalTrainees
+    </select>
+
+    <!-- 역할별 사용자 수 카운트 (단일 역할) -->
+    <select id="countUsersByRole" resultType="long">
+        SELECT COUNT(u.user_id)
+        FROM users u
+        JOIN user_roles ur ON u.user_id = ur.user_id
+        JOIN roles r ON ur.role_id = r.role_id
+        WHERE r.role = #{roleName}
+    </select>
+
+    <!-- 전체 기간 사용자 가입 통계 -->
+    <select id="findAllTimeUserSignups" resultMap="userStatisticsMap">
+        SELECT
+            'all_time' AS date_label,
+            COUNT(u.user_id) AS signup_count
+        FROM users u
+        <if test="roleName != null and roleName != 'all'">
+            JOIN user_roles ur ON u.user_id = ur.user_id
+            JOIN roles r ON ur.role_id = r.role_id
+        </if>
+        <where>
+            <if test="roleName != null and roleName != 'all'">
+                r.role = #{roleName}
+            </if>
+        </where>
     </select>
 
 </mapper>

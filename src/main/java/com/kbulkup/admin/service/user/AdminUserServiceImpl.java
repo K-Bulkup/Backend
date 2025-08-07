@@ -2,6 +2,8 @@ package com.kbulkup.admin.service.user;
 
 import com.kbulkup.admin.mapper.AdminUserMapper;
 import com.kbulkup.auth.dto.request.SignupRequestDTO;
+import com.kbulkup.common.exception.AdminException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.user.dto.request.UserRequestDTO;
 import com.kbulkup.user.dto.response.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +34,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             if (defaultRoleId != null) {
                 adminUserMapper.insertUserRole(dto.getUserId(), defaultRoleId);
             } else {
-                throw new RuntimeException("기본 역할을 찾을 수 없습니다.");
+                throw new AdminException(ResponseCode.ADMIN_USER_ROLE_MISSING);
             }
         }
     }
