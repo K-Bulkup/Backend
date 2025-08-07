@@ -44,6 +44,21 @@ public class TrainingController {
         return ResponseEntity.ok(CustomResponse.success(ResponseCode.SUCCESS));
     }
 
+    /** [트레이너] 내 트레이닝 목록 + 검색 */
+    @GetMapping("/trainer/trainings")
+    public CustomResponse<List<TrainingSearchListResponseDTO>> getMyTrainings(
+            @AuthenticationPrincipal(expression = "user") User user,
+            @ModelAttribute TrainingSearchListRequestDTO dto
+    ) {
+        // 로그인한 트레이너 ID 설정
+        dto.setTrainerId(user.getUserId());
+
+        return CustomResponse.success(
+                ResponseCode.SUCCESS,
+                trainingSearchService.getTrainerTrainingList(dto)
+        );
+    }
+
     /** [공용] 트레이닝 검색 */
     @GetMapping("/trainings/search")
     public CustomResponse<List<TrainingSearchListResponseDTO>> searchTrainings(

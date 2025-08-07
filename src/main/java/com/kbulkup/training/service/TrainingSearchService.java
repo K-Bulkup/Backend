@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TrainingSearchService {
     List<TrainingSearchListResponseDTO> searchTrainings(TrainingSearchListRequestDTO dto);
+
+    List<TrainingSearchListResponseDTO> getTrainerTrainingList(TrainingSearchListRequestDTO dto);
 }

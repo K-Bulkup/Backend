@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class TrainingSearchListRequestDTO {
     private String keyword;
+    private Long trainerId;
 }

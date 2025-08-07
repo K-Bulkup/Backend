@@ -25,4 +25,27 @@
         ORDER BY t.created_at DESC
     </select>
 
+    <select id="selectTrainerTrainingList"
+            parameterType="com.kbulkup.training.dto.request.TrainingSearchListRequestDTO"
+            resultType="com.kbulkup.training.dto.response.TrainingSearchListResponseDTO">
+        SELECT t.training_id AS trainingId,
+        t.title,
+        u.username AS trainerName,
+        t.average_rating AS averageRating,
+        t.trainee_count AS traineeCount,
+        t.price,
+        t.thumbnail_url AS thumbnailUrl,
+        t.level,
+        t.category
+        FROM trainings t
+        JOIN users u ON t.trainer_id = u.user_id
+        WHERE t.trainer_id = #{trainerId}
+        <if test="keyword != null and keyword != ''">
+            AND (
+            REPLACE(t.title, ' ', '') LIKE CONCAT('%', REPLACE(#{keyword}, ' ', ''), '%')
+            OR REPLACE(u.username, ' ', '') LIKE CONCAT('%', REPLACE(#{keyword}, ' ', ''), '%')
+            )
+        </if>
+        ORDER BY t.created_at DESC
+    </select>
 </mapper>
