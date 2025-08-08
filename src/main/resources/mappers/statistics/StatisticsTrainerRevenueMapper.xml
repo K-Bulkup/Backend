@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kbulkup.statistics.mapper.StatisticsTrainerRevenueMapper">
+
+    <resultMap id="TrainingRevenueDTOMap" type="com.kbulkup.statistics.dto.response.StatisticsTrainerRevenueResponseDTO$TrainingRevenueDTO">
+        <id property="trainingId" column="training_id"/>
+        <result property="trainingTitle" column="training_title"/>
+        <result property="accumulatedRevenue" column="accumulated_revenue"/>
+        <result property="last30DaysAccumulatedRevenue" column="last_30_days_accumulated_revenue"/>
+    </resultMap>
+
+    <select id="getTotalAndLast30DaysRevenue" resultType="com.kbulkup.statistics.dto.response.StatisticsTrainerRevenueResponseDTO">
+        SELECT
+            COALESCE(SUM(CASE WHEN p.status = 'COMPLETED' THEN p.amount ELSE 0 END), 0) AS totalAccumulatedRevenue,
+            COALESCE(SUM(CASE WHEN p.status = 'COMPLETED' AND p.payment_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN p.amount ELSE 0 END), 0) AS last30DaysAccumulatedRevenue
+        FROM
+            payment p
+        JOIN
+            training t ON p.training_id = t.id
+        WHERE
+            t.trainer_id = #{trainerId}
+    </select>
+
+    <select id="getTrainingRevenueDetails" resultMap="TrainingRevenueDTOMap">
+        SELECT
+            t.id AS training_id,
+            t.title AS training_title,
+            COALESCE(SUM(CASE WHEN p.status = 'COMPLETED' THEN p.amount ELSE 0 END), 0) AS accumulated_revenue,
+            COALESCE(SUM(CASE WHEN p.status = 'COMPLETED' AND p.payment_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN p.amount ELSE 0 END), 0) AS last_30_days_accumulated_revenue
+        FROM
+            training t
+        LEFT JOIN
+            payment p ON t.id = p.training_id
+        WHERE
+            t.trainer_id = #{trainerId}
+        GROUP BY
+            t.id, t.title
+        ORDER BY
+            t.id
+    </select>
+
+</mapper>
