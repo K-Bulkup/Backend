@@ -28,7 +28,7 @@ public class QnAController {
 
     @PostMapping("/trainee/trainings/{trainingId}/question")
     public CustomResponse<Void> createTrainingQuestion(@AuthenticationPrincipal(expression = "user") User user, @PathVariable Long trainingId, @RequestBody TraineeTrainingQnARequestDTO dto) {
-        qnAService.createTraineeTrainingQuestion(user.getUserId(), trainingId, dto.getQuestion());
+        qnAService.createTraineeTrainingQuestion(user.getUserId(), trainingId, dto.getQuestionTitle(), dto.getQuestion());
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
 
