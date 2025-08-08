@@ -6,6 +6,7 @@ import com.kbulkup.qna.dto.request.TraineeTrainingQnARequestDTO;
 import com.kbulkup.qna.dto.request.TrainerTrainingQnARequestDTO;
 import com.kbulkup.qna.dto.response.CommonTrainingQnADetailResponseDTO;
 import com.kbulkup.qna.dto.response.CommonTrainingQnAListDetailResponseDTO;
+import com.kbulkup.qna.dto.response.TrainerTrainingListDetailResponseDTO;
 import com.kbulkup.qna.service.QnAService;
 import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,11 @@ import java.util.List;
 public class QnAController {
 
     private final QnAService qnAService;
+
+    @GetMapping("/trainer/trainings/qnas")
+    public CustomResponse<List<TrainerTrainingListDetailResponseDTO>> getTrainerTrainings(@AuthenticationPrincipal(expression = "user") User user) {
+        return CustomResponse.success(ResponseCode.SUCCESS, qnAService.getTrainerTrainings(user.getUserId()));
+    }
 
     @GetMapping("/common/trainings/{trainingId}/qnas")
     public CustomResponse<CommonTrainingQnAListDetailResponseDTO> getTrainingQnAs(@PathVariable Long trainingId) {
