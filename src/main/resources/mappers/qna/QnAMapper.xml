@@ -16,7 +16,7 @@
         VALUES (#{trainingId},
                 #{traineeId},
                 #{trainerId},
-                #{questionTitle}
+                #{questionTitle},
                  #{question},
                 NOW())
     </insert>
