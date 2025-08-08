@@ -13,6 +13,7 @@ public interface QnAMapper {
             @Param("trainingId") Long trainingId,
             @Param("traineeId") Long traineeId,
             @Param("trainerId") Long trainerId,
+            @Param("questionTitle") String questionTitle,
             @Param("question") String question
     );
 
