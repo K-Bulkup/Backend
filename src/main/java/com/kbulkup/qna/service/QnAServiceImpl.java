@@ -27,7 +27,7 @@ public class QnAServiceImpl implements QnAService {
     }
 
     @Override
-    public void createTraineeTrainingQuestion(Long traineeId, Long trainingId, String question) {
+    public void createTraineeTrainingQuestion(Long traineeId, Long trainingId, String questionTitle, String question) {
         Long trainerId = trainingMapper.findTrainerByTrainingId(trainingId);
         qnaMapper.insertQnAQuestion(trainingId, traineeId, trainerId, question);
     }

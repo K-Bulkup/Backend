@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface QnAService {
 
-    void createTraineeTrainingQuestion(Long userId, Long traingId, String question);
+    void createTraineeTrainingQuestion(Long userId, Long traingId, String questionTitle, String question);
 
     CommonTrainingQnAListDetailResponseDTO getTrainingQnAs(Long trainingId);
 
