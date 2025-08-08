@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kbulkup.routine.mapper.RoutineResultMapper">
+
+    <select id="findRoutineAnswerByRoutineId" resultType="string">
+        SELECT answer FROM routine_answers WHERE routine_id = #{routineId}
+    </select>
+
+    <select id="selectRoutineScoreById" resultType="int">
+        SELECT score FROM routines WHERE routine_id = #{routineId}
+    </select>
+
+    <select id="existsByRoutineAndEnrollment" resultType="int">
+        SELECT COUNT(*) > 0 FROM routine_results
+        WHERE routine_id = #{routineId} AND enrollment_id = #{enrollmentId}
+    </select>
+
+    <insert id="insertRoutineResult" parameterType="com.kbulkup.routine.domain.RoutineResult">
+        INSERT INTO routine_results (enrollment_id, routine_id, status, awared_score, pass_fail_result,
+        answer_text, evidence_url, submitted_at)
+        VALUES (#{enrollmentId}, #{routineId}, #{status}, #{awaredScore}, #{passFailResult},
+        #{answerText}, #{evidenceUrl}, #{submittedAt})
+    </insert>
+
+    <update id="updateRoutineResult" parameterType="com.kbulkup.routine.domain.RoutineResult">
+        UPDATE routine_results
+        SET status = #{status},
+        awared_score = #{awaredScore},
+        pass_fail_result = #{passFailResult},
+        answer_text = #{answerText},
+        evidence_url = #{evidenceUrl},
+        submitted_at = #{submittedAt}
+        WHERE routine_id = #{routineId} AND enrollment_id = #{enrollmentId}
+    </update>
+
+    <update id="increaseUserScore">
+        UPDATE users
+        SET growth_score = growth_score + #{score}
+        WHERE user_id = (
+        SELECT user_id FROM enrollments WHERE enrollment_id = #{enrollmentId}
+        )
+    </update>
+
+    <update id="updateEnrollmentProgress">
+        UPDATE enrollments e_outer
+            JOIN (
+            SELECT e_inner.enrollment_id,
+            ROUND(COUNT(*) / MAX(total.total) * 100, 1) AS new_progress
+            FROM routine_results rr
+            JOIN routines r ON rr.routine_id = r.routine_id
+            JOIN trainings t ON r.training_id = t.training_id
+            JOIN enrollments e_inner ON rr.enrollment_id = e_inner.enrollment_id
+            JOIN (
+            SELECT e2.enrollment_id, COUNT(*) AS total
+            FROM routines r2
+            JOIN enrollments e2 ON r2.training_id = e2.training_id
+            WHERE e2.enrollment_id = #{enrollmentId}
+            GROUP BY e2.enrollment_id
+            ) total ON e_inner.enrollment_id = total.enrollment_id
+            WHERE rr.enrollment_id = #{enrollmentId}
+            AND rr.pass_fail_result = 'PASS'
+            GROUP BY e_inner.enrollment_id
+            ) progress_result
+        ON e_outer.enrollment_id = progress_result.enrollment_id
+            SET e_outer.progress = progress_result.new_progress
+    </update>
+</mapper>

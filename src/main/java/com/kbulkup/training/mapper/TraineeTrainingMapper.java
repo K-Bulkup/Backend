@@ -1,7 +1,7 @@
 package com.kbulkup.training.mapper;
 
-import com.kbulkup.routine.dto.RoutineSummaryResponseDTO;
-import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
+import com.kbulkup.routine.dto.response.RoutineSummaryResponseDTO;
+import com.kbulkup.routine.dto.response.TraineeRoutineSummaryResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO;

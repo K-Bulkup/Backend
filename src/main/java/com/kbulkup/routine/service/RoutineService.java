@@ -1,6 +1,6 @@
 package com.kbulkup.routine.service;
 
-import com.kbulkup.routine.dto.TraineeRoutineDetailResponseDTO;
+import com.kbulkup.routine.dto.response.TraineeRoutineDetailResponseDTO;
 
 public interface RoutineService {
 

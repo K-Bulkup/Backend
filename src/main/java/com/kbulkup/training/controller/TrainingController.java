@@ -2,12 +2,11 @@ package com.kbulkup.training.controller;
 
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
-import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
+import com.kbulkup.routine.dto.response.TraineeRoutineSummaryResponseDTO;
 import com.kbulkup.training.dto.request.TraineeTrainingDetailRequestDTO;
 import com.kbulkup.training.dto.request.TraineeTrainingReviewCreateDTO;
 import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import com.kbulkup.training.dto.request.TrainingSearchListRequestDTO;
-import com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO;
 import com.kbulkup.training.dto.response.TrainingSearchListResponseDTO;

@@ -1,8 +1,7 @@
 package com.kbulkup.routine.controller;
 
-import com.kbulkup.routine.dto.TraineeRoutineDetailResponseDTO;
+import com.kbulkup.routine.dto.response.TraineeRoutineDetailResponseDTO;
 import com.kbulkup.routine.service.RoutineService;
-import com.kbulkup.training.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

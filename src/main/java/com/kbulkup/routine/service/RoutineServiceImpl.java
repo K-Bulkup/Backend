@@ -1,6 +1,6 @@
 package com.kbulkup.routine.service;
 
-import com.kbulkup.routine.dto.TraineeRoutineDetailResponseDTO;
+import com.kbulkup.routine.dto.response.TraineeRoutineDetailResponseDTO;
 import com.kbulkup.routine.mapper.TraineeRoutineMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
