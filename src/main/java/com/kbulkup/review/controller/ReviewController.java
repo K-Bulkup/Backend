@@ -21,7 +21,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @GetMapping("/trainer/reviews/{trainingId}")
+    @GetMapping("/common/reviews/{trainingId}")
     public CustomResponse<List<TrainerTrainingReviewDetailResponseDTO>> getTrainerTrainingReview(@PathVariable Long trainingId) {
         List<TrainerTrainingReviewDetailResponseDTO> dtos = reviewService.getTrainingReviews(trainingId);
         return CustomResponse.success(ResponseCode.SUCCESS, dtos);
