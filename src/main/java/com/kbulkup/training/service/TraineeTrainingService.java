@@ -68,6 +68,7 @@ public class TraineeTrainingService {
                 training.getTrainerNickname(),
                 training.getTrainerProfileUrl(),
                 training.getTrainerId(),
+                training.getEnrollmentId(),
                 groupedRoutines
         );
     }

@@ -27,6 +27,8 @@ public class TraineeRoutineSummaryResponseDTO {
     private String trainerProfileUrl;
     private Long trainerId;
 
+    private Long enrollmentId;
+
     // 루틴 타입별 Map
     private Map<String, List<RoutineSummaryResponseDTO>> routines;
 

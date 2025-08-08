@@ -17,7 +17,8 @@
                t.trainee_count AS traineeCount,
                u.username AS trainerNickname,        <!-- ✅ 트레이너명 -->
                u.user_profile_url AS trainerProfileUrl, <!-- ✅ 트레이너 프로필 -->
-               e.progress
+               e.progress,
+               e.enrollment_id AS enrollmentId
         FROM trainings t
         JOIN enrollments e ON e.training_id = t.training_id
         JOIN users u ON t.trainer_id = u.user_id        <!-- ✅ 트레이너 정보 JOIN -->
