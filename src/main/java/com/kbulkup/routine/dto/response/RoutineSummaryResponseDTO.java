@@ -1,4 +1,4 @@
-package com.kbulkup.routine.dto;
+package com.kbulkup.routine.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

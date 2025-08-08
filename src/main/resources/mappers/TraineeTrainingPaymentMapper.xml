@@ -28,7 +28,7 @@
     <!-- ✅ routine_results 초기화 (루틴별 기본 결과 생성) -->
     <insert id="insertRoutineResultsForEnrollment">
         INSERT INTO routine_results (enrollment_id, routine_id, status, pass_fail_result)
-        SELECT #{enrollmentId}, r.routine_id, FALSE, NULL
+        SELECT #{enrollmentId}, r.routine_id, FALSE, 'PENDING'
         FROM routines r
         WHERE r.training_id = #{trainingId}
     </insert>

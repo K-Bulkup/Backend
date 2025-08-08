@@ -1,6 +1,6 @@
 package com.kbulkup.routine.mapper;
 
-import com.kbulkup.routine.dto.TraineeRoutineDetailResponseDTO;
+import com.kbulkup.routine.dto.response.TraineeRoutineDetailResponseDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

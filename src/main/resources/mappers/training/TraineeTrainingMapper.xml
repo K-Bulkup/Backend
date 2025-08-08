@@ -5,7 +5,7 @@
 <mapper namespace="com.kbulkup.training.mapper.TraineeTrainingMapper">
 
     <!-- 결제 후 트레이닝 기본 정보 -->
-    <select id="findTrainingById" resultType="com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO">
+    <select id="findTrainingById" resultType="com.kbulkup.routine.dto.response.TraineeRoutineSummaryResponseDTO">
         SELECT t.trainer_id AS trainerId,
                t.title,
                t.description,
@@ -26,7 +26,7 @@
     </select>
 
     <!-- 루틴 목록 조회 (루틴 타입 포함) -->
-    <select id="findRoutinesByTraining" resultType="com.kbulkup.routine.dto.RoutineSummaryResponseDTO">
+    <select id="findRoutinesByTraining" resultType="com.kbulkup.routine.dto.response.RoutineSummaryResponseDTO">
         SELECT r.routine_id   AS routineId,
                r.title,
                r.routine_type AS routineType,
