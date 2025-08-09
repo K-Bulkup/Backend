@@ -9,5 +9,7 @@ public interface TraineeAssetService {
 
     void createUserPortfolio(String bank, User user);
 
+    void updateUserPortfolio(User user);
+
     TraineeAssetDetailResponseDTO findTraineeAssetDetailByRoomID(String roomId);
 }
