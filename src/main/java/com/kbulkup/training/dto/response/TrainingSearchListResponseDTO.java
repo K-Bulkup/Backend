@@ -15,4 +15,5 @@ public class TrainingSearchListResponseDTO {
     private String thumbnailUrl;
     private String level;
     private String category;
+    private String status; // 트레이너용
 }
