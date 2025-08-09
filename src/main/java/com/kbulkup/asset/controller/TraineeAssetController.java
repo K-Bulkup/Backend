@@ -30,8 +30,14 @@ public class TraineeAssetController {
     @PostMapping("/account")
     public CustomResponse<Void> postTraineeAccount(@RequestBody TokenRequestDTO dto, @AuthenticationPrincipal(expression = "user") User user) {
         traineeAssetService.createUserPortfolio(dto.getBank(), user);
-
         return CustomResponse.success(ResponseCode.SUCCESS);
+    }
+
+    @PutMapping
+    public CustomResponse<TraineeAssetDetailResponseDTO> updateAndGetTraineeAsset(@AuthenticationPrincipal(expression = "user") User user) {
+        traineeAssetService.updateUserPortfolio(user);
+        TraineeAssetDetailResponseDTO dto = traineeAssetService.getTraineeAsset(user.getUserId());
+        return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }
 
     @GetMapping("/trainer-share/{roomId}")
