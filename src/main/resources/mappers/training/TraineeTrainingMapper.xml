@@ -14,7 +14,9 @@
                t.level,
                t.total_score AS totalScore,
                t.average_rating AS averageRating,
-               t.trainee_count AS traineeCount,
+               (SELECT COUNT(DISTINCT e2.user_id)
+                FROM enrollments e2
+                WHERE e2.training_id = t.training_id) AS traineeCount,
                u.username AS trainerNickname,        <!-- ✅ 트레이너명 -->
                u.user_profile_url AS trainerProfileUrl, <!-- ✅ 트레이너 프로필 -->
                e.progress,
@@ -95,17 +97,20 @@
         t.title,
         u.username AS trainerName,
         t.average_rating AS averageRating,
-        t.trainee_count AS traineeCount,
+        (SELECT COUNT(DISTINCT e2.user_id)
+        FROM enrollments e2
+        WHERE e2.training_id = t.training_id) AS traineeCount,
         t.price,
         t.thumbnail_url AS thumbnailUrl,
         t.level,
         t.category,
-        CASE WHEN e.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS purchased
+        CASE WHEN EXISTS (
+        SELECT 1 FROM enrollments e3
+        WHERE e3.training_id = t.training_id
+        AND e3.user_id     = #{userId}
+        ) THEN TRUE ELSE FALSE END AS purchased
         FROM trainings t
-        JOIN users u ON t.trainer_id = u.user_id
-        LEFT JOIN enrollments e
-        ON e.training_id = t.training_id
-        AND e.user_id = #{userId}    <!-- 로그인 사용자 기준 -->
+                 JOIN users u ON t.trainer_id = u.user_id
         WHERE t.approval_status = '승인'
         ORDER BY t.created_at DESC
     </select>
@@ -121,7 +126,9 @@
                t.category,
                t.level,
                t.average_rating AS averageRating,
-               t.trainee_count AS traineeCount,
+               (SELECT COUNT(DISTINCT e2.user_id)
+                FROM enrollments e2
+                WHERE e2.training_id = t.training_id) AS traineeCount,
                u.username AS trainerNickname,
                u.user_profile_url AS trainerProfileUrl,
                t.thumbnail_url AS thumbnailUrl,

@@ -19,9 +19,13 @@
             u.user_profile_url,
             tp.career,
             tp.total_average_rating,
-            tp.total_trainee_count
-        FROM trainer_profiles tp JOIN users u ON tp.trainer_id = u.user_id
-        WHERE tp.trainer_id = #{trainerId};
+            (SELECT COALESCE(COUNT(DISTINCT e.user_id),0)
+             FROM enrollments e
+                      JOIN trainings t2 ON e.training_id = t2.training_id
+             WHERE t2.trainer_id = tp.trainer_id) AS total_trainee_count
+        FROM trainer_profiles tp
+                 JOIN users u ON tp.trainer_id = u.user_id
+        WHERE tp.trainer_id = #{trainerId}
     </select>
     
     <update id="updateTrainerCareer">
