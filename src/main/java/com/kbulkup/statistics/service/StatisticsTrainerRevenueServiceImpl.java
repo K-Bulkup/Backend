@@ -16,9 +16,16 @@ public class StatisticsTrainerRevenueServiceImpl implements StatisticsTrainerRev
     private final StatisticsTrainerRevenueMapper statisticsTrainerRevenueMapper;
 
     @Override
-    public StatisticsTrainerRevenueResponseDTO getTrainerRevenueStatistics(Long trainerId) {
-        // 전체 누적 매출액 및 최근 30일 누적 매출액 조회
-        StatisticsTrainerRevenueResponseDTO totalRevenueData = statisticsTrainerRevenueMapper.getTotalAndLast30DaysRevenue(trainerId);
+    public StatisticsTrainerRevenueResponseDTO getTrainerRevenueStatistics(Long trainerId, Long trainingId) {
+        StatisticsTrainerRevenueResponseDTO totalRevenueData;
+
+        if (trainingId != null) {
+            // Get revenue for a specific training
+            totalRevenueData = statisticsTrainerRevenueMapper.getTotalAndLast30DaysRevenueForTraining(trainerId, trainingId);
+        } else {
+            // Get overall trainer revenue
+            totalRevenueData = statisticsTrainerRevenueMapper.getTotalAndLast30DaysRevenue(trainerId);
+        }
 
         // 트레이닝별 누적 매출액 및 최근 30일 누적 매출액 조회
         List<StatisticsTrainerRevenueResponseDTO.TrainingRevenueDTO> trainingRevenueDetails = statisticsTrainerRevenueMapper.getTrainingRevenueDetails(trainerId);

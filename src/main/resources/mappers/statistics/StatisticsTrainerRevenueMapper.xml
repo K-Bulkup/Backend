@@ -118,4 +118,16 @@
             revenue_month
     </select>
 
+    <select id="getTotalAndLast30DaysRevenueForTraining" resultType="com.kbulkup.statistics.dto.response.StatisticsTrainerRevenueResponseDTO">
+        SELECT
+            COALESCE(SUM(t.price), 0) AS totalAccumulatedRevenue,
+            COALESCE(SUM(CASE WHEN e.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN t.price ELSE 0 END), 0) AS last30DaysAccumulatedRevenue
+        FROM
+            trainings t
+        JOIN
+            enrollments e ON t.training_id = e.training_id
+        WHERE
+            t.trainer_id = #{trainerId} AND t.training_id = #{trainingId}
+    </select>
+
 </mapper>

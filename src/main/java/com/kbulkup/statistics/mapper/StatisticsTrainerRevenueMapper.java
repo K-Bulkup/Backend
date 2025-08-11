@@ -20,4 +20,6 @@ public interface StatisticsTrainerRevenueMapper {
     List<DailyRevenueDTO> getDailyRevenueForTraining(@Param("trainerId") Long trainerId, @Param("trainingId") Long trainingId);
 
     List<MonthlyRevenueDTO> getMonthlyRevenueForTraining(@Param("trainerId") Long trainerId, @Param("trainingId") Long trainingId);
+
+    StatisticsTrainerRevenueResponseDTO getTotalAndLast30DaysRevenueForTraining(@Param("trainerId") Long trainerId, @Param("trainingId") Long trainingId);
 }

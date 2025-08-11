@@ -7,7 +7,7 @@ import com.kbulkup.statistics.dto.response.StatisticsTrainerRevenueResponseDTO;
 import java.util.List;
 
 public interface StatisticsTrainerRevenueService {
-    StatisticsTrainerRevenueResponseDTO getTrainerRevenueStatistics(Long trainerId);
+    StatisticsTrainerRevenueResponseDTO getTrainerRevenueStatistics(Long trainerId, Long trainingId);
 
     List<DailyRevenueDTO> getDailyRevenueLast30Days(Long trainerId);
 

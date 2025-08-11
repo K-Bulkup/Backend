@@ -10,10 +10,7 @@ import com.kbulkup.statistics.service.StatisticsTrainerRevenueService;
 import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +22,9 @@ public class StatisticsTrainerRevenueController {
     private final StatisticsTrainerRevenueService statisticsTrainerRevenueService;
 
     @GetMapping
-    public CustomResponse<StatisticsTrainerRevenueResponseDTO> getRevenueStatistics(@AuthenticationPrincipal(expression = "user") User user) {
+    public CustomResponse<StatisticsTrainerRevenueResponseDTO> getRevenueStatistics(
+            @AuthenticationPrincipal(expression = "user") User user,
+            @RequestParam(required = false) Long trainingId) {
         // 사용자가 TRAINER 역할을 가지고 있는지 확인
         if (user == null || user.getRoles() == null || !user.getRoles().contains("TRAINER")) {
             throw new AuthException(ResponseCode.TRAINER_ACCESS_DENIED);
@@ -33,7 +32,7 @@ public class StatisticsTrainerRevenueController {
 
         Long trainerId = user.getUserId();
 
-        StatisticsTrainerRevenueResponseDTO response = statisticsTrainerRevenueService.getTrainerRevenueStatistics(trainerId);
+        StatisticsTrainerRevenueResponseDTO response = statisticsTrainerRevenueService.getTrainerRevenueStatistics(trainerId, trainingId);
         return CustomResponse.success(ResponseCode.SUCCESS, response);
     }
 
