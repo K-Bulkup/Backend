@@ -398,3 +398,36 @@ ALTER TABLE snapshots
     MODIFY COLUMN snapshot_id BIGINT NOT NULL AUTO_INCREMENT;
 
 select * from users;
+
+-- trainer_schedule
+CREATE TABLE `trainer_schedules`
+(
+    `schedule_id`     BIGINT      NOT NULL AUTO_INCREMENT,
+    `trainer_id`      BIGINT      NOT NULL,
+    `start_time`      DATETIME    NOT NULL,
+    `end_time`        DATETIME    NOT NULL,
+    `is_available`    BOOLEAN     NOT NULL DEFAULT TRUE,
+    `created_at`      DATETIME    NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`schedule_id`),
+    FOREIGN KEY (`trainer_id`) REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE
+);
+
+-- counseling_reservation
+CREATE TABLE `counseling_reservations`
+(
+    `reservation_id`  BIGINT                                  NOT NULL AUTO_INCREMENT,
+    `user_id`         BIGINT                                  NOT NULL,
+    `trainer_id`      BIGINT                                  NOT NULL,
+    `training_id`     BIGINT                                  NOT NULL,
+    `schedule_id`     BIGINT                                  NOT NULL,
+    `status`          ENUM ('예약완료', '진행중', '완료', '취소')    NOT NULL DEFAULT '예약완료',
+    `room_id`         VARCHAR(100)                            NULL,
+    `created_at`      DATETIME                                NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`      DATETIME                                NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`reservation_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`trainer_id`) REFERENCES `trainer_profiles` (`trainer_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`schedule_id`) REFERENCES `trainer_schedules` (`schedule_id`) ON DELETE CASCADE,
+    UNIQUE (`room_id`)
+);
