@@ -41,6 +41,15 @@
         LIMIT 1
     </select>
 
+    <select id="existsByUserIdAndTrainingId" resultType="java.lang.Boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM counselings
+            WHERE user_id = #{userId}
+              AND training_id = #{trainingId}
+        )
+    </select>
+
     <insert id="insertCounseling" parameterType="com.kbulkup.counseling.domain.Counseling">
         INSERT INTO counselings (
             user_id,

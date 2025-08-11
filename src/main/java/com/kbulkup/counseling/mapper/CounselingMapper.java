@@ -17,6 +17,8 @@ public interface CounselingMapper {
 
     Counseling findByRoomId(@Param("roomId") String roomId);
 
+    Boolean existsByUserIdAndTrainingId(@Param("userId") Long userId,  @Param("trainingId") Long trainingId);
+
     void insertCounseling(Counseling counseling);
 
     void updateLatestMessage(@Param("roomId") String roomId, @Param("latestMessage") String latestMessage, @Param("latestAt") LocalDateTime latestAt);

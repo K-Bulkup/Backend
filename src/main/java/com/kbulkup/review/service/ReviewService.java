@@ -6,6 +6,4 @@ import java.util.List;
 
 public interface ReviewService {
     List<TrainerTrainingReviewDetailResponseDTO> getTrainingReviews(Long trainingId);
-
-    Boolean hasWrittenReview(Long userId, Long trainingId);
 }

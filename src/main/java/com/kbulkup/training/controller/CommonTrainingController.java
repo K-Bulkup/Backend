@@ -30,7 +30,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class TrainingController {
+public class CommonTrainingController {
 
     private final TrainingService trainingService;
     private final TrainingSearchService trainingSearchService;
