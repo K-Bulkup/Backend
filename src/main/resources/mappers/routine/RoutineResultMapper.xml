@@ -7,6 +7,10 @@
         SELECT answer FROM routine_answers WHERE routine_id = #{routineId}
     </select>
 
+    <select id="findRoutineDescriptionByRoutineId" resultType="java.lang.String">
+        SELECT description FROM routines WHERE routine_id = #{routineId}
+    </select>
+
     <select id="selectRoutineScoreById" resultType="int">
         SELECT score FROM routines WHERE routine_id = #{routineId}
     </select>
