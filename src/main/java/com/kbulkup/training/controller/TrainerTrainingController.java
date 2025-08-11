@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/trainee/trainers")
-public class TrainerController {
+public class TrainerTrainingController {
 
     private final TrainerService trainerService;
 

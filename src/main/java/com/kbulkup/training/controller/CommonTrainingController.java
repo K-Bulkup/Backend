@@ -7,7 +7,6 @@ import com.kbulkup.training.dto.request.TraineeTrainingDetailRequestDTO;
 import com.kbulkup.training.dto.request.TraineeTrainingReviewCreateDTO;
 import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
 import com.kbulkup.training.dto.request.TrainingSearchListRequestDTO;
-import com.kbulkup.training.dto.response.TraineeTrainingDetailResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO;
 import com.kbulkup.training.dto.response.TrainingSearchListResponseDTO;
@@ -27,7 +26,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class TrainingController {
+public class CommonTrainingController {
 
     private final TrainingService trainingService;
     private final TrainingSearchService trainingSearchService;
