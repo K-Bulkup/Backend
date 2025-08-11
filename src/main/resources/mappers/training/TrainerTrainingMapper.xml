@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.training.mapper.TrainerTrainingMapper">
+
+    <!-- 트레이너 트레이닝 상세 조회 -->
+    <select id="selectTrainerTrainingDetail"
+            parameterType="com.kbulkup.training.dto.request.TrainerTrainingDetailRequestDTO"
+            resultType="com.kbulkup.training.dto.response.TrainerTrainingDetailResponseDTO">
+        SELECT
+            t.level AS difficulty,
+            t.category,
+            t.total_score AS totalReward,
+            t.thumbnail_url AS thumbnailUrl,
+            u.username AS trainerName,
+            u.user_profile_url AS trainerProfileImage,
+            tp.total_average_rating AS trainerRating,
+            (SELECT COUNT(DISTINCT e.user_id) FROM enrollments e WHERE e.training_id = t.training_id) AS enrolledTraineeCount,
+            t.title,
+            t.description
+        FROM trainings t
+                 JOIN trainer_profiles tp ON t.trainer_id = tp.trainer_id
+                 JOIN users u ON tp.trainer_id = u.user_id
+        WHERE t.training_id = #{trainingId}
+          AND t.trainer_id = #{trainerId}
+    </select>
+
+    <select id="selectRoutineRows" parameterType="long"
+            resultType="com.kbulkup.training.dto.response.RoutineCategoryResponseDTO">
+        SELECT
+            r.routine_type AS category,
+            r.title AS routineTitle
+        FROM routines r
+        WHERE r.training_id = #{trainingId}
+        ORDER BY r.routine_type, r.order_number
+    </select>
+
+</mapper>

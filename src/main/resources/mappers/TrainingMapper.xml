@@ -40,4 +40,13 @@
     <select id="findTrainerByTrainingId" resultType="java.lang.Long">
         SELECT trainer_id FROM trainings WHERE training_id = #{trainingId}
     </select>
+
+    <select id="findTrainerTrainings"
+            resultType="com.kbulkup.qna.dto.response.TrainerTrainingListDetailResponseDTO">
+        SELECT training_id AS trainingId,
+               title       AS trainingTitle
+        FROM trainings
+        WHERE trainer_id = #{trainerId}
+        ORDER BY created_at DESC
+    </select>
 </mapper>

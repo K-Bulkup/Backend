@@ -1,4 +1,4 @@
-package com.kbulkup.routine.dto;
+package com.kbulkup.routine.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +26,8 @@ public class TraineeRoutineSummaryResponseDTO {
     private String trainerNickname;
     private String trainerProfileUrl;
     private Long trainerId;
+
+    private Long enrollmentId;
 
     // 루틴 타입별 Map
     private Map<String, List<RoutineSummaryResponseDTO>> routines;

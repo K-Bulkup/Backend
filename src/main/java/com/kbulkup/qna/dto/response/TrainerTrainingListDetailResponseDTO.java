@@ -1,4 +1,4 @@
-package com.kbulkup.qna.dto.request;
+package com.kbulkup.qna.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TraineeTrainingQnARequestDTO {
-    private String questionTitle;
-    private String question;
+public class TrainerTrainingListDetailResponseDTO {
+    private Long trainingId;
+    private String trainingTitle;
 }

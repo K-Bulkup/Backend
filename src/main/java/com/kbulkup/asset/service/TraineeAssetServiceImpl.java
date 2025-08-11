@@ -3,7 +3,9 @@ package com.kbulkup.asset.service;
 import com.kbulkup.asset.domain.Composition;
 import com.kbulkup.asset.domain.Snapshot;
 import com.kbulkup.asset.domain.Transaction;
+import com.kbulkup.asset.dto.request.FintechAuthRequestDTO;
 import com.kbulkup.asset.dto.request.TokenRequestDTO;
+import com.kbulkup.asset.dto.response.ExternalAccessTokenResponseDTO;
 import com.kbulkup.asset.dto.response.ExternalAssetResponseDTO;
 import com.kbulkup.asset.dto.response.ExternalTokenResponseDTO;
 import com.kbulkup.asset.dto.response.TraineeAssetDetailResponseDTO;
@@ -15,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -37,30 +42,70 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     @Transactional
     public void createUserPortfolio(String bank, User user) {
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId(), user.getRoles());
-        ExternalTokenResponseDTO externalTokenResponseDTO = getAccessToken(bank, accessToken);
+        ExternalTokenResponseDTO externalTokenResponseDTO = getAccessTokenAndFintechUseNum(bank, accessToken);
+        traineeAssetMapper.insertFintechUseNum(user.getUserId(), bank, externalTokenResponseDTO.getFintechUseNum());
         ExternalAssetResponseDTO externalAssetResponseDTO = getUserAssetData(externalTokenResponseDTO.getAccessToken(), externalTokenResponseDTO.getFintechUseNum());
+        traineeAssetMapper.insertPortfolio(user.getUserId());
+        insertTraineeAsset(user.getUserId(), externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
+        traineeAssetMapper.insertComposition(user.getUserId(), externalAssetResponseDTO.getTraineeAssetDetailResponseDTO().getComposition());
+    }
+
+    @Override
+    @Transactional
+    public void updateUserPortfolio(User user) {
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId(), user.getRoles());
+        FintechAuthRequestDTO fintechAuthRequestDTO = traineeAssetMapper.findBankAndFintechUseNum(user.getUserId());
+        ExternalAccessTokenResponseDTO externalAccessTokenResponseDTO = getAccessToken(accessToken, fintechAuthRequestDTO.getFintechUseNum());
+        ExternalAssetResponseDTO externalAssetResponseDTO = getUserAssetData(externalAccessTokenResponseDTO.getAccessToken(), fintechAuthRequestDTO.getFintechUseNum());
+        deleteTraineeAsset(user.getUserId(), externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
         insertTraineeAsset(user.getUserId(), externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
     }
 
     @Transactional
-    public void insertTraineeAsset(Long id, TraineeAssetDetailResponseDTO dto) {
-        traineeAssetMapper.insertPortfolio(id);
-        traineeAssetMapper.insertTransactions(id, dto.getTransactions());
-        traineeAssetMapper.insertSnapshots(id, dto.getSnapshots());
-        traineeAssetMapper.insertComposition(id, dto.getComposition());
+    public void deleteTraineeAsset(Long id, TraineeAssetDetailResponseDTO dto) {
+        LocalDate end = LocalDate.now();
+        LocalDate start = end.minusMonths(3).withDayOfMonth(1);
+
+        LocalDateTime startDateTime = start.atStartOfDay();
+        LocalDateTime endDateTime = end.atTime(LocalTime.MAX);
+
+        traineeAssetMapper.deleteTransactionsWindow(id, startDateTime, endDateTime);
+        traineeAssetMapper.deleteSnapshotsWindow(id, startDateTime, endDateTime);
     }
 
-    private ExternalTokenResponseDTO getAccessToken(String bank, String accessToken) {
+    @Transactional
+    public void insertTraineeAsset(Long id, TraineeAssetDetailResponseDTO dto) {
+        traineeAssetMapper.insertTransactions(id, dto.getTransactions());
+        traineeAssetMapper.insertSnapshots(id, dto.getSnapshots());
+    }
+
+    private ExternalTokenResponseDTO getAccessTokenAndFintechUseNum(String bank, String accessToken) {
         WebClient webClient = WebClient
                 .builder()
                 .baseUrl("http://localhost:9080")
                 .build();
         return webClient.post()
-                .uri("/external-api/token")
+                .uri("/external-api/create-user")
                 .header("Authorization", "Bearer " + accessToken)
                 .bodyValue(TokenRequestDTO.create(bank))
                 .retrieve()
                 .bodyToMono(ExternalTokenResponseDTO.class)
+                .block();
+    }
+
+    private ExternalAccessTokenResponseDTO getAccessToken(String accessToken, String fintechUseNum) {
+        WebClient webClient = WebClient
+                .builder()
+                .baseUrl("http://localhost:9080")
+                .build();
+        return webClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/external-api/token")
+                        .queryParam("fintechUseNum", fintechUseNum) // 쿼리 파라미터 추가
+                        .build())
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .bodyToMono(ExternalAccessTokenResponseDTO.class)
                 .block();
     }
 

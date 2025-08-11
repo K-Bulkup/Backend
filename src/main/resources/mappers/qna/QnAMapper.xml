@@ -7,19 +7,18 @@
 
     <insert id="insertQnAQuestion">
 
-        INSERT INTO qnas (
-            training_id,
-            user_id,
-            trainer_id,
-            question,
-            created_at
-        ) VALUES (
-                     #{trainingId},
-                     #{traineeId},
-                     #{trainerId},
-                     #{question},
-                     NOW()
-                 )
+        INSERT INTO qnas (training_id,
+                          user_id,
+                          trainer_id,
+                          question_title,
+                          question,
+                          created_at)
+        VALUES (#{trainingId},
+                #{traineeId},
+                #{trainerId},
+                #{questionTitle},
+                 #{question},
+                NOW())
     </insert>
 
     <select id="getQnAList" resultType="com.kbulkup.qna.dto.response.CommonTrainingQnADetailResponseDTO">

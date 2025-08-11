@@ -41,6 +41,15 @@
         WHERE user_id = #{traineeId}
     </select>
 
+    <insert id="insertFintechUseNum">
+        INSERT INTO user_fintech_auths (
+        user_id,
+        bank_code,
+        fintech_use_num
+        )
+        VALUES (#{userId}, #{bank}, #{fintechUseNum})
+    </insert>
+
     <insert id="insertPortfolio">
         INSERT INTO portfolios (user_id)
         VALUES (#{traineeId})
@@ -92,5 +101,23 @@
     <select id="findUserIdByRoomID" resultType="java.lang.Long">
         SELECT user_id FROM counselings WHERE room_id = #{roomId}
     </select>
+
+    <select id="findBankAndFintechUseNum" resultType="com.kbulkup.asset.dto.request.FintechAuthRequestDTO">
+        SELECT fintech_use_num FROM user_fintech_auths WHERE user_id = #{userId}
+    </select>
+
+    <delete id="deleteTransactionsWindow">
+        DELETE FROM transactions
+        WHERE user_id = #{userId}
+          AND tran_date BETWEEN #{startDate, jdbcType=TIMESTAMP}
+            AND #{endDate, jdbcType=TIMESTAMP}
+    </delete>
+
+    <delete id="deleteSnapshotsWindow">
+        DELETE FROM snapshots
+        WHERE user_id = #{userId}
+          AND snapshot_date BETWEEN #{startDate, jdbcType=TIMESTAMP}
+            AND #{endDate, jdbcType=TIMESTAMP}
+    </delete>
 
 </mapper>

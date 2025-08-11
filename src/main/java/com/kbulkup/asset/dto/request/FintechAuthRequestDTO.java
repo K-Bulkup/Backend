@@ -1,4 +1,4 @@
-package com.kbulkup.qna.dto.request;
+package com.kbulkup.asset.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TraineeTrainingQnARequestDTO {
-    private String questionTitle;
-    private String question;
+public class FintechAuthRequestDTO {
+    private String FintechUseNum;
 }

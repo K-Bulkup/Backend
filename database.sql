@@ -141,7 +141,7 @@ CREATE TABLE `routine_results`
     `routine_id`        BIGINT            NOT NULL,
     `status`            BOOLEAN           NULL,
     `awared_score`      INT               NULL,
-    `pass_fail_result`  ENUM ('성공', '실패') NULL,
+    `pass_fail_result`  ENUM ('PASS', 'FAIL','PENDING') NOT NULL,
     `answer_text`       VARCHAR(255)      NULL,
     `evidence_url`      VARCHAR(255)      NULL,
     `submitted_at`      TIMESTAMP         NULL DEFAULT CURRENT_TIMESTAMP,

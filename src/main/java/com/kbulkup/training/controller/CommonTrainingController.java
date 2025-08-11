@@ -2,7 +2,7 @@ package com.kbulkup.training.controller;
 
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
-import com.kbulkup.routine.dto.TraineeRoutineSummaryResponseDTO;
+import com.kbulkup.routine.dto.response.TraineeRoutineSummaryResponseDTO;
 import com.kbulkup.training.dto.request.TraineeTrainingDetailRequestDTO;
 import com.kbulkup.training.dto.request.TraineeTrainingReviewCreateDTO;
 import com.kbulkup.training.dto.request.TrainerTrainingCreateRequestDTO;
@@ -10,9 +10,12 @@ import com.kbulkup.training.dto.request.TrainingSearchListRequestDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingListResponseDTO;
 import com.kbulkup.training.dto.response.TraineeTrainingReviewResponseDTO;
 import com.kbulkup.training.dto.response.TrainingSearchListResponseDTO;
+import com.kbulkup.training.dto.request.TrainerTrainingDetailRequestDTO;
+import com.kbulkup.training.dto.response.TrainerTrainingDetailResponseDTO;
 import com.kbulkup.training.service.TraineeTrainingService;
 import com.kbulkup.training.service.TrainingSearchService;
 import com.kbulkup.training.service.TrainingService;
+import com.kbulkup.training.service.TrainerTrainingService;
 import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +35,7 @@ public class CommonTrainingController {
     private final TrainingService trainingService;
     private final TrainingSearchService trainingSearchService;
     private final TraineeTrainingService traineeTrainingService;
+    private final TrainerTrainingService trainerTrainingService;
 
     /** [트레이너] 트레이닝 생성 */
     @PostMapping("/trainer/trainings")
@@ -41,6 +46,21 @@ public class CommonTrainingController {
     ) throws IOException {
         trainingService.createTraining(user.getUserId(), dto, thumbnail);
         return ResponseEntity.ok(CustomResponse.success(ResponseCode.SUCCESS));
+    }
+
+    /** [트레이너] 내 트레이닝 목록 + 검색 */
+    @GetMapping("/trainer/trainings")
+    public CustomResponse<List<TrainingSearchListResponseDTO>> getMyTrainings(
+            @AuthenticationPrincipal(expression = "user") User user,
+            @ModelAttribute TrainingSearchListRequestDTO dto
+    ) {
+        // 로그인한 트레이너 ID 설정
+        dto.setTrainerId(user.getUserId());
+
+        return CustomResponse.success(
+                ResponseCode.SUCCESS,
+                trainingSearchService.getTrainerTrainingList(dto)
+        );
     }
 
     /** [공용] 트레이닝 검색 */
@@ -92,4 +112,21 @@ public class CommonTrainingController {
         traineeTrainingService.createReview(user.getUserId(), trainingId, dto);
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
+
+    @GetMapping("/trainer/trainings/{trainingId}")
+    public CustomResponse<TrainerTrainingDetailResponseDTO> getTrainerTrainingDetail(
+            @PathVariable Long trainingId,
+            @AuthenticationPrincipal(expression = "user") User user
+    ) {
+        var request = TrainerTrainingDetailRequestDTO.of(trainingId, user.getUserId());
+        TrainerTrainingDetailResponseDTO detail = trainerTrainingService.getTrainerTrainingDetail(request);
+        return CustomResponse.success(ResponseCode.SUCCESS, detail);
+    }
+
+    @GetMapping("/trainer/trainings/{trainingId}/routines")
+    public CustomResponse<List<Map<String, String>>> getTrainerTrainingRoutines(@PathVariable Long trainingId) {
+        var routines = trainerTrainingService.getTrainerTrainingRoutines(trainingId);
+        return CustomResponse.success(ResponseCode.SUCCESS, routines);
+    }
+
 }

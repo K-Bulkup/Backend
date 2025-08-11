@@ -5,7 +5,7 @@
 
 <mapper namespace="com.kbulkup.routine.mapper.TraineeRoutineMapper">
 
-    <resultMap id="RoutineDetailMap" type="com.kbulkup.routine.dto.TraineeRoutineDetailResponseDTO">
+    <resultMap id="RoutineDetailMap" type="com.kbulkup.routine.dto.response.TraineeRoutineDetailResponseDTO">
     <result property="routineTitle" column="routine_title"/>
         <result property="routineDescription" column="routine_description"/>
         <result property="routineScore" column="routine_score"/>

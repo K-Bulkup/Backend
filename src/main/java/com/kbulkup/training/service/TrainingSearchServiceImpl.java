@@ -22,4 +22,9 @@ public class TrainingSearchServiceImpl implements TrainingSearchService {
         }
         return trainingSearchMapper.searchTrainings(dto.getKeyword());
     }
+
+    @Override
+    public List<TrainingSearchListResponseDTO> getTrainerTrainingList(TrainingSearchListRequestDTO dto) {
+        return trainingSearchMapper.selectTrainerTrainingList(dto);
+    }
 }
