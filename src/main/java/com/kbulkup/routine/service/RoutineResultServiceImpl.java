@@ -1,6 +1,8 @@
 // --- RoutineResultServiceImpl.java ---
 package com.kbulkup.routine.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.kbulkup.routine.client.AiJudgeClient;
 import com.kbulkup.routine.domain.RoutineResult;
 import com.kbulkup.routine.dto.request.RoutineResultCreateRequestDTO;
@@ -9,10 +11,14 @@ import com.kbulkup.routine.dto.response.RoutineResultCreateResponseDTO.PassFailR
 import com.kbulkup.routine.mapper.RoutineResultMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -21,14 +27,36 @@ public class RoutineResultServiceImpl implements RoutineResultService {
 
     private final RoutineResultMapper routineResultMapper;
     private final AiJudgeClient aiJudgeClient;
+    private final AmazonS3 amazonS3;
+
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String bucket;
 
     @Override
     @Transactional
-    public RoutineResultCreateResponseDTO submitResult(Long routineId, RoutineResultCreateRequestDTO dto) {
-        String routineDescription = routineResultMapper.findRoutineDescriptionByRoutineId(routineId); // 루틴 질문 ( 추후 주석 삭제 )
+    public RoutineResultCreateResponseDTO submitResult(Long routineId, RoutineResultCreateRequestDTO dto, MultipartFile file) {
+        String routineDescription = routineResultMapper.findRoutineDescriptionByRoutineId(routineId);
 
-        // evidence_url은 S3 트레이너 실천형 수행 결과 이미지 주소 ( 추후 주석 삭제 )
-        boolean isCorrect = aiJudgeClient.evaluate(routineDescription, dto.getAnswerText(), dto.getEvidenceUrl());
+        String thumbnailUrl = null;
+
+        if(file != null && !file.isEmpty()) {
+            String originalFilename = file.getOriginalFilename();
+            String storedFileName = "routine_result/" + UUID.randomUUID() + "-" + originalFilename;
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            try {
+                amazonS3.putObject(bucket, storedFileName, file.getInputStream(), metadata);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            thumbnailUrl = amazonS3.getUrl(bucket, storedFileName).toString();
+        }
+
+        boolean isCorrect = aiJudgeClient.evaluate(routineDescription, dto.getAnswerText(), thumbnailUrl);
 
         int score = routineResultMapper.selectRoutineScoreById(routineId);
         int awaredScore = isCorrect ? score : 0;
@@ -39,7 +67,7 @@ public class RoutineResultServiceImpl implements RoutineResultService {
                 .routineId(routineId)
                 .enrollmentId(dto.getEnrollmentId())
                 .answerText(dto.getAnswerText())
-                .evidenceUrl(dto.getEvidenceUrl())
+                .evidenceUrl(thumbnailUrl)
                 .status(true)
                 .awaredScore(awaredScore)
                 .passFailResult(isCorrect ? PassFailResult.PASS : PassFailResult.FAIL)
