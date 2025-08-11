@@ -26,7 +26,7 @@ public class CounselingReservation {
     public static CounselingReservation createReservation(Long traineeId, Long trainerId, Long trainingId, Long scheduleId, String roomId) {
         return CounselingReservation.builder()
                 .traineeId(traineeId)
-                .traineeId(trainerId)
+                .trainerId(trainerId)
                 .trainingId(trainingId)
                 .scheduleId(scheduleId)
                 .status(ReservationStatus.RESERVED.getName())

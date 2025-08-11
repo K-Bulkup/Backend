@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.counseling.mapper.TrainerScheduleMapper">
+
+    <insert id="insertSchedule" parameterType="com.kbulkup.counseling.domain.TrainerSchedule" useGeneratedKeys="true" keyProperty="scheduleId">
+        INSERT INTO trainer_schedule (trainer_id, start_time, end_time, is_available, created_at)
+        VALUES (#{trainerId}, #{startTime}, #{endTime}, #{isAvailable}, #{createdAt})
+    </insert>
+
+    <select id="findByTrainerId" parameterType="long" resultType="com.kbulkup.counseling.domain.TrainerSchedule">
+        SELECT schedule_id, trainer_id, start_time, end_time, is_available, created_at
+        FROM trainer_schedule
+        WHERE trainer_id = #{trainerId}
+        ORDER BY start_time ASC
+    </select>
+
+    <select id="findByTrainerIdAndDateRange" resultType="com.kbulkup.counseling.domain.TrainerSchedule">
+        SELECT schedule_id, trainer_id, start_time, end_time, is_available, created_at
+        FROM trainer_schedule
+        WHERE trainer_id = #{trainerId}
+        AND start_time >= #{startDate}
+        AND end_time <= #{endDate}
+        ORDER BY start_time ASC
+    </select>
+
+    <select id="findByScheduleId" parameterType="long" resultType="com.kbulkup.counseling.domain.TrainerSchedule">
+        SELECT schedule_id, trainer_id, start_time, end_time, is_available, created_at
+        FROM trainer_schedule
+        WHERE schedule_id = #{scheduleId}
+    </select>
+
+    <select id="existsByTrainerIdAndTimeRange" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM trainer_schedule
+        WHERE trainer_id = #{trainerId}
+        AND (
+        (start_time <= #{startTime} AND end_time > #{startTime}) OR
+        (start_time < #{endTime} AND end_time >= #{endTime}) OR
+        (start_time >= #{startTime} AND end_time <= #{endTime})
+        )
+    </select>
+
+    <update id="updateAvailability">
+        UPDATE trainer_schedule
+        SET is_available = #{isAvailable}
+        WHERE schedule_id = #{scheduleId}
+    </update>
+
+    <delete id="deleteSchedule" parameterType="long">
+        DELETE FROM trainer_schedule
+        WHERE schedule_id = #{scheduleId}
+    </delete>
+
+</mapper>
