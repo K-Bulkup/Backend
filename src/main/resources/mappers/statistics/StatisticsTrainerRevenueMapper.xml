@@ -11,32 +11,111 @@
 
     <select id="getTotalAndLast30DaysRevenue" resultType="com.kbulkup.statistics.dto.response.StatisticsTrainerRevenueResponseDTO">
         SELECT
-            COALESCE(SUM(CASE WHEN p.status = 'COMPLETED' THEN p.amount ELSE 0 END), 0) AS totalAccumulatedRevenue,
-            COALESCE(SUM(CASE WHEN p.status = 'COMPLETED' AND p.payment_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN p.amount ELSE 0 END), 0) AS last30DaysAccumulatedRevenue
+            COALESCE(SUM(t.price), 0) AS totalAccumulatedRevenue,
+            COALESCE(SUM(CASE WHEN e.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN t.price ELSE 0 END), 0) AS last30DaysAccumulatedRevenue
         FROM
-            payment p
+            trainings t
         JOIN
-            training t ON p.training_id = t.id
+            enrollments e ON t.training_id = e.training_id
         WHERE
             t.trainer_id = #{trainerId}
     </select>
 
     <select id="getTrainingRevenueDetails" resultMap="TrainingRevenueDTOMap">
         SELECT
-            t.id AS training_id,
+            t.training_id AS training_id,
             t.title AS training_title,
-            COALESCE(SUM(CASE WHEN p.status = 'COMPLETED' THEN p.amount ELSE 0 END), 0) AS accumulated_revenue,
-            COALESCE(SUM(CASE WHEN p.status = 'COMPLETED' AND p.payment_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN p.amount ELSE 0 END), 0) AS last_30_days_accumulated_revenue
+            COALESCE(t.price * COUNT(e.enrollment_id), 0) AS accumulated_revenue,
+            COALESCE(t.price * SUM(CASE WHEN e.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN 1 ELSE 0 END), 0) AS last_30_days_accumulated_revenue
         FROM
-            training t
+            trainings t
         LEFT JOIN
-            payment p ON t.id = p.training_id
+            enrollments e ON t.training_id = e.training_id
         WHERE
             t.trainer_id = #{trainerId}
         GROUP BY
-            t.id, t.title
+            t.training_id, t.title, t.price
         ORDER BY
-            t.id
+            t.training_id
+    </select>
+
+
+    <resultMap id="DailyRevenueDTOMap" type="com.kbulkup.statistics.dto.response.DailyRevenueDTO">
+        <result property="date" column="revenue_date"/>
+        <result property="revenue" column="daily_revenue"/>
+    </resultMap>
+
+    <resultMap id="MonthlyRevenueDTOMap" type="com.kbulkup.statistics.dto.response.MonthlyRevenueDTO">
+        <result property="month" column="revenue_month"/>
+        <result property="revenue" column="monthly_revenue"/>
+    </resultMap>
+
+    <select id="getDailyRevenueLast30Days" resultMap="DailyRevenueDTOMap">
+        SELECT
+            DATE(e.created_at) AS revenue_date,
+            COALESCE(SUM(t.price), 0) AS daily_revenue
+        FROM
+            trainings t
+        JOIN
+            enrollments e ON t.training_id = e.training_id
+        WHERE
+            t.trainer_id = #{trainerId}
+            AND e.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        GROUP BY
+            revenue_date
+        ORDER BY
+            revenue_date
+    </select>
+
+    <select id="getMonthlyRevenue" resultMap="MonthlyRevenueDTOMap">
+        SELECT
+            DATE_FORMAT(e.created_at, '%Y-%m') AS revenue_month,
+            COALESCE(SUM(t.price), 0) AS monthly_revenue
+        FROM
+            trainings t
+        JOIN
+            enrollments e ON t.training_id = e.training_id
+        WHERE
+            t.trainer_id = #{trainerId}
+        GROUP BY
+            revenue_month
+        ORDER BY
+            revenue_month
+    </select>
+
+    <select id="getDailyRevenueForTraining" resultMap="DailyRevenueDTOMap">
+        SELECT
+            DATE(e.created_at) AS revenue_date,
+            COALESCE(SUM(t.price), 0) AS daily_revenue
+        FROM
+            trainings t
+        JOIN
+            enrollments e ON t.training_id = e.training_id
+        WHERE
+            t.trainer_id = #{trainerId}
+            AND t.training_id = #{trainingId}
+            AND e.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        GROUP BY
+            revenue_date
+        ORDER BY
+            revenue_date
+    </select>
+
+    <select id="getMonthlyRevenueForTraining" resultMap="MonthlyRevenueDTOMap">
+        SELECT
+            DATE_FORMAT(e.created_at, '%Y-%m') AS revenue_month,
+            COALESCE(SUM(t.price), 0) AS monthly_revenue
+        FROM
+            trainings t
+        JOIN
+            enrollments e ON t.training_id = e.training_id
+        WHERE
+            t.trainer_id = #{trainerId}
+            AND t.training_id = #{trainingId}
+        GROUP BY
+            revenue_month
+        ORDER BY
+            revenue_month
     </select>
 
 </mapper>

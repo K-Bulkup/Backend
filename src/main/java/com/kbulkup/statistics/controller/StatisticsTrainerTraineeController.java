@@ -1,6 +1,7 @@
 package com.kbulkup.statistics.controller;
 
 import com.kbulkup.common.response.CustomResponse;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,6 @@ public class StatisticsTrainerTraineeController {
     @GetMapping
     public CustomResponse<?> getTraineeStatistics(@AuthenticationPrincipal(expression = "user") User user) {
         // TODO: Implement trainee statistics logic
-        return CustomResponse.ok(null);
+        return CustomResponse.success(ResponseCode.SUCCESS);
     }
 }

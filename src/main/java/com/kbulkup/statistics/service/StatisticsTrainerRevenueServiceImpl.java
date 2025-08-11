@@ -1,5 +1,7 @@
 package com.kbulkup.statistics.service;
 
+import com.kbulkup.statistics.dto.response.DailyRevenueDTO;
+import com.kbulkup.statistics.dto.response.MonthlyRevenueDTO;
 import com.kbulkup.statistics.dto.response.StatisticsTrainerRevenueResponseDTO;
 import com.kbulkup.statistics.mapper.StatisticsTrainerRevenueMapper;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +29,25 @@ public class StatisticsTrainerRevenueServiceImpl implements StatisticsTrainerRev
                 .last30DaysAccumulatedRevenue(totalRevenueData != null ? totalRevenueData.getLast30DaysAccumulatedRevenue() : null)
                 .trainingRevenues(trainingRevenueDetails)
                 .build();
+    }
+
+    @Override
+    public List<DailyRevenueDTO> getDailyRevenueLast30Days(Long trainerId) {
+        return statisticsTrainerRevenueMapper.getDailyRevenueLast30Days(trainerId);
+    }
+
+    @Override
+    public List<MonthlyRevenueDTO> getMonthlyRevenue(Long trainerId) {
+        return statisticsTrainerRevenueMapper.getMonthlyRevenue(trainerId);
+    }
+
+    @Override
+    public List<DailyRevenueDTO> getDailyRevenueForTraining(Long trainerId, Long trainingId) {
+        return statisticsTrainerRevenueMapper.getDailyRevenueForTraining(trainerId, trainingId);
+    }
+
+    @Override
+    public List<MonthlyRevenueDTO> getMonthlyRevenueForTraining(Long trainerId, Long trainingId) {
+        return statisticsTrainerRevenueMapper.getMonthlyRevenueForTraining(trainerId, trainingId);
     }
 }
