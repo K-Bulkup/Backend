@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.counseling.mapper.CounselingReservationMapper">
+    <insert id="insertReservation" parameterType="com.kbulkup.counseling.domain.CounselingReservation" useGeneratedKeys="true" keyProperty="reservationId">
+        INSERT INTO counseling_reservation (trainee_id, trainer_id, training_id, schedule_id, status, room_id, created_at, updated_at)
+        VALUES (#{traineeId}, #{trainerId}, #{trainingId}, #{scheduleId}, #{status}, #{roomId}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <select id="findByReservationId" parameterType="long" resultType="com.kbulkup.counseling.domain.CounselingReservation">
+        SELECT reservation_id, trainee_id, trainer_id, training_id, schedule_id, status, room_id, created_at, updated_at
+        FROM counseling_reservation
+        WHERE reservation_id = #{reservationId}
+    </select>
+
+    <select id="findByTraineeId" parameterType="long" resultType="com.kbulkup.counseling.dto.response.CounselingReservationResponseDTO">
+        SELECT
+            cr.reservation_id,
+            cr.trainee_id,
+            cr.trainer_id,
+            cr.training_id,
+            cr.schedule_id,
+            cr.status,
+            cr.room_id,
+            ts.start_time,
+            ts.end_time,
+            trainer.name as trainer_name,
+            trainee.name as trainee_name,
+            t.title as training_title,
+            cr.created_at
+        FROM counseling_reservation cr
+        JOIN trainer_schedule ts ON cr.schedule_id = ts.schedule_id
+        JOIN user trainer ON cr.trainer_id = trainer.user_id
+        JOIN user trainee ON cr.trainee_id = trainee.user_id
+        JOIN training t ON cr.training_id = t.training_id
+        WHERE cr.trainee_id = #{traineeId}
+        ORDER BY ts.start_time DESC
+    </select>
+
+    <select id="findByTrainerId" parameterType="long" resultType="com.kbulkup.counseling.dto.response.CounselingReservationResponseDTO">
+        SELECT
+            cr.reservation_id,
+            cr.trainee_id,
+            cr.trainer_id,
+            cr.training_id,
+            cr.schedule_id,
+            cr.status,
+            cr.room_id,
+            ts.start_time,
+            ts.end_time,
+            trainer.name as trainer_name,
+            trainee.name as trainee_name,
+            t.title as training_title,
+            cr.created_at
+        FROM counseling_reservation cr
+        JOIN trainer_schedule ts ON cr.schedule_id = ts.schedule_id
+        JOIN user trainer ON cr.trainer_id = trainer.user_id
+        JOIN user trainee ON cr.trainee_id = trainee.user_id
+        JOIN training t ON cr.training_id = t.training_id
+        WHERE cr.trainer_id = #{trainerId}
+        ORDER BY ts.start_time DESC
+    </select>
+
+    <select id="findByRoomId" parameterType="string" resultType="com.kbulkup.counseling.domain.CounselingReservation">
+        SELECT reservation_id, trainee_id, trainer_id, training_id, schedule_id, status, room_id, created_at, updated_at
+        FROM counseling_reservation
+        WHERE room_id = #{roomId}
+    </select>
+
+    <select id="existsByScheduleId" parameterType="long" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM counseling_reservation
+        WHERE schedule_id = #{scheduleId} AND status != '취소'
+    </select>
+
+    <update id="updateStatus">
+        UPDATE counseling_reservation
+        SET status = #{status}, updated_at = NOW()
+        WHERE reservation_id = #{reservationId}
+    </update>
+
+    <update id="updateStatusToActive" parameterType="long">
+        UPDATE counseling_reservation
+        SET status = '진행중', updated_at = NOW()
+        WHERE reservation_id = #{reservationId}
+    </update>
+
+    <update id="updateStatusToCompleted" parameterType="long">
+        UPDATE counseling_reservation
+        SET status = '완료', updated_at = NOW()
+        WHERE reservation_id = #{reservationId}
+    </update>
+
+    <update id="updateStatusToCanceled" parameterType="long">
+        UPDATE counseling_reservation
+        SET status = '취소', updated_at = NOW()
+        WHERE reservation_id = #{reservationId}
+    </update>
+
+    <select id="findReservationsToActivate" parameterType="java.time.LocalDateTime" resultType="com.kbulkup.counseling.domain.CounselingReservation">
+        SELECT
+        cr.reservation_id,
+        cr.trainee_id,
+        cr.trainer_id,
+        cr.training_id,
+        cr.schedule_id,
+        cr.status,
+        cr.room_id,
+        cr.created_at,
+        cr.updated_at
+        FROM counseling_reservation cr
+        JOIN trainer_schedule ts ON cr.schedule_id = ts.schedule_id
+        WHERE cr.status = '예약완료'
+        AND ts.start_time <= #{currentTime}
+        AND ts.end_time > #{currentTime}
+    </select>
+
+    <select id="findReservationsToComplete" parameterType="java.time.LocalDateTime" resultType="com.kbulkup.counseling.domain.CounselingReservation">
+        SELECT
+        cr.reservation_id,
+        cr.trainee_id,
+        cr.trainer_id,
+        cr.training_id,
+        cr.schedule_id,
+        cr.status,
+        cr.room_id,
+        cr.created_at,
+        cr.updated_at
+        FROM counseling_reservation cr
+        JOIN trainer_schedule ts ON cr.schedule_id = ts.schedule_id
+        WHERE cr.status = '진행중'
+        AND ts.end_time <= #{currentTime}
+    </select>
+</mapper>
