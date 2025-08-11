@@ -7,6 +7,12 @@
         SELECT answer FROM routine_answers WHERE routine_id = #{routineId}
     </select>
 
+    <select id="findQuizTypeByRoutineId" resultType="java.lang.String">
+        SELECT quiz_type
+        FROM routines
+        WHERE routine_id = #{routineId}
+    </select>
+
     <select id="findRoutineDescriptionByRoutineId" resultType="java.lang.String">
         SELECT description FROM routines WHERE routine_id = #{routineId}
     </select>
