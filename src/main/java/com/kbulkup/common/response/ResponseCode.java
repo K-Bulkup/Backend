@@ -48,6 +48,7 @@ public enum ResponseCode {
 
     // 403 FORBIDDEN
     ADMIN_USER_ROLE_MISSING(FORBIDDEN,"잘못된 역할입니다." ),
+    TRAINER_ACCESS_DENIED(FORBIDDEN, "트레이너만 접근할 수 있습니다."),
 
     //500 InternalServerError
     TRAINER_CAREER_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 소개 업데이트에 실패했습니다."),
