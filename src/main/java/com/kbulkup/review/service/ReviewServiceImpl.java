@@ -17,9 +17,4 @@ public class ReviewServiceImpl implements ReviewService {
     public List<TrainerTrainingReviewDetailResponseDTO> getTrainingReviews(Long trainingId) {
         return reviewMapper.findReviewsByTrainingId(trainingId);
     }
-
-    @Override
-    public Boolean hasWrittenReview(Long userId, Long trainingId) {
-        return reviewMapper.hasWrittenReview(userId, trainingId);
-    }
 }
