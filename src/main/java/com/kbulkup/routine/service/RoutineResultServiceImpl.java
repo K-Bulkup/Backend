@@ -25,10 +25,10 @@ public class RoutineResultServiceImpl implements RoutineResultService {
     @Override
     @Transactional
     public RoutineResultCreateResponseDTO submitResult(Long routineId, RoutineResultCreateRequestDTO dto) {
-        String correctAnswer = routineResultMapper.findRoutineAnswerByRoutineId(routineId)
-                .orElseThrow(() -> new IllegalArgumentException("정답이 존재하지 않습니다."));
+        String routineDescription = routineResultMapper.findRoutineDescriptionByRoutineId(routineId); // 루틴 질문 ( 추후 주석 삭제 )
 
-        boolean isCorrect = aiJudgeClient.evaluate(correctAnswer, dto.getAnswerText(), dto.getEvidenceUrl());
+        // evidence_url은 S3 트레이너 실천형 수행 결과 이미지 주소 ( 추후 주석 삭제 )
+        boolean isCorrect = aiJudgeClient.evaluate(routineDescription, dto.getAnswerText(), dto.getEvidenceUrl());
 
         int score = routineResultMapper.selectRoutineScoreById(routineId);
         int awaredScore = isCorrect ? score : 0;
