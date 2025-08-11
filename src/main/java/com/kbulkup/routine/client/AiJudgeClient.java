@@ -14,13 +14,13 @@ public class AiJudgeClient {
 
     private final GPTService gptService;
 
-    public boolean evaluate(String correctAnswer, String userAnswer, String evidenceUrl) {
+    public boolean evaluate(String routineDescription, String userAnswer, String evidenceUrl) {
         GPTResponseDTO response;
 
         if (evidenceUrl != null && !evidenceUrl.isBlank()) {
-            response = gptService.requestImageAnalysis(correctAnswer, evidenceUrl);
+            response = gptService.requestImageAnalysis(routineDescription, evidenceUrl);
         } else {
-            response = gptService.requestOnlyText(correctAnswer, userAnswer);
+            response = gptService.requestOnlyText(routineDescription, userAnswer);
         }
 
         if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
@@ -31,6 +31,7 @@ public class AiJudgeClient {
         String content = String.valueOf(response.getChoices().get(0).getMessage().getContent()).toUpperCase();
         log.info("GPT 응답 결과: {}", content);
 
-        return content.matches(".*(PASS|정답|맞|정확|TRUE).*");
+        // return content.matches(".*(PASS|정답|맞|정확|TRUE).*");
+        return content.toLowerCase().contains("true");
     }
 }
