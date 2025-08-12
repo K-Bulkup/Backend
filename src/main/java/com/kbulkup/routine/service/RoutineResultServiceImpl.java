@@ -3,6 +3,8 @@ package com.kbulkup.routine.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.kbulkup.common.exception.QuizException;
+import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.routine.client.AiJudgeClient;
 import com.kbulkup.routine.domain.RoutineResult;
 import com.kbulkup.routine.dto.request.RoutineResultCreateRequestDTO;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -35,33 +38,25 @@ public class RoutineResultServiceImpl implements RoutineResultService {
     @Override
     @Transactional
     public RoutineResultCreateResponseDTO submitResult(Long routineId, RoutineResultCreateRequestDTO dto, MultipartFile file) {
-        String routineDescription = routineResultMapper.findRoutineDescriptionByRoutineId(routineId);
+        final String quizType = Optional.ofNullable(
+                routineResultMapper.findQuizTypeByRoutineId(routineId)
+        ).orElseThrow(() -> new QuizException(ResponseCode.QUIZ_TYPE_NOT_FOUND));
 
-        String thumbnailUrl = null;
+        final String routineDescription =
+                routineResultMapper.findRoutineDescriptionByRoutineId(routineId);
 
-        if(file != null && !file.isEmpty()) {
-            String originalFilename = file.getOriginalFilename();
-            String storedFileName = "routine_result/" + UUID.randomUUID() + "-" + originalFilename;
+        final String thumbnailUrl = (file != null && !file.isEmpty())
+                ? uploadToS3(file) : null;
 
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
-            metadata.setContentLength(file.getSize());
+        final boolean isCorrect = evaluateByType(
+                quizType, routineId, dto.getAnswerText(), routineDescription, thumbnailUrl
+        );
 
-            try {
-                amazonS3.putObject(bucket, storedFileName, file.getInputStream(), metadata);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        final int score = routineResultMapper.selectRoutineScoreById(routineId);
+        final int awardedScore = isCorrect ? score : 0;
 
-            thumbnailUrl = amazonS3.getUrl(bucket, storedFileName).toString();
-        }
-
-        boolean isCorrect = aiJudgeClient.evaluate(routineDescription, dto.getAnswerText(), thumbnailUrl);
-
-        int score = routineResultMapper.selectRoutineScoreById(routineId);
-        int awaredScore = isCorrect ? score : 0;
-
-        boolean alreadySubmitted = routineResultMapper.existsByRoutineAndEnrollment(routineId, dto.getEnrollmentId()) > 0;
+        final boolean alreadySubmitted =
+                routineResultMapper.existsByRoutineAndEnrollment(routineId, dto.getEnrollmentId()) > 0;
 
         RoutineResult result = RoutineResult.builder()
                 .routineId(routineId)
@@ -69,7 +64,7 @@ public class RoutineResultServiceImpl implements RoutineResultService {
                 .answerText(dto.getAnswerText())
                 .evidenceUrl(thumbnailUrl)
                 .status(true)
-                .awaredScore(awaredScore)
+                .awaredScore(awardedScore)
                 .passFailResult(isCorrect ? PassFailResult.PASS : PassFailResult.FAIL)
                 .submittedAt(LocalDateTime.now())
                 .build();
@@ -81,10 +76,56 @@ public class RoutineResultServiceImpl implements RoutineResultService {
         }
 
         if (isCorrect) {
-            routineResultMapper.increaseUserScore(dto.getEnrollmentId(), awaredScore);
+            routineResultMapper.increaseUserScore(dto.getEnrollmentId(), awardedScore);
             routineResultMapper.updateEnrollmentProgress(dto.getEnrollmentId());
         }
 
         return RoutineResultCreateResponseDTO.from(result.getPassFailResult());
+    }
+
+    private String uploadToS3(MultipartFile file) {
+        final String thumbnailUrl;
+        String originalFilename = file.getOriginalFilename();
+        String storedFileName = "routine-result/" + UUID.randomUUID() + "-" + originalFilename;
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.getSize());
+
+        try {
+            amazonS3.putObject(bucket, storedFileName, file.getInputStream(), metadata);
+        } catch (IOException e) {
+            throw new QuizException(ResponseCode.S3_UPLOAD_FAILED);
+        }
+
+        thumbnailUrl = amazonS3.getUrl(bucket, storedFileName).toString();
+        return thumbnailUrl;
+    }
+
+    private boolean evaluateByType(String quizType,
+                                   Long routineId,
+                                   String userAnswer,
+                                   String routineDescription,
+                                   String evidenceUrl) {
+
+        switch (quizType.toUpperCase()) {
+            case "OX": {
+                String correct = routineResultMapper.findRoutineAnswerByRoutineId(routineId)
+                        .orElseThrow(() ->  new QuizException(ResponseCode.QUIZ_TYPE_NOT_FOUND));
+                return normalize(correct).equals(normalize(userAnswer));
+            }
+            case "PHOTO": {
+                return aiJudgeClient.evaluate(routineDescription, userAnswer, evidenceUrl);
+            }
+            case "SHORT_ANSWER": {
+                return aiJudgeClient.evaluate(routineDescription, userAnswer, null);
+            }
+            default:
+                throw new QuizException(ResponseCode.QUIZ_TYPE_NOT_FOUND);
+        }
+    }
+
+    private static String normalize(String s) {
+        return s == null ? "" : s.trim().replaceAll("\\s+", " ").toUpperCase();
     }
 }

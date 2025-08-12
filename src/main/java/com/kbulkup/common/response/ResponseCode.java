@@ -40,7 +40,9 @@ public enum ResponseCode {
     TRAINING_NOT_FOUND(BAD_REQUEST, "존재하지 않는 트레이닝이거나 수강권한이 없습니다."),
     INVALID_QNA_REQUEST(BAD_REQUEST, "올바르지 않은 QnA ID 입니다."),
     ADMIN_INVALID_DATE_VALUE(BAD_REQUEST,"유효하지 않은 날짜입니다." ),
-
+    QUIZ_TYPE_NOT_FOUND(BAD_REQUEST, "퀴즈 타입이 존재하지 않습니다."),
+    INVALID_QUIZ_TYPE(BAD_REQUEST,"지원하지 않는 퀴즈 타입입니다." ),
+    OX_ANSWER_NOT_FOUND(BAD_REQUEST, "OX 정답이 없습니다."),
 
     // 401 Unauthorized
     AUTH_JWT_INVALID_SIGNATURE(UNAUTHORIZED, "JWT 서명이 유효하지 않습니다."),
@@ -57,7 +59,7 @@ public enum ResponseCode {
     TRAINER_CERTIFICATES_VALIDATION_FAILED(INTERNAL_SERVER_ERROR, "유효하지 않은 자격정보 입니다."),
     PAYMENT_PROCESS_FAILED(INTERNAL_SERVER_ERROR, "결제 처리 중 오류가 발생했습니다."),
     PAYMENT_SAVE_FAILED(INTERNAL_SERVER_ERROR, "결제 정보 저장 중 오류가 발생했습니다."),
-
+    S3_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "S3 저장에 실패했습니다."),
 
 
     //200 OK
