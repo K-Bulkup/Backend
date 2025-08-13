@@ -8,7 +8,6 @@ import java.util.List;
 @Getter
 public class TrainerScheduleCreateRequestDTO {
 
-    private Long trainerId;
     private List<TimeSlotDTO> timeSlots;
 
     @Getter
