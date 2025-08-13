@@ -41,6 +41,13 @@ public enum ResponseCode {
     INVALID_QNA_REQUEST(BAD_REQUEST, "올바르지 않은 QnA ID 입니다."),
     ADMIN_INVALID_DATE_VALUE(BAD_REQUEST,"유효하지 않은 날짜입니다." ),
 
+    //컨설팅 트레이너 스케줄 관련
+    INVALID_BUSINESS_HOURS(BAD_REQUEST, "영업시간(9시-18시) 내에서만 스케줄 등록이 가능합니다."),
+    INVALID_SESSION_DURATION(BAD_REQUEST, "세션은 30분 단위로만 등록 가능합니다."),
+    INVALID_TIME_SLOT(BAD_REQUEST, "30분 단위 시간(예: 9:00, 9:30)으로만 등록 가능합니다."),
+    INVALID_PAST_TIME(BAD_REQUEST, "과거 시간으로는 스케줄을 등록할 수 없습니다."),
+    INVALID_TRAINER_SCHEDULE(BAD_REQUEST, "해당 트레이너의 스케줄이 아닙니다."),
+
 
     // 401 Unauthorized
     AUTH_JWT_INVALID_SIGNATURE(UNAUTHORIZED, "JWT 서명이 유효하지 않습니다."),
@@ -48,6 +55,24 @@ public enum ResponseCode {
 
     // 403 FORBIDDEN
     ADMIN_USER_ROLE_MISSING(FORBIDDEN,"잘못된 역할입니다." ),
+
+    //컨설팅 트레이너 스케줄 관련
+    UNAUTHORIZED_SCHEDULE_ACCESS(FORBIDDEN, "스케줄에 대한 접근 권한이 없습니다."),
+    CANNOT_CANCEL_RESERVATION(FORBIDDEN, "진행중이거나 완료된 예약은 취소할 수 없습니다."),
+    CHAT_NOT_AVAILABLE(FORBIDDEN, "채팅이 활성화되지 않은 예약입니다."),
+    CHAT_TIME_EXPIRED(FORBIDDEN, "예약된 시간이 아닙니다."),
+
+    // 404 NOTFOUND
+    SCHEDULE_NOT_FOUND(NOT_FOUND, "스케줄을 찾을 수 없습니다."),
+    RESERVATION_NOT_FOUND(NOT_FOUND, "예약을 찾을 수 없습니다."),
+
+    // 409 Conflict - 충돌
+    DUPLICATE_SCHEDULE(CONFLICT, "이미 등록된 시간대입니다."),
+    SCHEDULE_ALREADY_RESERVED(CONFLICT, "이미 예약된 스케줄입니다."),
+    SCHEDULE_NOT_AVAILABLE(CONFLICT, "예약 불가능한 스케줄입니다."),
+
+    // 422 Unprocessable Entity - 비즈니스 규칙 위반
+    SCHEDULE_HAS_RESERVATIONS(UNPROCESSABLE_ENTITY, "예약이 있는 스케줄은 삭제할 수 없습니다."),
 
     //500 InternalServerError
     TRAINER_CAREER_UPDATE_FAILED(INTERNAL_SERVER_ERROR, "트레이너 소개 업데이트에 실패했습니다."),
