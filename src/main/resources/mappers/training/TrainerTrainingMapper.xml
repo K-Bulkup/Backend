@@ -16,7 +16,7 @@
             t.thumbnail_url AS thumbnailUrl,
             u.username AS trainerName,
             u.user_profile_url AS trainerProfileImage,
-            tp.total_average_rating AS trainerRating,
+            t.average_rating AS trainingRating,
             (SELECT COUNT(DISTINCT e.user_id) FROM enrollments e WHERE e.training_id = t.training_id) AS enrolledTraineeCount,
             t.title,
             t.description
