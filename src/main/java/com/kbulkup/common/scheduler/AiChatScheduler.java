@@ -1,4 +1,4 @@
-package com.kbulkup.chat;
+package com.kbulkup.common.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
