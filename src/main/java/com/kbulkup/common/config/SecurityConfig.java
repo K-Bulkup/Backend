@@ -51,6 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/admin/auth/login" // 관리자 로그인 경로 추가
                 ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/api/common/auth/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/trainer/trainings/*")
+                .hasAnyAuthority("TRAINER","TRAINEE")
                 .antMatchers("/api/trainer/**").hasAuthority("TRAINER")
                 .antMatchers("/api/trainee/assets/trainer-share/**").hasAuthority("TRAINER")
                 .antMatchers("/api/trainee/**").hasAuthority("TRAINEE")
