@@ -13,17 +13,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommonTrainingQnADetailResponseDTO {
     private Long qnaId;
-    private Long userId;
+    private String userName;
     private String questionTitle;
     private String question;
     private String answer;
     private LocalDateTime createAt;
     private LocalDateTime answeredAt;
 
-    public static CommonTrainingQnADetailResponseDTO create(Long qnaId, Long userId, String question, String answer, LocalDateTime createAt, LocalDateTime answeredAt) {
+    public static CommonTrainingQnADetailResponseDTO create(Long qnaId, String userName, String question, String answer, LocalDateTime createAt, LocalDateTime answeredAt) {
         return CommonTrainingQnADetailResponseDTO.builder()
                 .qnaId(qnaId)
-                .userId(userId)
+                .userName(userName)
                 .question(question)
                 .answer(answer)
                 .createAt(createAt)
