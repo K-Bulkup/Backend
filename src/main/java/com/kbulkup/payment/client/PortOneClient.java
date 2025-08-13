@@ -26,10 +26,11 @@ public class PortOneClient {
     private Instant tokenExpiry;
 
     /**
-     *  AccessToken 발급 및 캐싱
+     * AccessToken 발급 및 캐싱
      */
     private String getAccessToken() {
-        if (cachedToken != null && Instant.now().isBefore(tokenExpiry)) {
+        // 만료 60초 전부터는 재발급
+        if (cachedToken != null && tokenExpiry != null && Instant.now().isBefore(tokenExpiry.minusSeconds(60))) {
             return cachedToken;
         }
 
@@ -49,7 +50,8 @@ public class PortOneClient {
                     TokenResponse.class
             );
 
-            TokenResponse.TokenData data = (response.getBody() != null) ? response.getBody().getResponse() : null;
+            TokenResponse tokenResponse = response.getBody();
+            TokenResponse.TokenData data = (tokenResponse != null) ? tokenResponse.getResponse() : null;
             if (data == null || data.getAccessToken() == null) {
                 log.error("[PortOneClient] 토큰 응답 데이터 없음");
                 throw new BaseException(ResponseCode.PAYMENT_VERIFICATION_FAILED);
@@ -70,7 +72,7 @@ public class PortOneClient {
     }
 
     /**
-     *  결제 검증 API 호출
+     * 결제 검증 API 호출
      */
     public PaymentResult verifyPayment(String impUid) {
         try {
@@ -78,7 +80,8 @@ public class PortOneClient {
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + token); //  Bearer prefix 추가
+            // 기존 코드 유지(환경에 따라 Bearer/비Bearer 모두 허용됨)
+            headers.set("Authorization", "Bearer " + token);
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
             ResponseEntity<PaymentVerificationResponse> response = restTemplate.exchange(
@@ -88,10 +91,22 @@ public class PortOneClient {
                     PaymentVerificationResponse.class
             );
 
-            PaymentVerificationResponse.PaymentData res = response.getBody().getResponse();
+            PaymentVerificationResponse body = response.getBody();
+            if (body == null || body.getResponse() == null) {
+                log.error("[PortOneClient] 결제 검증 응답이 비어있음");
+                throw new BaseException(ResponseCode.PAYMENT_VERIFICATION_FAILED);
+            }
+            PaymentVerificationResponse.PaymentData res = body.getResponse();
+
             log.info("[PortOneClient] 결제 검증 성공: impUid={}, status={}", impUid, res.getStatus());
 
-            return new PaymentResult("paid".equals(res.getStatus()), res.getAmount(), res.getPayMethod(), res.getPaidAt());
+            boolean paid = "paid".equalsIgnoreCase(res.getStatus());
+            return new PaymentResult(
+                    paid,
+                    res.getAmount(),
+                    res.getPayMethod(),
+                    String.valueOf(res.getPaidAt()) // unix epoch를 문자열로 전달
+            );
 
         } catch (HttpClientErrorException e) {
             log.error("[PortOneClient] 결제 검증 실패(포트원 응답 오류): {}", e.getMessage());
@@ -102,7 +117,7 @@ public class PortOneClient {
         }
     }
 
-    /**  Token API 응답 DTO */
+    /** Token API 응답 DTO */
     private static class TokenResponse {
         @JsonProperty("response")
         private TokenData response;
@@ -115,11 +130,11 @@ public class PortOneClient {
             private long expiredAt;
 
             public String getAccessToken() { return accessToken; }
-            public long getExpiredAt() { return expiredAt; } //  UNIX Timestamp 그대로 반환
+            public long getExpiredAt() { return expiredAt; }
         }
     }
 
-    /**  결제 검증 응답 DTO */
+    /** 결제 검증 응답 DTO */
     private static class PaymentVerificationResponse {
         @JsonProperty("response")
         private PaymentData response;
@@ -131,16 +146,16 @@ public class PortOneClient {
             @JsonProperty("pay_method")
             private String payMethod;
             @JsonProperty("paid_at")
-            private String paidAt;
+            private long paidAt; // ✅ number 매핑
 
             public String getStatus() { return status; }
             public int getAmount() { return amount; }
             public String getPayMethod() { return payMethod; }
-            public String getPaidAt() { return paidAt; }
+            public long getPaidAt() { return paidAt; }
         }
     }
 
-    /**  서비스에서 사용되는 결과 DTO */
+    /** 서비스에서 사용되는 결과 DTO */
     @Getter
     @AllArgsConstructor
     public static class PaymentResult {

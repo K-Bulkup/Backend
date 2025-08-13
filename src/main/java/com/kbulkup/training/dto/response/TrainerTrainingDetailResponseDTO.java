@@ -13,7 +13,7 @@ public class TrainerTrainingDetailResponseDTO {
 
     private String trainerName;
     private String trainerProfileImage;
-    private double trainerRating;
+    private double trainingRating;
     private int enrolledTraineeCount;
 
     private String title;
@@ -22,7 +22,7 @@ public class TrainerTrainingDetailResponseDTO {
 
     @Builder
     public TrainerTrainingDetailResponseDTO(String difficulty, String category, int totalReward,
-                                            String trainerName, String trainerProfileImage, double trainerRating,
+                                            String trainerName, String trainerProfileImage, double trainingRating,
                                             int enrolledTraineeCount, String title, String description,
                                             String thumbnailUrl) {
         this.difficulty = difficulty;
@@ -30,7 +30,7 @@ public class TrainerTrainingDetailResponseDTO {
         this.totalReward = totalReward;
         this.trainerName = trainerName;
         this.trainerProfileImage = trainerProfileImage;
-        this.trainerRating = trainerRating;
+        this.trainingRating = trainingRating;
         this.enrolledTraineeCount = enrolledTraineeCount;
         this.title = title;
         this.description = description;
