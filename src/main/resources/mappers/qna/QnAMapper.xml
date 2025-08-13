@@ -23,13 +23,14 @@
 
     <select id="getQnAList" resultType="com.kbulkup.qna.dto.response.CommonTrainingQnADetailResponseDTO">
         SELECT q.qna_id         AS qnaId,
-               q.user_id        AS userId,
+               u.username       AS userName,   -- ✅ users 테이블에서 가져오기
                q.question_title AS questionTitle,
                q.question       AS question,
                q.answer         AS answer,
                q.created_at     AS createAt,
                q.answered_at    AS answeredAt
         FROM qnas q
+                 JOIN users u ON q.user_id = u.user_id   -- ✅ JOIN
         WHERE q.training_id = #{trainingId}
         ORDER BY q.created_at DESC
     </select>
