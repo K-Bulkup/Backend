@@ -32,5 +32,5 @@ public interface TrainerScheduleMapper {
 
     void deleteSchedule(@Param("scheduleId") Long scheduleId);
 
-//    List<AvailableTimeSlotResponseDTO> findAvailableSlotsByTrainerId(@Param("trainerId") Long trainerId);
+    Long findScheduleIdByTime(@Param("trainerId") Long trainerId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }
