@@ -49,4 +49,10 @@
         WHERE trainer_id = #{trainerId}
         ORDER BY created_at DESC
     </select>
+
+    <select id="findAverageRatingByTrainingId" resultType="java.lang.Double">
+        SELECT average_rating
+        FROM trainings
+        WHERE training_id = #{trainingId}
+    </select>
 </mapper>
