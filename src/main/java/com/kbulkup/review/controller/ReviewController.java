@@ -3,6 +3,7 @@ package com.kbulkup.review.controller;
 import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.review.dto.response.TrainerTrainingReviewDetailResponseDTO;
+import com.kbulkup.review.dto.response.TrainingReviewSummaryResponseDTO;
 import com.kbulkup.review.service.ReviewService;
 import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/common/reviews/{trainingId}")
-    public CustomResponse<List<TrainerTrainingReviewDetailResponseDTO>> getTrainerTrainingReview(@PathVariable Long trainingId) {
-        List<TrainerTrainingReviewDetailResponseDTO> dtos = reviewService.getTrainingReviews(trainingId);
-        return CustomResponse.success(ResponseCode.SUCCESS, dtos);
+    public CustomResponse<TrainingReviewSummaryResponseDTO> getTrainerTrainingReview(@PathVariable Long trainingId) {
+        TrainingReviewSummaryResponseDTO dto = reviewService.getTrainingReviews(trainingId);
+        return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }
 }
