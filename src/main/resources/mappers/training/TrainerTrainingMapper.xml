@@ -24,7 +24,6 @@
                  JOIN trainer_profiles tp ON t.trainer_id = tp.trainer_id
                  JOIN users u ON tp.trainer_id = u.user_id
         WHERE t.training_id = #{trainingId}
-          AND t.trainer_id = #{trainerId}
     </select>
 
     <select id="selectRoutineRows" parameterType="long"
