@@ -217,23 +217,6 @@ CREATE TABLE compositions
     FOREIGN KEY (user_id) REFERENCES portfolios (user_id)
 );
 
--- counselings
-CREATE TABLE `counselings`
-(
-    `counseling_id`  BIGINT             NOT NULL AUTO_INCREMENT,
-    `user_id`        BIGINT             NOT NULL,
-    `trainer_id`     BIGINT             NOT NULL,
-    `training_id`    BIGINT             NOT NULL,
-    `room_id`        VARCHAR(100)       NOT NULL UNIQUE,
-    `status`         ENUM ('진행중', '만료') NOT NULL DEFAULT '진행중',
-    `latest_message` TEXT,
-    `latest_at`      DATETIME,
-    `start_at`       TIMESTAMP          NULL,
-    `expires_at`     TIMESTAMP          NULL,
-    `message_count`  INT                NULL,
-    PRIMARY KEY (`counseling_id`)
-);
-
 -- user_fintech_auths (수정된 부분)
 CREATE TABLE `user_fintech_auths`
 (
@@ -422,6 +405,8 @@ CREATE TABLE `counseling_reservations`
     `schedule_id`     BIGINT                                  NOT NULL,
     `status`          ENUM ('예약완료', '진행중', '완료', '취소')    NOT NULL DEFAULT '예약완료',
     `room_id`         VARCHAR(100)                            NULL,
+    `latest_message`  TEXT,
+    `latest_at`       DATETIME,
     `created_at`      DATETIME                                NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`      DATETIME                                NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`reservation_id`),
