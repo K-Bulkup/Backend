@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/trainer/profiles")
@@ -20,21 +22,32 @@ public class TrainerProfileController {
     private final TrainerProfileService trainerProfileService;
 
     @GetMapping("/me")
-    public CustomResponse<TrainerProfileDetailResponseDTO> getTrainerProfile(@AuthenticationPrincipal(expression = "user") User user) {
+    public CustomResponse<TrainerProfileDetailResponseDTO> getTrainerProfile(
+            @AuthenticationPrincipal(expression = "user") User user) {
         TrainerProfileDetailResponseDTO dto = trainerProfileService.getTrainerProfile(user.getUserId());
         return CustomResponse.success(ResponseCode.SUCCESS, dto);
     }
 
+    // 트레이니가 보는 트레이너 상세 (프로필 + 운영중 트레이닝)
+    @GetMapping("/{trainerId}")
+    public CustomResponse<Map<String, Object>> getTrainerDetailForTrainee(
+            @PathVariable Long trainerId) {
+        return CustomResponse.success(ResponseCode.SUCCESS,
+                trainerProfileService.getTrainerDetailForTrainee(trainerId));
+    }
+
     @PutMapping("/career")
-    public CustomResponse<Void> putTrainerProfile(@AuthenticationPrincipal(expression = "user") User user,
-                                                  @RequestBody TrainerProfileCareerUpdateRequestDTO dto){
-        return trainerProfileService.updateTrainerProfileCareer(user.getUserId(),dto);
+    public CustomResponse<Void> putTrainerProfile(
+            @AuthenticationPrincipal(expression = "user") User user,
+            @RequestBody TrainerProfileCareerUpdateRequestDTO dto) {
+        return trainerProfileService.updateTrainerProfileCareer(user.getUserId(), dto);
     }
 
     @PutMapping("/profile-image")
     public CustomResponse<TrainerProfileImgUrlResponseDTO> updateTrainerProfileImage(
             @AuthenticationPrincipal(expression = "user") User user,
             @ModelAttribute TrainerProfileImageUpdateRequestDTO dto) {
-        return CustomResponse.success(ResponseCode.SUCCESS,trainerProfileService.updateTrainerProfileImage(user.getUserId(), dto));
+        return CustomResponse.success(ResponseCode.SUCCESS,
+                trainerProfileService.updateTrainerProfileImage(user.getUserId(), dto));
     }
 }
