@@ -4,7 +4,6 @@ import com.kbulkup.common.response.CustomResponse;
 import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.qna.dto.request.TraineeTrainingQnARequestDTO;
 import com.kbulkup.qna.dto.request.TrainerTrainingQnARequestDTO;
-import com.kbulkup.qna.dto.response.CommonTrainingQnADetailResponseDTO;
 import com.kbulkup.qna.dto.response.CommonTrainingQnAListDetailResponseDTO;
 import com.kbulkup.qna.dto.response.TrainerTrainingListDetailResponseDTO;
 import com.kbulkup.qna.service.QnAService;
