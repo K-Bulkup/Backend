@@ -46,7 +46,7 @@ public class TraineeTrainingService {
                 routines.stream().collect(Collectors.groupingBy(
                         RoutineSummaryResponseDTO::getRoutineType,
                         Collectors.mapping(r -> TraineeRoutineSummaryResponseDTO.RoutineSummaryResponseDTO.of(
-                                r.getRoutineId(), r.getTitle(), r.isCompleted(), r.getRewardPoint(), r.getCompletedAt()
+                                r.getRoutineId(), r.getTitle(), r.isCompleted(), r.getRewardPoint(), r.getCompletedAt(), r.getRoutineType(), r.getQuizType()
                         ), Collectors.toList())
                 ));
 

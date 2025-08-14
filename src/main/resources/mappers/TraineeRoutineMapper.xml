@@ -13,8 +13,8 @@
         <result property="category"            column="category"/>
         <result property="level"               column="level"/>
         <result property="routineVideoUrl"     column="routine_video_url"/>
-        <!-- NEW -->
         <result property="routineType"         column="routine_type"/>
+        <result property="quizType"            column="quiz_type"/>
     </resultMap>
 
     <select id="findRoutineDetailById"
@@ -27,8 +27,8 @@
             t.category,
             t.level,
             rv.routine_video_url,
-            -- NEW: DB 컬럼 quiz_type을 프론트가 쓰는 routineType으로 내려줌
-            r.quiz_type   AS routine_type
+            r.routine_type AS routine_type,
+            r.quiz_type    AS quiz_type
         FROM routines r
                  JOIN trainings t   ON r.training_id = t.training_id
                  LEFT JOIN routine_videos rv ON r.routine_id = rv.routine_id

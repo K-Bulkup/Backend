@@ -18,4 +18,5 @@ public class TraineeRoutineDetailResponseDTO {
     private String level;                // 트레이닝 난이도
     private String routineVideoUrl;      // 루틴 영상 URL
     private String routineType;          // 루틴 타입
+    private String quizType;
 }
