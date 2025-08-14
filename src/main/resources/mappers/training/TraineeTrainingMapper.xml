@@ -34,6 +34,7 @@
         SELECT r.routine_id   AS routineId,
                r.title,
                r.routine_type AS routineType,
+               r.quiz_type    AS quizType,
                r.score        AS rewardPoint,
                lr.status      AS completed,
                lr.submitted_at AS completedAt

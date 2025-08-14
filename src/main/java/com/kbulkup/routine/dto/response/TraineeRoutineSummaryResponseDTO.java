@@ -40,5 +40,7 @@ public class TraineeRoutineSummaryResponseDTO {
         private boolean completed;
         private int rewardPoint;
         private LocalDateTime completedAt;
+        private String routineType;
+        private String quizType;
     }
 }
