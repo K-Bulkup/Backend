@@ -4,14 +4,15 @@ import com.kbulkup.chat.dto.ChatMessageDTO;
 import com.kbulkup.chat.domain.MongoChatMessage;
 import com.kbulkup.chat.dto.ChatSummaryDTO;
 import com.kbulkup.chat.repository.ChatMongoRepository;
-import com.kbulkup.counseling.domain.Counseling;
-import com.kbulkup.counseling.domain.CounselingStatus;
-import com.kbulkup.counseling.mapper.CounselingMapper;
+import com.kbulkup.common.exception.CounselingException;
+import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.counseling.domain.CounselingReservation;
+import com.kbulkup.counseling.domain.ReservationStatus;
+import com.kbulkup.counseling.mapper.CounselingReservationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,29 +20,28 @@ import java.util.List;
 public class ChatServiceImpl implements ChatService {
 
     private final ChatMongoRepository chatMongoRepository;
-    private final CounselingMapper counselingMapper;
+    private final CounselingReservationMapper counselingReservationMapper;
 
     @Override
     @Transactional
     public ChatSummaryDTO saveChatMessage(ChatMessageDTO dto) {
 
-        Counseling counseling = counselingMapper.findByRoomId(dto.getRoomId());
+        CounselingReservation reservation = counselingReservationMapper.findByRoomId(dto.getRoomId());
 
-        //만료된 채팅방에서 채팅시 CounselingStatus 수정 및 에러 메시지 반환
-        if (counseling.getExpiresAt().isBefore(LocalDateTime.now())) {
-            counselingMapper.updateStatusToExpired(dto.getRoomId(), CounselingStatus.EXPIRED.getName());
-            return null;
+        // 예약 상태가 ACTIVE인지 확인
+        if (!ReservationStatus.ACTIVE.getName().equals(reservation.getStatus())) {
+            throw new CounselingException(ResponseCode.CHAT_NOT_AVAILABLE);
         }
 
-        String receiverId = dto.getSenderId().equals(counseling.getUserId().toString())
-                ? counseling.getTrainerId().toString() : counseling.getUserId().toString();
+        String receiverId = dto.getSenderId().equals(reservation.getTraineeId().toString())
+                ? reservation.getTrainerId().toString() : reservation.getTraineeId().toString();
 
         //mongodb 채팅 내역 저장
         MongoChatMessage document = MongoChatMessage.create(dto, receiverId);
         chatMongoRepository.save(document);
 
         //mysql 마지막 채팅 시간, 마지막 채팅 업데이트
-        counselingMapper.updateLatestMessage(dto.getRoomId(), dto.getMessage(), dto.getSendAt());
+        counselingReservationMapper.updateLatestMessage(dto.getRoomId(), dto.getMessage(), dto.getSendAt());
 
         //채팅방 요약 정보 전송 위함
         int unreadCount = (int) chatMongoRepository.countUnreadMessages(dto.getRoomId(), receiverId);
