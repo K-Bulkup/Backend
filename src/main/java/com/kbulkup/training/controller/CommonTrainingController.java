@@ -113,7 +113,7 @@ public class CommonTrainingController {
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
 
-    @GetMapping("/trainer/trainings/{trainingId}")
+    @GetMapping("/common/trainings/{trainingId}")
     public CustomResponse<TrainerTrainingDetailResponseDTO> getTrainerTrainingDetail(
             @PathVariable Long trainingId,
             @AuthenticationPrincipal(expression = "user") User user
