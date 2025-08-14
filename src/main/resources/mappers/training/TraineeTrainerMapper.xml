@@ -1,43 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kbulkup.training.mapper.TraineeTrainerMapper">
 
-    <!-- 트레이너 프로필 조회 (NULL/무자료 안전) -->
+    <!-- 프로필 요약: 승인된 트레이닝만 집계 -->
     <select id="selectTrainerProfile" parameterType="long"
-            resultType="com.kbulkup.training.dto.response.TrainingTrainerDetailProfileResponseDTO">
+            resultType="com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO">
         SELECT
-            u.username         AS name,
-            u.user_profile_url AS profileUrl,
-            COALESCE(tp.career, '')               AS description,
-            /* 트레이너의 모든 트레이닝에 등록된 수강생 합계 */
+            u.username         AS username,
+            u.user_profile_url AS userProfileUrl,
+            COALESCE(tp.career, '') AS career,
+
+            /* ✅ 누적 수강생수: enrollments 기준으로 안전하게 집계 */
             COALESCE((
-                         SELECT COUNT(e.enrollment_id)
+                         SELECT COUNT(1)
                          FROM enrollments e
-                                  JOIN trainings t2 ON e.training_id = t2.training_id
-                         WHERE t2.trainer_id = #{trainerId}
-                     ), 0)                                  AS traineeCount,
-            COALESCE(tp.total_average_rating, 0)   AS averageRating,
-            /* 자격증 여부 (tp가 없어도 안전) */
-            EXISTS (
-                SELECT 1 FROM trainer_certificates tc
-                WHERE tc.trainer_id = u.user_id
-            )                                      AS isCertified
+                                  JOIN trainings t2 ON t2.training_id = e.training_id
+                         WHERE t2.trainer_id = u.user_id
+                     ), 0) AS totalTraineeCount,
+
+            /* 평균 별점: 승인된 강의만 평균 */
+            COALESCE((
+                         SELECT AVG(NULLIF(t3.average_rating, 0))
+                         FROM trainings t3
+                         WHERE t3.trainer_id = u.user_id
+                           AND t3.approval_status = '승인'
+                     ), 0) AS totalAverageRating
+
         FROM users u
-                 LEFT JOIN trainer_profiles tp ON u.user_id = tp.trainer_id
+                 LEFT JOIN trainer_profiles tp ON tp.trainer_id = u.user_id
         WHERE u.user_id = #{trainerId}
     </select>
 
-    <!-- 트레이너가 개설한 트레이닝 목록 (기존 그대로면 OK) -->
+    <!-- 자격증 리스트(툴팁용) -->
+    <select id="selectTrainerCertificates" parameterType="long" resultType="string">
+        SELECT tc.cert_type
+        FROM trainer_certificates tc
+        WHERE tc.trainer_id = #{trainerId}
+        ORDER BY tc.created_at DESC
+    </select>
+
+    <!-- 트레이닝 목록: 가격/평균별점 포함 -->
     <select id="selectTrainerTrainings" parameterType="long"
             resultType="com.kbulkup.training.dto.response.TrainerTrainingSummaryResponseDTO">
         SELECT
-            t.training_id AS trainingId,
-            t.title       AS title,
-            t.level       AS level,
-            t.thumbnail_url AS thumbnailUrl
+            t.training_id    AS trainingId,
+            t.title          AS title,
+            t.level          AS level,
+            t.thumbnail_url  AS thumbnailUrl,
+            COALESCE(t.price, 0)          AS price,
+            COALESCE(t.average_rating, 0) AS averageRating
         FROM trainings t
         WHERE t.trainer_id = #{trainerId}
+          AND t.approval_status = '승인'
+        ORDER BY t.created_at DESC
     </select>
 
 </mapper>

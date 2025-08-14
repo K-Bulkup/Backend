@@ -5,10 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CounselingStatus {
+public enum ReservationStatus {
 
-    PROGRESS("진행중"),
-    EXPIRED("만료");
+    RESERVED("예약완료"),
+    ACTIVE("진행중"),
+    COMPLETED("완료"),
+    CANCELED("취소");
 
     private final String name;
 }

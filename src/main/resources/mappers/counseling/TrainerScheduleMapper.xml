@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kbulkup.counseling.mapper.TrainerScheduleMapper">
+
+    <insert id="insertSchedule"
+            parameterType="com.kbulkup.counseling.domain.TrainerSchedule"
+            useGeneratedKeys="true" keyProperty="scheduleId">
+        INSERT INTO trainer_schedules (trainer_id, start_time, end_time, is_available, created_at)
+        VALUES (#{trainerId}, #{startTime}, #{endTime}, #{isAvailable}, #{createdAt})
+    </insert>
+
+    <select id="findByTrainerId" parameterType="long"
+            resultType="com.kbulkup.counseling.domain.TrainerSchedule">
+        SELECT schedule_id, trainer_id, start_time, end_time, is_available, created_at
+        FROM trainer_schedules
+        WHERE trainer_id = #{trainerId}
+        ORDER BY start_time ASC
+    </select>
+
+    <select id="findByTrainerIdAndDateRange"
+            resultType="com.kbulkup.counseling.domain.TrainerSchedule">
+        SELECT schedule_id, trainer_id, start_time, end_time, is_available, created_at
+        FROM trainer_schedules
+        WHERE trainer_id = #{trainerId}
+          AND <![CDATA[ start_time >= #{startDate} ]]>
+      AND <![CDATA[ end_time <= #{endDate} ]]>
+    ORDER BY start_time ASC
+    </select>
+
+    <select id="findByScheduleId" parameterType="long"
+            resultType="com.kbulkup.counseling.domain.TrainerSchedule">
+        SELECT schedule_id, trainer_id, start_time, end_time, is_available, created_at
+        FROM trainer_schedules
+        WHERE schedule_id = #{scheduleId}
+    </select>
+
+    <!-- EXISTS로 바꿔 비교연산 제거 (DB 호환/가독성↑) -->
+    <select id="existsByTrainerIdAndTimeRange" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM trainer_schedules
+            WHERE trainer_id = #{trainerId}
+              AND (
+          <![CDATA[
+                (start_time <= #{startTime} AND end_time > #{startTime})
+                    OR (start_time < #{endTime} AND end_time >= #{endTime})
+                    OR (start_time >= #{startTime} AND end_time <= #{endTime})
+          ]]>
+        )
+        )
+    </select>
+
+    <select id="findScheduleIdByTime" resultType="java.lang.Long">
+        SELECT schedule_id
+        FROM trainer_schedules
+        WHERE trainer_id = #{trainerId}
+          AND start_time = #{start}
+          AND end_time   = #{end}
+        LIMIT 1
+    </select>
+
+    <update id="updateAvailability">
+        UPDATE trainer_schedules
+        SET is_available = #{isAvailable}
+        WHERE schedule_id = #{scheduleId}
+    </update>
+
+    <delete id="deleteSchedule" parameterType="long">
+        DELETE FROM trainer_schedules
+        WHERE schedule_id = #{scheduleId}
+    </delete>
+
+</mapper>
