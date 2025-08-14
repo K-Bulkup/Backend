@@ -12,12 +12,12 @@ jobs :
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name : Checkout repository
+      - name : Checkout repository with submodules
         uses : actions/checkout@v3
-#        with:
-#          #우리 서비스는 submodule이 1개이기 때문에 true , 중첩되어 있을 경우 recursive
-#          token: ${{ secrets.SUBMODULE_TOKEN }}  # 서브모듈 접근용 토큰
-#          submodules: true
+        with:
+          #우리 서비스는 submodule이 1개이기 때문에 true , 중첩되어 있을 경우 recursive
+          token: ${{ secrets.SUBMODULE_TOKEN }}  # 서브모듈 접근용 토큰
+          submodules: true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
