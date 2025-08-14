@@ -14,6 +14,10 @@ public interface RoutineResultMapper {
 
     Optional<String> findRoutineAnswerByRoutineId(@Param("routineId") Long routineId);
 
+    String findQuizTypeByRoutineId(@Param("routineId") Long routineId);
+
+    String findRoutineDescriptionByRoutineId(@Param("routineId") Long routineId);
+
     int selectRoutineScoreById(@Param("routineId") Long routineId);
 
     int existsByRoutineAndEnrollment(@Param("routineId") Long routineId, @Param("enrollmentId") Long enrollmentId);

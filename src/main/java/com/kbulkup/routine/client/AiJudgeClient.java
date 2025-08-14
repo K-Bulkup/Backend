@@ -6,6 +6,7 @@ import com.kbulkup.gpt.service.GPTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
@@ -14,13 +15,13 @@ public class AiJudgeClient {
 
     private final GPTService gptService;
 
-    public boolean evaluate(String correctAnswer, String userAnswer, String evidenceUrl) {
+    public boolean evaluate(String routineDescription, String userAnswer, String imageUrl) {
         GPTResponseDTO response;
 
-        if (evidenceUrl != null && !evidenceUrl.isBlank()) {
-            response = gptService.requestImageAnalysis(correctAnswer, evidenceUrl);
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            response = gptService.requestImageAnalysis(routineDescription, imageUrl);
         } else {
-            response = gptService.requestOnlyText(correctAnswer, userAnswer);
+            response = gptService.requestOnlyText(routineDescription, userAnswer);
         }
 
         if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
@@ -28,9 +29,10 @@ public class AiJudgeClient {
             return false;
         }
 
-        String content = String.valueOf(response.getChoices().get(0).getMessage().getContent()).toUpperCase();
+        String content = String.valueOf(response.getChoices().get(0).getMessage().getContent());
         log.info("GPT 응답 결과: {}", content);
 
-        return content.matches(".*(PASS|정답|맞|정확|TRUE).*");
+        // return content.matches(".*(PASS|정답|맞|정확|TRUE).*");
+        return content.toLowerCase().contains("true");
     }
 }

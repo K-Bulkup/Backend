@@ -14,4 +14,6 @@ public interface TrainingMapper {
     Long findTrainerByTrainingId(@Param("trainingId") Long trainingId);
 
     List<TrainerTrainingListDetailResponseDTO> findTrainerTrainings(@Param("trainerId") Long trainerId);
+
+    Double findAverageRatingByTrainingId(@Param("trainingId") Long trainingId);
 }

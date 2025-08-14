@@ -48,6 +48,9 @@ public enum ResponseCode {
     INVALID_PAST_TIME(BAD_REQUEST, "과거 시간으로는 스케줄을 등록할 수 없습니다."),
     INVALID_TRAINER_SCHEDULE(BAD_REQUEST, "해당 트레이너의 스케줄이 아닙니다."),
 
+    QUIZ_TYPE_NOT_FOUND(BAD_REQUEST, "퀴즈 타입이 존재하지 않습니다."),
+    INVALID_QUIZ_TYPE(BAD_REQUEST,"지원하지 않는 퀴즈 타입입니다." ),
+    OX_ANSWER_NOT_FOUND(BAD_REQUEST, "OX 정답이 없습니다."),
 
     // 401 Unauthorized
     AUTH_JWT_INVALID_SIGNATURE(UNAUTHORIZED, "JWT 서명이 유효하지 않습니다."),
@@ -55,6 +58,7 @@ public enum ResponseCode {
 
     // 403 FORBIDDEN
     ADMIN_USER_ROLE_MISSING(FORBIDDEN,"잘못된 역할입니다." ),
+    TRAINER_ACCESS_DENIED(FORBIDDEN, "트레이너만 접근할 수 있습니다."),
 
     //컨설팅 트레이너 스케줄 관련
     UNAUTHORIZED_SCHEDULE_ACCESS(FORBIDDEN, "스케줄에 대한 접근 권한이 없습니다."),
@@ -81,7 +85,7 @@ public enum ResponseCode {
     TRAINER_CERTIFICATES_VALIDATION_FAILED(INTERNAL_SERVER_ERROR, "유효하지 않은 자격정보 입니다."),
     PAYMENT_PROCESS_FAILED(INTERNAL_SERVER_ERROR, "결제 처리 중 오류가 발생했습니다."),
     PAYMENT_SAVE_FAILED(INTERNAL_SERVER_ERROR, "결제 정보 저장 중 오류가 발생했습니다."),
-
+    S3_UPLOAD_FAILED(INTERNAL_SERVER_ERROR, "S3 저장에 실패했습니다."),
 
 
     //200 OK
