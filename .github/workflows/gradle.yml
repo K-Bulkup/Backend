@@ -54,7 +54,7 @@ jobs :
         with:
           host: 43.201.172.152
           username: ec2-user
-          key: ${{ secrets.EC2_KEY }}| base64 --decode > src/main/resources/config/application-prd.properties
+          key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
             cd /home/ec2-user && sudo docker-compose down || true 
