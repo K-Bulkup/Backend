@@ -1,0 +1,8 @@
+name: Java CI/CD with Gradle # 워크플로우명 (GitHub Actions UI에서 이 이름으로 워크플로우를 식별함)
+
+#해당 워크플로우가 어떤 이벤트에 의해 트리거될지 정의
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]

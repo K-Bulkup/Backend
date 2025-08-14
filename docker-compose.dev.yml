@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  spring-app:
+    container_name: kbulkup
+    restart: always
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile-java
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - app_logs:/usr/local/tomcat/logs
+    networks:
+      - kbulkup-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   mongodb:
     image: mongo:7.0
     container_name: kbulkup-mongodb
@@ -13,6 +33,10 @@ services:
       - mongodb_data:/data/db
     networks:
       - kbulkup-network
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.runCommand('ping').ok" ]
+      interval: 10s
+      retries: 5
 
   redis:
     image: redis:7.2-alpine
@@ -24,11 +48,18 @@ services:
       - redis_data:/data
     networks:
       - kbulkup-network
+    healthcheck:
+      test: ["CMD","redis-cli","ping"]
+      interval: 5s
+      retries: 10
+
 
 volumes:
+  app_logs:
   mongodb_data:
   redis_data:
 
 networks:
   kbulkup-network:
     driver: bridge
+
