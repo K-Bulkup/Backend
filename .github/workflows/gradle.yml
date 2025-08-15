@@ -62,6 +62,16 @@ jobs :
             rm -f /home/ec2-user/kbulkup-spring.tar
             sudo docker image prune -f
 
+      - name: Copy docker-compose.yml to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 43.201.172.152
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          port: 22
+          source: "docker-compose.yml"
+          target: "/home/ec2-user/"
+
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
