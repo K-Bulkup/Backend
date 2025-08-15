@@ -4,11 +4,12 @@ import com.kbulkup.auth.dto.request.LoginRequestDTO;
 import com.kbulkup.auth.dto.request.SignupRequestDTO;
 import com.kbulkup.auth.dto.request.SocialSignUpRequestDTO; // SocialSignUpRequestDTO import 추가
 import com.kbulkup.auth.dto.response.LoginResponseDTO;
-import com.kbulkup.auth.dto.response.LogoutResponseDTO;
 import com.kbulkup.auth.dto.response.SignupResponseDTO;
 import com.kbulkup.auth.service.AuthService;
 import com.kbulkup.auth.service.LoginContext;
 import com.kbulkup.auth.naver.NaverApiClient; // NaverApiClient import 추가
+import com.kbulkup.common.response.CustomResponse;
+import com.kbulkup.common.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping; // GetMapping import 추가
@@ -200,4 +201,10 @@ public class AuthController {
 
         return new RedirectView(redirectUrl);
     }
+
+    @GetMapping("/ping")
+    private CustomResponse<Void> pingTest(){
+        return CustomResponse.success(ResponseCode.SUCCESS);
+    }
+
 }
