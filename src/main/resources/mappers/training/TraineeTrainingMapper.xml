@@ -36,7 +36,7 @@
                r.routine_type AS routineType,
                r.quiz_type    AS quizType,
                r.score        AS rewardPoint,
-               lr.status      AS completed,
+               CASE WHEN lr.pass_fail_result = 'PASS' THEN TRUE ELSE FALSE END AS completed,
                lr.submitted_at AS completedAt
         FROM routines r
                  /* 수강행 먼저 확정 (userId, trainingId) */
@@ -65,17 +65,16 @@
         FROM (
                  SELECT rr.routine_id,
                         ROW_NUMBER() OVER (
-             PARTITION BY rr.routine_id, rr.enrollment_id
-             ORDER BY rr.submitted_at DESC, rr.routine_result_id DESC
-           ) AS rn,
-                         rr.status
+           PARTITION BY rr.routine_id, rr.enrollment_id
+           ORDER BY rr.submitted_at DESC, rr.routine_result_id DESC
+         ) AS rn,
+                         rr.pass_fail_result
                  FROM routine_results rr
-                          JOIN enrollments e
-                               ON e.enrollment_id = rr.enrollment_id
-                                   AND e.training_id   = #{trainingId}
-                                   AND e.user_id       = #{userId}
+                          JOIN enrollments e ON e.enrollment_id = rr.enrollment_id
+                     AND e.training_id   = #{trainingId}
+                     AND e.user_id       = #{userId}
              ) x
-        WHERE x.rn = 1 AND x.status = TRUE
+        WHERE x.rn = 1 AND x.pass_fail_result = 'PASS'
     </select>
 
     <select id="countTotalRoutines" resultType="int">
