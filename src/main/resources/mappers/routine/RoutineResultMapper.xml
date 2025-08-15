@@ -29,13 +29,13 @@
     <insert id="insertRoutineResult" parameterType="com.kbulkup.routine.domain.RoutineResult">
         INSERT INTO routine_results (
         enrollment_id, routine_id,
-        status,                             <!-- ★ status를 직접 넣되 -->
+        status,                             <!-- status를 직접 넣되 -->
         awared_score, pass_fail_result,
         answer_text, evidence_url, submitted_at
         )
         VALUES (
         #{enrollmentId}, #{routineId},
-        CASE WHEN #{passFailResult} = 'PASS' THEN TRUE ELSE FALSE END,  <!-- ★ PASS 기준으로 강제 동기화 -->
+        CASE WHEN #{passFailResult} = 'PASS' THEN TRUE ELSE FALSE END,  <!-- PASS 기준으로 강제 동기화 -->
         #{awaredScore}, #{passFailResult},
         #{answerText}, #{evidenceUrl}, #{submittedAt}
         )
@@ -43,7 +43,7 @@
 
     <update id="updateRoutineResult" parameterType="com.kbulkup.routine.domain.RoutineResult">
         UPDATE routine_results
-        SET status = CASE WHEN #{passFailResult} = 'PASS' THEN TRUE ELSE FALSE END,  <!-- ★ 동기화 -->
+        SET status = CASE WHEN #{passFailResult} = 'PASS' THEN TRUE ELSE FALSE END,  <!-- 동기화 -->
         awared_score = #{awaredScore},
         pass_fail_result = #{passFailResult},
         answer_text = #{answerText},
