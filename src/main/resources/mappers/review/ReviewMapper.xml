@@ -19,6 +19,7 @@
         SELECT EXISTS (
             SELECT 1
             FROM reviews
+
             WHERE user_id = #{userId}
               AND training_id = #{trainingId}
         )
