@@ -2,13 +2,11 @@ version: '3.8'
 
 services:
   spring-app:
+    image: kbulkup-spring:latest
     container_name: kbulkup
     restart: always
     ports:
       - "8080:8080"
-    build:
-      context: .
-      dockerfile: Dockerfile-java
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     volumes:
