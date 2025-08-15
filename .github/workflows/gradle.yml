@@ -86,7 +86,8 @@ jobs :
               sudo docker images | grep kbulkup-spring
               
               echo "Starting services with docker-compose..."
-              cd /home/ec2-user && sudo docker-compose -f docker-compose.dev.yml up -d
+              cd /home/ec2-user
+              sudo SPRING_PROFILES_ACTIVE=prd docker-compose -f docker-compose.dev.yml up -d
 
               echo "Waiting for services to start..."
               sleep 30
