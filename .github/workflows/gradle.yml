@@ -44,10 +44,10 @@ jobs :
 
       - name: Save Docker image to tar
         run: |
-          docker save -o kbulkup-spring.tar kbulkup-spring:latest
+          docker save -o kbulkup-spring.war kbulkup-spring:latest
           echo "Docker image saved to tar file"
-          chmod 644 kbulkup-spring.tar  # 읽기 권한 부여
-          ls -lh kbulkup-spring.tar
+          chmod 644 kbulkup-spring.war  # 읽기 권한 부여
+          ls -lh kbulkup-spring.war
 
 
       - name: Prepare deployment on EC2
@@ -69,7 +69,7 @@ jobs :
             username: ec2-user
             key: ${{ secrets.EC2_KEY }}
             port: 22
-            source: "docker-compose.yml"
+            source: "kbulkup-spring.tar"
             target: "/home/ec2-user/"
 
       - name: Load image and start with docker-compose
