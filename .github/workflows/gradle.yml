@@ -59,7 +59,7 @@ jobs :
           port: 22
           script: |
             cd /home/ec2-user && sudo docker-compose down || true 
-            rm -f /home/ec2-user/kbulkup-spring.tar
+            rm -f /home/ec2-user/kbulkup-spring.war
             sudo docker image prune -f
 
       - name: Copy Docker image to EC2
@@ -69,7 +69,7 @@ jobs :
             username: ec2-user
             key: ${{ secrets.EC2_KEY }}
             port: 22
-            source: "kbulkup-spring.tar"
+            source: "kbulkup-spring.war"
             target: "/home/ec2-user/"
 
       - name: Load image and start with docker-compose
@@ -81,7 +81,7 @@ jobs :
             port: 22
             script: |
               echo "Loading Docker image..."
-              sudo docker load -i /home/ec2-user/kbulkup-spring.tar
+              sudo docker load -i /home/ec2-user/kbulkup-spring.war
               
               echo "Loaded images:"
               sudo docker images | grep kbulkup-spring
@@ -100,5 +100,5 @@ jobs :
                 sleep 5
               done && echo "✅ Spring application is healthy!" || echo "❌ Spring application health check failed"'
               
-              rm -f /home/ec2-user/kbulkup-spring.tar
+              rm -f /home/ec2-user/kbulkup-spring.war
               echo "Deployment completed successfully!"
