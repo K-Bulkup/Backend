@@ -99,7 +99,7 @@
     </insert>
 
     <select id="findUserIdByRoomID" resultType="java.lang.Long">
-        SELECT user_id FROM counselings WHERE room_id = #{roomId}
+        SELECT user_id FROM counseling_reservations WHERE room_id = #{roomId}
     </select>
 
     <select id="findBankAndFintechUseNum" resultType="com.kbulkup.asset.dto.request.FintechAuthRequestDTO">
