@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/ws/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(
+                        "/api/common/auth/ping",
                         "/api/common/auth/login",
                         "/api/common/auth/signup",
                         "/api/common/auth/naver/**", // 네이버 OAuth 로그인 시작 및 콜백
