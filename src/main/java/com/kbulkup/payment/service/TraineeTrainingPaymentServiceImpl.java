@@ -5,6 +5,7 @@ import com.kbulkup.payment.dto.request.TraineeTrainingPaymentRequestDTO;
 import com.kbulkup.payment.dto.response.TraineeTrainingPaymentResponseDTO;
 import com.kbulkup.payment.mapper.TraineeTrainingPaymentMapper;
 import com.kbulkup.payment.mapper.AuthUserMapper;
+import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -38,9 +39,9 @@ public class TraineeTrainingPaymentServiceImpl implements TraineeTrainingPayment
     }
 
     @Override
-    public TraineeTrainingPaymentResponseDTO processPayment(TraineeTrainingPaymentRequestDTO requestDTO) {
+    public TraineeTrainingPaymentResponseDTO processPayment(TraineeTrainingPaymentRequestDTO requestDTO, User user) {
 
-        final Long userId = resolveUserId(requestDTO.getUserId());
+        final Long userId = user.getUserId();
         final Long trainingId = requestDTO.getTrainingId();
         log.info("[Payment] userId={}, trainingId={}, impUid={}", userId, trainingId, requestDTO.getImpUid());
 
