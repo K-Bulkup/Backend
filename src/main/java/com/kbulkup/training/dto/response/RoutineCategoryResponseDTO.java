@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class RoutineCategoryResponseDTO {
     private String category;       // '스트레칭', '근력', '유산소'
     private String routineTitle;
+    private String quizType;
 }
