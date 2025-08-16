@@ -5,8 +5,10 @@ import com.kbulkup.common.response.ResponseCode;
 import com.kbulkup.payment.dto.request.TraineeTrainingPaymentRequestDTO;
 import com.kbulkup.payment.dto.response.TraineeTrainingPaymentResponseDTO;
 import com.kbulkup.payment.service.TraineeTrainingPaymentService;
+import com.kbulkup.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,9 +22,9 @@ public class TraineeTrainingPaymentController {
 
     @PostMapping("/payment")
     public CustomResponse<TraineeTrainingPaymentResponseDTO> processPayment(
-            @RequestBody TraineeTrainingPaymentRequestDTO requestDTO) {
+            @RequestBody TraineeTrainingPaymentRequestDTO requestDTO,  @AuthenticationPrincipal(expression = "user") User user) {
 
-        TraineeTrainingPaymentResponseDTO response = paymentService.processPayment(requestDTO);
+        TraineeTrainingPaymentResponseDTO response = paymentService.processPayment(requestDTO, user);
 
         if (response.isSuccess()) {
             return CustomResponse.success(ResponseCode.SUCCESS, response);
