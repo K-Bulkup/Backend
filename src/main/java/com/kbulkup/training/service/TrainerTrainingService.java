@@ -25,7 +25,8 @@ public class TrainerTrainingService {
         return trainerTrainingMapper.selectRoutineRows(trainingId).stream()
                 .map(dto -> Map.of(
                         "category", dto.getCategory(),        // 한글 그대로
-                        "routineTitle", dto.getRoutineTitle()
+                        "routineTitle", dto.getRoutineTitle(),
+                        "quizType",dto.getQuizType()
                 ))
                 .collect(Collectors.toList());
     }
