@@ -28,8 +28,8 @@ public class MessageDTO {
         return MessageDTO.builder()
                 .role(role)
                 .content(List.of(
-                        new TextContentDTO(text),
-                        new ImageContentDTO(imageUrl)
+                        new ImageContentDTO(imageUrl),
+                        new TextContentDTO(text)
                 ))
                 .build();
     }
