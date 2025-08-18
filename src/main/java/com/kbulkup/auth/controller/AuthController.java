@@ -30,6 +30,16 @@ import com.kbulkup.auth.kakao.KakaoApiClient; // KakaoApiClient import 추가
 import java.net.URLEncoder; // URLEncoder import 추가
 import java.nio.charset.StandardCharsets; // StandardCharsets import 추가
 
+// Swagger
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@Api(tags = "Auth", description = "공통 인증 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/common/auth")
@@ -43,20 +53,39 @@ public class AuthController {
     private final KakaoApiClient kakaoApiClient; // KakaoApiClient 의존성 추가
 
     // 1. 로그인 엔드포인트: LoginContext로 위임
+    @ApiOperation(value = "로그인", notes = "이메일/비밀번호 또는 소셜 코드로 로그인합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패")
+    })
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO dto) {
+    public ResponseEntity<LoginResponseDTO> login(
+            @ApiParam(value = "로그인 요청 바디", required = true)
+            @RequestBody LoginRequestDTO dto) {
         LoginResponseDTO responseDTO = loginContext.executeLogin(dto);
         return ResponseEntity.ok(responseDTO);
     }
 
     // 2. 회원가입 엔드포인트: AuthService로 위임
+    @ApiOperation(value = "회원가입", notes = "일반/소셜 사용자의 회원가입을 처리합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "요청 값 오류"),
+            @ApiResponse(code = 409, message = "중복(이미 존재)")
+    })
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDTO> signup(@Valid @RequestBody SignupRequestDTO dto) {
+    public ResponseEntity<SignupResponseDTO> signup(
+            @ApiParam(value = "회원가입 요청 바디", required = true)
+            @Valid @RequestBody SignupRequestDTO dto) {
         SignupResponseDTO responseDTO = authService.signup(dto);
         return ResponseEntity.ok(responseDTO);
     }
 
     // 3. 로그아웃 엔드포인트: AuthService로 위임
+    @ApiOperation(value = "로그아웃", notes = "현재 세션/토큰을 무효화합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공")
+    })
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
         authService.logout();
@@ -64,6 +93,10 @@ public class AuthController {
     }
 
     // 4. 네이버 로그인 시작 엔드포인트
+    @ApiOperation(value = "네이버 로그인 시작", notes = "네이버 OAuth 인증 페이지로 리다이렉트합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 302, message = "리다이렉트")
+    })
     @GetMapping("/naver/start")
     public RedirectView naverLoginStart(HttpServletRequest request) {
         log.info("Received GET request for /api/common/auth/naver/start"); // 로그 추가
@@ -80,6 +113,14 @@ public class AuthController {
     }
 
     // 5. 네이버 로그인 콜백 엔드포인트
+    @ApiOperation(value = "네이버 로그인 콜백", notes = "네이버에서 전달된 code/state로 로그인 처리를 합니다. 이후 프론트로 리다이렉트합니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "code", value = "인증 코드", required = true, dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "state", value = "CSRF 방지용 상태값", required = true, dataType = "string", paramType = "query")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 302, message = "리다이렉트")
+    })
     @GetMapping("/naver/callback")
     public RedirectView naverCallback(@RequestParam String code, @RequestParam String state, HttpServletRequest request) {
         String storedState = (String) request.getSession().getAttribute("naver_oauth_state");
@@ -135,6 +176,10 @@ public class AuthController {
     }
 
     // 6. 카카오 로그인 시작 엔드포인트
+    @ApiOperation(value = "카카오 로그인 시작", notes = "카카오 OAuth 인증 페이지로 리다이렉트합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 302, message = "리다이렉트")
+    })
     @GetMapping("/kakao/start")
     public RedirectView kakaoLoginStart() {
         log.info("Received GET request for /api/common/auth/kakao/start"); // 로그 추가
@@ -147,13 +192,24 @@ public class AuthController {
     }
 
     // 7. 소셜 회원가입 완료 엔드포인트
+    @ApiOperation(value = "소셜 회원가입 완료", notes = "소셜 로그인 후 추가 정보를 제출하여 회원가입을 마무리합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공")
+    })
     @PostMapping("/social-signup-complete")
-    public ResponseEntity<LoginResponseDTO> socialSignupComplete(@RequestBody SocialSignUpRequestDTO dto) {
+    public ResponseEntity<LoginResponseDTO> socialSignupComplete(
+            @ApiParam(value = "소셜 회원가입 완료 요청 바디", required = true)
+            @RequestBody SocialSignUpRequestDTO dto) {
         LoginResponseDTO responseDTO = authService.socialSignUp(dto);
         return ResponseEntity.ok(responseDTO);
     }
 
     // 8. 카카오 로그인 콜백 엔드포인트
+    @ApiOperation(value = "카카오 로그인 콜백", notes = "카카오에서 전달된 code로 로그인 처리를 합니다. 이후 프론트로 리다이렉트합니다.")
+    @ApiImplicitParam(name = "code", value = "인증 코드", required = true, dataType = "string", paramType = "query")
+    @ApiResponses({
+            @ApiResponse(code = 302, message = "리다이렉트")
+    })
     @GetMapping("/login/oauth2/code/kakao")
     public RedirectView kakaoCallback(@RequestParam String code) {
         LoginResponseDTO responseDTO = loginContext.executeSocialLogin(LoginType.KAKAO, code);
@@ -202,6 +258,10 @@ public class AuthController {
         return new RedirectView(redirectUrl);
     }
 
+    @ApiOperation(value = "Ping", notes = "서버 상태 확인용 엔드포인트")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공")
+    })
     @GetMapping("/ping")
     private CustomResponse<Void> pingTest(){
         return CustomResponse.success(ResponseCode.SUCCESS);
