@@ -37,8 +37,8 @@ public class PromptBuilder {
                 {ANSWER}
                 
                 [출력 형식]
-                - 이유나 해설 없이 한 줄.
-                - 정확히 [true] 또는 [false]만 출력(대괄호 포함).
+                - 정답이면 해설을 간략히 한 줄로 설명합니다. 그리고, 줄바꿈 뒤 정확히 [true]를 출력합니다. (대괄호 포함)
+                - 오답이면 틀린 이유를 간략히 한 줄로 설명합니다. 그리고, 줄바꿈 뒤 정확히 [false]를 출력합니다. (대괄호 포함)
                 """;
 
         return template
@@ -81,8 +81,8 @@ public class PromptBuilder {
                 {MISSION}
                 
                 [출력 형식]
-                - 이유나 해설 없이 한 줄만 출력.
-                - 정확히 [true] 또는 [false]만 출력(대괄호 포함).
+                - 정답 또는 오답에 대한 이유를 한 줄로 설명합니다.
+                - 그리고 나서, 줄바꿈 후 정답이면 true, 오답이면 false를  출력합니다.
                 """;
 
         return template.replace("{MISSION}", mission == null ? "" : mission);

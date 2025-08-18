@@ -12,12 +12,13 @@ public class RoutineResultCreateResponseDTO {
 
     @ApiModelProperty(value = "판정 결과", allowableValues = "PASS, FAIL, PENDING")
     private PassFailResult passFailResult;
+    private String commentary;
 
     public enum PassFailResult {
         PASS, FAIL, PENDING
     }
 
-    public static RoutineResultCreateResponseDTO from(PassFailResult result) {
-        return new RoutineResultCreateResponseDTO(result);
+    public static RoutineResultCreateResponseDTO from(PassFailResult result, String commentary) {
+        return new RoutineResultCreateResponseDTO(result, commentary);
     }
 }
