@@ -8,25 +8,24 @@ import lombok.Getter;
 @Getter
 public class AdminTrainingResponseDTO {
 
-    @ApiModelProperty(value = "트레이닝 ID", example = "101")
+    @ApiModelProperty(value = "트레이닝 ID")
     private Long trainingId;
 
-    @ApiModelProperty(value = "트레이닝명", example = "아침 스트레칭 루틴")
+    @ApiModelProperty(value = "트레이닝명")
     private String trainingName;
 
-    @ApiModelProperty(value = "트레이너 ID", example = "501")
+    @ApiModelProperty(value = "트레이너 ID")
     private Long trainerId;
 
-    @ApiModelProperty(value = "트레이너 이름", example = "trainer_lee")
-    private String trainerName; // 추가
+    @ApiModelProperty(value = "트레이너 이름")
+    private String trainerName;
 
-    @ApiModelProperty(value = "승인 상태", example = "APPROVED",
-            allowableValues = "PENDING,APPROVED,REJECTED")
+    @ApiModelProperty(value = "승인 상태", allowableValues = "PENDING,APPROVED,REJECTED")
     private String approvalStatus;
 
-    @ApiModelProperty(value = "총 수강생 수", example = "128")
+    @ApiModelProperty(value = "총 수강생 수")
     private int totalStudents;
 
-    @ApiModelProperty(value = "요청일시(등록일, ISO-8601)", example = "2024-08-01T10:15:30")
-    private String requestDate; // 추가 (created_at을 매핑)
+    @ApiModelProperty(value = "요청일시(등록일, ISO-8601)")
+    private String requestDate;
 }

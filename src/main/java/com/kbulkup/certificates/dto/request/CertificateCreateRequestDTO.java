@@ -1,12 +1,9 @@
 package com.kbulkup.certificates.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-@ApiIgnore // 내부용: Swagger 문서에서 제외
+@ApiIgnore
 @Getter
 @Builder
 @NoArgsConstructor

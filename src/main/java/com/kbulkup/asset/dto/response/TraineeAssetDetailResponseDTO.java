@@ -5,10 +5,7 @@ import com.kbulkup.asset.domain.Snapshot;
 import com.kbulkup.asset.domain.Transaction;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 

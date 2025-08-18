@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminUserStatisticsResponseDTO {
-
-    @ApiModelProperty(value = "라벨(날짜/주/월 표시)", example = "2024-08-01")
+    @ApiModelProperty(value = "라벨(날짜/주/월)")
     private String dateLabel;
-
-    @ApiModelProperty(value = "가입자 수", example = "23")
+    @ApiModelProperty(value = "가입자 수")
     private long signupCount;
 }

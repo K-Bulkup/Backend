@@ -11,13 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminUserSummaryStatsResponseDTO {
-
-    @ApiModelProperty(value = "전체 사용자 수", example = "5321")
+    @ApiModelProperty(value = "전체 사용자 수")
     private long totalUsers;
-
-    @ApiModelProperty(value = "트레이너 수", example = "221")
+    @ApiModelProperty(value = "트레이너 수")
     private long totalTrainers;
-
-    @ApiModelProperty(value = "수강생 수", example = "5100")
+    @ApiModelProperty(value = "수강생 수")
     private long totalTrainees;
 }
