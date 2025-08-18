@@ -11,6 +11,7 @@ import com.kbulkup.routine.domain.RoutineResult;
 import com.kbulkup.routine.dto.request.RoutineResultCreateRequestDTO;
 import com.kbulkup.routine.dto.response.RoutineResultCreateResponseDTO;
 import com.kbulkup.routine.dto.response.RoutineResultCreateResponseDTO.PassFailResult;
+import com.kbulkup.routine.dto.response.UserAnswerDTO;
 import com.kbulkup.routine.mapper.RoutineResultMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +86,12 @@ public class RoutineResultServiceImpl implements RoutineResultService {
         String preCommentary = (String) gptService.requestOnlyText(routineDescription, dto.getAnswerText()).getChoices().get(0).getMessage().getContent();
         String comment = preCommentary.split("\\R", 2)[0];
         return RoutineResultCreateResponseDTO.from(result.getPassFailResult(), comment);
+    }
+
+    @Override
+    public UserAnswerDTO getUserAnswer(Long routineId, Long trainingId, Long userId) {
+        Long enrollmentId = routineResultMapper.findEnrollmentId(userId, trainingId);
+        return routineResultMapper.findAnswer(enrollmentId, routineId);
     }
 
     private String uploadToS3(MultipartFile file) {

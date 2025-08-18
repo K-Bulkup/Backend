@@ -3,6 +3,7 @@ package com.kbulkup.routine.mapper;
 
 import com.kbulkup.routine.domain.RoutineResult;
 import com.kbulkup.routine.dto.response.RoutineResultCreateResponseDTO.PassFailResult;
+import com.kbulkup.routine.dto.response.UserAnswerDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -29,4 +30,8 @@ public interface RoutineResultMapper {
     void increaseUserScore(@Param("enrollmentId") Long enrollmentId, @Param("score") int score);
 
     void updateEnrollmentProgress(@Param("enrollmentId") Long enrollmentId);
+
+    Long findEnrollmentId(@Param("userId")Long userId, @Param("trainingId") Long trainingId);
+
+    UserAnswerDTO findAnswer(@Param("enrollmentId") Long enrollmentId,@Param("routineId") Long routineId);
 }
