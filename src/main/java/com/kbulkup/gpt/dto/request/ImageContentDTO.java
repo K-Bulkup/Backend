@@ -3,7 +3,9 @@ package com.kbulkup.gpt.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore // 내부용
 @Getter
 @SuperBuilder
 @NoArgsConstructor
@@ -24,8 +26,7 @@ public class ImageContentDTO extends ContentDTO {
         private String url;
 
         public static ImageUrl create(String url) {
-            return ImageUrl.builder()
-                    .url(url).build();
+            return ImageUrl.builder().url(url).build();
         }
     }
 }
