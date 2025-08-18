@@ -1,10 +1,10 @@
 package com.kbulkup.gpt.dto.request;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore // 내부용
 @Getter
 @Setter
 @SuperBuilder

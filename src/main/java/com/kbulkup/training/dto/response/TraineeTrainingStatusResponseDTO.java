@@ -1,18 +1,17 @@
 package com.kbulkup.training.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
+@ApiModel(description = "트레이닝 진행 상태 응답")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class TraineeTrainingStatusResponseDTO {
-
-    private boolean hasWrittenReview;
-    private boolean chatRoomCreated;
+    @ApiModelProperty("리뷰 작성 여부") private boolean hasWrittenReview;
+    @ApiModelProperty("상담방 생성 여부") private boolean chatRoomCreated;
 
     public static TraineeTrainingStatusResponseDTO create(boolean hasWrittenReview, boolean chatRoomCreated) {
         return TraineeTrainingStatusResponseDTO.builder()
