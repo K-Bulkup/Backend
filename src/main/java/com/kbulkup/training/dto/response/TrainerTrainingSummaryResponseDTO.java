@@ -1,21 +1,19 @@
 package com.kbulkup.training.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
+@ApiModel(description = "트레이너 트레이닝 요약")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainerTrainingSummaryResponseDTO {
-    private Long trainingId;
-    private String title;
-    private String level;
-    private String thumbnailUrl;
-
-    // 추가 필드
-    private Long price;
-    private Double averageRating;
+    @ApiModelProperty("트레이닝 ID") private Long trainingId;
+    @ApiModelProperty("제목") private String title;
+    @ApiModelProperty("난이도") private String level;
+    @ApiModelProperty("썸네일 URL") private String thumbnailUrl;
+    @ApiModelProperty("가격") private Long price;
+    @ApiModelProperty("평균 평점") private Double averageRating;
 }
