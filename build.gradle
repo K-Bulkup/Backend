@@ -72,9 +72,12 @@ dependencies {
     implementation 'org.springframework.data:spring-data-mongodb:3.4.13'
     implementation 'org.mongodb:mongodb-driver-sync:4.10.2'
 
-    // 테스트
+    // 테스트 JUnit
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+
+    // AssertJ
+    testImplementation 'org.assertj:assertj-core:3.24.2'
 
     //Webclient
     implementation 'org.springframework:spring-webflux:5.3.23'
