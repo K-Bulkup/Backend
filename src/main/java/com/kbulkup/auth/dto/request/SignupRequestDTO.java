@@ -1,6 +1,8 @@
 package com.kbulkup.auth.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -8,30 +10,46 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
+@ApiModel(description = "회원가입 요청")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class SignupRequestDTO {
+
+    @ApiModelProperty(value = "사용자 ID(수정용)")
     private Long userId;
-    @Size(min = 8, max = 64, message = "비밀번호는 8자 이상 64자 이하로 입력해주세요.")
-    @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,64}$",
-            message = "비밀번호는 최소 8자, 최대 64자이며, 소문자, 숫자, 특수문자(@$!%*?&)를 각각 1개 이상 포함해야 합니다."
-    )
+
+    @ApiModelProperty(value = "비밀번호(8~64자, 소문자/숫자/특수문자 포함)")
+    @Size(min = 8, max = 64)
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,64}$")
     private String password;
 
-    @NotNull(message = "사용자 이름은 필수 입력 사항입니다.")
+    @ApiModelProperty(value = "사용자 이름", required = true)
+    @NotNull
     private String username;
+
+    @ApiModelProperty(value = "이메일")
     private String email;
+
+    @ApiModelProperty(value = "전화번호")
     private String phone;
+
+    @ApiModelProperty(value = "주소")
     private String address;
-    @NotNull(message = "역할은 필수 선택 사항입니다.")
-    private String role; // 추가: "TRAINEE", "TRAINER" 등
-    private String loginType; // 추가: "LOCAL", "KAKAO", "NAVER" 등
-    private String providerId; // 소셜 로그인 제공자 ID
+
+    @ApiModelProperty(value = "역할", required = true, allowableValues = "TRAINEE,TRAINER")
+    @NotNull
+    private String role;
+
+    @ApiModelProperty(value = "로그인 타입", allowableValues = "LOCAL,KAKAO,NAVER")
+    private String loginType;
+
+    @ApiModelProperty(value = "소셜 제공자 ID")
+    private String providerId;
+
+    @ApiModelProperty(value = "생년월일(yyyyMMddHHmmss)")
     @JsonFormat(pattern = "yyyyMMddHHmmss")
     private LocalDateTime birthdate;
 }

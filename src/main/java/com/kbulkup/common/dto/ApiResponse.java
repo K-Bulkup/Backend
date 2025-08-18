@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore // 내부용: Swagger 문서에서 제외
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
