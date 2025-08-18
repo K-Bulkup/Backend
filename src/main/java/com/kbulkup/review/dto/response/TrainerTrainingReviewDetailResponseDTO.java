@@ -1,16 +1,22 @@
 package com.kbulkup.review.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(description = "트레이닝 리뷰 상세 항목")
 public class TrainerTrainingReviewDetailResponseDTO {
-    private String username; //회원 닉네임
-    private int rating; //평점
-    private String content; //리뷰 내용
+
+    @ApiModelProperty(value = "작성자 닉네임")
+    private String username;
+
+    @ApiModelProperty(value = "평점")
+    private int rating;
+
+    @ApiModelProperty(value = "리뷰 내용")
+    private String content;
 }
