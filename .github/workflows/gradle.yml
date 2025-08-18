@@ -42,7 +42,7 @@ jobs :
       - name: Prepare deployment on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 43.201.172.152
+          host:  ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           port: 22
@@ -54,7 +54,7 @@ jobs :
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: 43.201.172.152
+          host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           port: 22
@@ -64,7 +64,7 @@ jobs :
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
-            host: 43.201.172.152
+            host: ${{ secrets.EC2_HOST }}
             username: ec2-user
             key: ${{ secrets.EC2_KEY }}
             port: 22
@@ -74,7 +74,7 @@ jobs :
       - name: Load image and start with docker-compose
         uses: appleboy/ssh-action@v1.0.3
         with:
-            host: 43.201.172.152
+            host:  ${{ secrets.EC2_HOST }}
             username: ec2-user
             key: ${{ secrets.EC2_KEY }}
             port: 22
