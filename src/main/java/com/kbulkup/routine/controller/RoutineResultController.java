@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "Routine Result", description = "루틴 결과 제출 API")
 @RestController
@@ -36,11 +37,16 @@ public class RoutineResultController {
         return ResponseEntity.ok(response);
     }
 
+    @ApiOperation(value = "루틴 답변 조회", notes = "사용자가 최근 제출한 루틴 답변을 조회합니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "trainingId", value = "트레이닝 ID", required = true, dataType = "long", paramType = "path"),
+            @ApiImplicitParam(name = "routineId",  value = "루틴 ID",      required = true, dataType = "long", paramType = "path")
+    })
     @GetMapping(value="/user-answers/{trainingId}/{routineId}")
     public ResponseEntity<UserAnswerDTO> getUserAnswer(
             @PathVariable("routineId") Long routineId,
             @PathVariable("trainingId") Long trainingId,
-            @AuthenticationPrincipal(expression = "user") User user
+            @ApiIgnore @AuthenticationPrincipal(expression = "user") User user
             ) {
         UserAnswerDTO dto = routineResultService.getUserAnswer(routineId, trainingId, user.getUserId());
         return ResponseEntity.ok(dto);
