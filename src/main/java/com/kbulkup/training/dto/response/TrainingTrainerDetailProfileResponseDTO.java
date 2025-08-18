@@ -1,15 +1,17 @@
+// src/main/java/com/kbulkup/training/dto/response/TrainingTrainerDetailProfileResponseDTO.java
 package com.kbulkup.training.dto.response;
 
 import com.kbulkup.profile.dto.response.TrainerProfileDetailResponseDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.security.cert.Certificate;
+import java.util.List;
 
 /** 트레이너 프로필 요약(트레이니 화면용) */
 @ApiModel(description = "트레이너 프로필 요약")
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,29 +27,7 @@ public class TrainingTrainerDetailProfileResponseDTO {
     private int traineeCount;
     @ApiModelProperty("평균 별점")
     private double averageRating;
+    @ApiModelProperty("트레이너 자격증 목록")
+    private List<Certificate> certificateList;
 
-    public static TrainingTrainerDetailProfileResponseDTO from(TrainerProfileDetailResponseDTO p) {
-        if (p == null) {
-            return new TrainingTrainerDetailProfileResponseDTO("", "", "", 0, 0.0);
-        }
-        return new TrainingTrainerDetailProfileResponseDTO(
-                p.getUsername(),
-                p.getUserProfileUrl(),
-                p.getCareer(),
-                p.getTotalTraineeCount(),
-                p.getTotalAverageRating()
-        );
-    }
-
-    public static TrainingTrainerDetailProfileResponseDTO of(
-            String name,
-            String profileUrl,
-            String description,
-            int traineeCount,
-            double averageRating
-    ) {
-        return new TrainingTrainerDetailProfileResponseDTO(
-                name, profileUrl, description, traineeCount, averageRating
-        );
-    }
 }
