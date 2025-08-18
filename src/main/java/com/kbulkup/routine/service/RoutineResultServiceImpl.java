@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.kbulkup.common.exception.QuizException;
 import com.kbulkup.common.response.ResponseCode;
+import com.kbulkup.gpt.service.GPTService;
 import com.kbulkup.routine.client.AiJudgeClient;
 import com.kbulkup.routine.domain.RoutineResult;
 import com.kbulkup.routine.dto.request.RoutineResultCreateRequestDTO;
@@ -31,6 +32,7 @@ public class RoutineResultServiceImpl implements RoutineResultService {
     private final RoutineResultMapper routineResultMapper;
     private final AiJudgeClient aiJudgeClient;
     private final AmazonS3 amazonS3;
+    private final GPTService gptService;
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
@@ -50,7 +52,7 @@ public class RoutineResultServiceImpl implements RoutineResultService {
 
         final boolean isCorrect = evaluateByType(
                 quizType, routineId, dto.getAnswerText(), routineDescription, thumbnailUrl
-        );
+        ); //
 
         final int score = routineResultMapper.selectRoutineScoreById(routineId);
         final int awardedScore = isCorrect ? score : 0;
@@ -80,7 +82,9 @@ public class RoutineResultServiceImpl implements RoutineResultService {
             routineResultMapper.updateEnrollmentProgress(dto.getEnrollmentId());
         }
 
-        return RoutineResultCreateResponseDTO.from(result.getPassFailResult());
+        String preCommentary = (String) gptService.requestOnlyText(routineDescription, dto.getAnswerText()).getChoices().get(0).getMessage().getContent();
+        String comment = preCommentary.split("\\R", 2)[0];
+        return RoutineResultCreateResponseDTO.from(result.getPassFailResult(), comment);
     }
 
     private String uploadToS3(MultipartFile file) {
@@ -126,6 +130,7 @@ public class RoutineResultServiceImpl implements RoutineResultService {
     }
 
     private static String normalize(String s) {
-        return s == null ? "" : s.trim().replaceAll("\\s+", " ").toUpperCase();
+        return s == null ? "" : s.trim().replaceAll("\s+", " ").toUpperCase();
     }
 }
+
