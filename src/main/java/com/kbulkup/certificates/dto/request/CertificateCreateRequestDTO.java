@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore // 내부용: Swagger 문서에서 제외
 @Getter
 @Builder
 @NoArgsConstructor
@@ -22,5 +24,4 @@ public class CertificateCreateRequestDTO {
                 .certNumber(dto.getSuccessDocNo())
                 .build();
     }
-
 }
