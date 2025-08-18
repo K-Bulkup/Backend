@@ -10,6 +10,10 @@ import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
 
+// Swagger
+import springfox.documentation.annotations.ApiIgnore;
+
+@ApiIgnore // WebSocket 엔드포인트는 Swagger 문서에서 제외
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
@@ -25,10 +29,10 @@ public class ChatController {
         // 만료된 방이면 아무것도 하지 않음
         if (chatSummary == null) return;
 
-        //채팅방에 메시지 실시간 전송
+        // 채팅방에 메시지 실시간 전송
         messagingTemplate.convertAndSend("/topic/room/" + chatMessageDTO.getRoomId(), chatMessageDTO);
 
-        //요약 정보 채팅방 리스트에 실시간 전송
+        // 요약 정보 채팅방 리스트에 실시간 전송
         messagingTemplate.convertAndSend("/queue/user/" + chatSummary.getReceiverId(), chatSummary);
     }
 }
