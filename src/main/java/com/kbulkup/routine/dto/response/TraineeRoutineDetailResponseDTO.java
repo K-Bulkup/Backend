@@ -1,22 +1,37 @@
 package com.kbulkup.routine.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
+@ApiModel(description = "수강생 루틴 상세 응답")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class TraineeRoutineDetailResponseDTO {
 
-    private String routineTitle;         // 루틴 제목
-    private String routineDescription;   // 루틴 설명
-    private int routineScore;            // 루틴 점수
-    private String category;             // 트레이닝 카테고리
-    private String level;                // 트레이닝 난이도
-    private String routineVideoUrl;      // 루틴 영상 URL
-    private String routineType;          // 루틴 타입
+    @ApiModelProperty(value = "루틴 제목")
+    private String routineTitle;
+
+    @ApiModelProperty(value = "루틴 설명")
+    private String routineDescription;
+
+    @ApiModelProperty(value = "루틴 점수")
+    private int routineScore;
+
+    @ApiModelProperty(value = "트레이닝 카테고리")
+    private String category;
+
+    @ApiModelProperty(value = "트레이닝 난이도")
+    private String level;
+
+    @ApiModelProperty(value = "루틴 영상 URL")
+    private String routineVideoUrl;
+
+    @ApiModelProperty(value = "루틴 타입")
+    private String routineType;
+
+    @ApiModelProperty(value = "퀴즈 타입")
     private String quizType;
 }
