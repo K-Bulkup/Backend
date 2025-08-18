@@ -2,10 +2,13 @@ package com.kbulkup.routine.controller;
 
 import com.kbulkup.routine.dto.request.RoutineResultCreateRequestDTO;
 import com.kbulkup.routine.dto.response.RoutineResultCreateResponseDTO;
+import com.kbulkup.routine.dto.response.UserAnswerDTO;
 import com.kbulkup.routine.service.RoutineResultService;
+import com.kbulkup.user.domain.User;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,5 +34,15 @@ public class RoutineResultController {
     ) {
         RoutineResultCreateResponseDTO response = routineResultService.submitResult(routineId, requestDTO, file);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value="/user-answers/{trainingId}/{routineId}")
+    public ResponseEntity<UserAnswerDTO> getUserAnswer(
+            @PathVariable("routineId") Long routineId,
+            @PathVariable("trainingId") Long trainingId,
+            @AuthenticationPrincipal(expression = "user") User user
+            ) {
+        UserAnswerDTO dto = routineResultService.getUserAnswer(routineId, trainingId, user.getUserId());
+        return ResponseEntity.ok(dto);
     }
 }
