@@ -1,4 +1,6 @@
 package com.kbulkup.statistics.dto.request;
 
-public class StatisticsTrainerRevenueRequestDTO {
-}
+import springfox.documentation.annotations.ApiIgnore;
+
+@ApiIgnore // 문서 비노출
+public class StatisticsTrainerRevenueRequestDTO { }

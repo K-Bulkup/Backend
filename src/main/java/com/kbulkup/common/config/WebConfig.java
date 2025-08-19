@@ -25,12 +25,17 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{ServletConfig.class};
+        return new Class[]{ServletConfig.class,  SwaggerConfig.class };
     }
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/"};
+        return new String[]{"/",
+                "/swagger-ui.html",         // Swagger UI 메인 페이지
+                "/swagger-resources/**",    // Swagger 리소스
+                "/v2/api-docs",            // API 명세 JSON
+                "/webjars/**"              // WebJar 리소스 (CSS, JS 등)};
+        };
     }
 
     @Override

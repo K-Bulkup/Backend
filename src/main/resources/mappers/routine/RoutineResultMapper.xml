@@ -26,6 +26,33 @@
         WHERE routine_id = #{routineId} AND enrollment_id = #{enrollmentId}
     </select>
 
+    <select id="findEnrollmentId" resultType="java.lang.Long">
+        select enrollment_id from enrollments where user_id = #{userId} and training_id = #{trainingId}
+    </select>
+
+    <select id="findAnswer" resultType="com.kbulkup.routine.dto.response.UserAnswerDTO">
+        SELECT
+        /* 공백/빈문자열을 NULL처럼 취급 후 우선 answer_text, 없으면 evidence_url */
+        COALESCE(
+        NULLIF(TRIM(rr.answer_text), ''),
+        NULLIF(TRIM(rr.evidence_url), '')
+        ) AS answer,
+        CASE
+        WHEN NULLIF(TRIM(rr.answer_text), '') IS NOT NULL THEN TRUE
+        ELSE FALSE
+        END AS isText
+        FROM routine_results rr
+        WHERE rr.routine_id = #{routineId}
+        AND rr.enrollment_id = #{enrollmentId}
+        /* 둘 다 비었거나 NULL인 행은 애초에 제외 */
+        AND (
+        NULLIF(TRIM(rr.answer_text), '') IS NOT NULL
+        OR NULLIF(TRIM(rr.evidence_url), '') IS NOT NULL
+        )
+        ORDER BY rr.submitted_at DESC   <!-- 최근 제출 우선 -->
+        LIMIT 1
+    </select>
+
     <insert id="insertRoutineResult" parameterType="com.kbulkup.routine.domain.RoutineResult">
         INSERT INTO routine_results (
         enrollment_id, routine_id,

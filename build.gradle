@@ -105,6 +105,10 @@ dependencies {
      * v2가 존재하지만 취약성이 존재해 v1을 쓰다가 추후 취약성 문제가 해결되면 수정하는 것이 좋음 !
      */
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.767'
+
+    // Swagger 관련 의존성
+    implementation 'io.springfox:springfox-swagger2:2.9.2'       // Swagger 핵심 라이브러리
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'     // Swagger UI 웹 인터페이스
 }
 
 // WAR 파일 이름 설정 (선택 사항)

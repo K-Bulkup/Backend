@@ -30,7 +30,8 @@
             resultType="com.kbulkup.training.dto.response.RoutineCategoryResponseDTO">
         SELECT
             r.routine_type AS category,
-            r.title AS routineTitle
+            r.title AS routineTitle,
+            r.quiz_type AS quizType
         FROM routines r
         WHERE r.training_id = #{trainingId}
         ORDER BY r.routine_type, r.order_number
