@@ -78,6 +78,16 @@ dependencies {
 
     // AssertJ
     testImplementation 'org.assertj:assertj-core:3.24.2'
+    
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:5.6.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.6.0'
+    
+    // Reactor Test (WebFlux 비동기 테스트용)
+    testImplementation 'io.projectreactor:reactor-test:3.4.32'
+    
+    // Spring Test (ReflectionTestUtils 등)
+    testImplementation 'org.springframework:spring-test:5.3.30'
 
     //Webclient
     implementation 'org.springframework:spring-webflux:5.3.23'
