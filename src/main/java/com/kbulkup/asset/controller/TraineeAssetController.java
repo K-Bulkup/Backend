@@ -37,7 +37,7 @@ public class TraineeAssetController {
             @ApiParam(value = "은행 식별 정보", required = true)
             @RequestBody TokenRequestDTO dto,
             @ApiIgnore @AuthenticationPrincipal(expression = "user") User user) {
-        traineeAssetService.createUserPortfolio(dto.getBank(), user);
+        traineeAssetService.createUserPortfolio(dto.getBank(), dto.getAccountNumber(), user);
         return CustomResponse.success(ResponseCode.SUCCESS);
     }
 

@@ -7,7 +7,7 @@ public interface TraineeAssetService {
 
     TraineeAssetDetailResponseDTO getTraineeAsset(Long id);
 
-    void createUserPortfolio(String bank, User user);
+    void createUserPortfolio(String bank, String accountNumber, User user);
 
     void updateUserPortfolio(User user);
 
