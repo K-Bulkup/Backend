@@ -80,7 +80,7 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     private ExternalTokenResponseDTO getAccessTokenAndFintechUseNum(String bank, String accountNumber) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://localhost:9080") //http://13.125.89.72:9080
+                .baseUrl("http://13.125.89.72:9080") //http://13.125.89.72:9080
                 .build();
         return webClient.post()
                 .uri("/external-api/create-user")
@@ -93,7 +93,7 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     private ExternalAccessTokenResponseDTO getAccessToken(String fintechUseNum) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://localhost:9080") //http://13.125.89.72:9080
+                .baseUrl("http://13.125.89.72:9080") //http://13.125.89.72:9080
                 .build();
         return webClient.post()
                 .uri(uriBuilder -> uriBuilder
@@ -108,7 +108,7 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     private ExternalAssetResponseDTO getUserAssetData(String token, String fintechUseNum) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://localhost:9080") //http://13.125.89.72:9080
+                .baseUrl("http://13.125.89.72:9080") //http://13.125.89.72:9080
                 .build();
 
         return webClient.post()
