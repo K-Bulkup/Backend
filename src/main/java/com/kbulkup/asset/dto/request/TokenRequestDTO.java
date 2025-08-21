@@ -13,7 +13,13 @@ public class TokenRequestDTO {
     @ApiModelProperty(value = "은행 코드/식별자")
     private String bank;
 
-    public static TokenRequestDTO create(String bank) {
-        return TokenRequestDTO.builder().bank(bank).build();
+    @ApiModelProperty(value = "계좌 번호")
+    private String accountNumber;
+
+    public static TokenRequestDTO create(String bank, String accountNumber) {
+        return TokenRequestDTO.builder()
+                .bank(bank)
+                .accountNumber(accountNumber)
+                .build();
     }
 }

@@ -40,9 +40,8 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
 
     @Override
     @Transactional
-    public void createUserPortfolio(String bank, User user) {
-        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId(), user.getRoles());
-        ExternalTokenResponseDTO externalTokenResponseDTO = getAccessTokenAndFintechUseNum(bank, accessToken);
+    public void createUserPortfolio(String bank, String accountNumber, User user) {
+        ExternalTokenResponseDTO externalTokenResponseDTO = getAccessTokenAndFintechUseNum(bank, accountNumber);
         traineeAssetMapper.insertFintechUseNum(user.getUserId(), bank, externalTokenResponseDTO.getFintechUseNum());
         ExternalAssetResponseDTO externalAssetResponseDTO = getUserAssetData(externalTokenResponseDTO.getAccessToken(), externalTokenResponseDTO.getFintechUseNum());
         traineeAssetMapper.insertPortfolio(user.getUserId());
@@ -53,16 +52,15 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     @Override
     @Transactional
     public void updateUserPortfolio(User user) {
-        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getUserId(), user.getRoles());
         FintechAuthRequestDTO fintechAuthRequestDTO = traineeAssetMapper.findBankAndFintechUseNum(user.getUserId());
-        ExternalAccessTokenResponseDTO externalAccessTokenResponseDTO = getAccessToken(accessToken, fintechAuthRequestDTO.getFintechUseNum());
+        ExternalAccessTokenResponseDTO externalAccessTokenResponseDTO = getAccessToken(fintechAuthRequestDTO.getFintechUseNum());
         ExternalAssetResponseDTO externalAssetResponseDTO = getUserAssetData(externalAccessTokenResponseDTO.getAccessToken(), fintechAuthRequestDTO.getFintechUseNum());
-        deleteTraineeAsset(user.getUserId(), externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
+        deleteTraineeAsset(user.getUserId());
         insertTraineeAsset(user.getUserId(), externalAssetResponseDTO.getTraineeAssetDetailResponseDTO());
     }
 
     @Transactional
-    public void deleteTraineeAsset(Long id, TraineeAssetDetailResponseDTO dto) {
+    public void deleteTraineeAsset(Long id) {
         LocalDate end = LocalDate.now();
         LocalDate start = end.minusMonths(3).withDayOfMonth(1);
 
@@ -79,31 +77,29 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
         traineeAssetMapper.insertSnapshots(id, dto.getSnapshots());
     }
 
-    private ExternalTokenResponseDTO getAccessTokenAndFintechUseNum(String bank, String accessToken) {
+    private ExternalTokenResponseDTO getAccessTokenAndFintechUseNum(String bank, String accountNumber) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://13.125.89.72:9080")
+                .baseUrl("http://13.125.89.72:9080") //http://13.125.89.72:9080
                 .build();
         return webClient.post()
                 .uri("/external-api/create-user")
-                .header("Authorization", "Bearer " + accessToken)
-                .bodyValue(TokenRequestDTO.create(bank))
+                .bodyValue(TokenRequestDTO.create(bank, accountNumber))
                 .retrieve()
                 .bodyToMono(ExternalTokenResponseDTO.class)
                 .block();
     }
 
-    private ExternalAccessTokenResponseDTO getAccessToken(String accessToken, String fintechUseNum) {
+    private ExternalAccessTokenResponseDTO getAccessToken(String fintechUseNum) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://13.125.89.72:9080")
+                .baseUrl("http://13.125.89.72:9080") //http://13.125.89.72:9080
                 .build();
         return webClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/external-api/token")
                         .queryParam("fintechUseNum", fintechUseNum) // 쿼리 파라미터 추가
                         .build())
-                .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(ExternalAccessTokenResponseDTO.class)
                 .block();
@@ -112,7 +108,7 @@ public class TraineeAssetServiceImpl implements TraineeAssetService {
     private ExternalAssetResponseDTO getUserAssetData(String token, String fintechUseNum) {
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://13.125.89.72:9080")
+                .baseUrl("http://13.125.89.72:9080") //http://13.125.89.72:9080
                 .build();
 
         return webClient.post()

@@ -66,7 +66,7 @@
         VALUES
         <foreach collection="transactions" item="transaction" separator=",">
             (
-            #{transaction.userId},
+            #{traineeId},
             #{transaction.transactionType},
             #{transaction.amount},
             #{transaction.transactionCategory, typeHandler=com.kbulkup.asset.typehandler.TransactionCategoryTypeHandler},
@@ -84,7 +84,7 @@
         VALUES
         <foreach collection="snapshots" item="snapshot" separator=",">
             (
-            #{snapshot.userId},
+            #{traineeId},
             #{snapshot.balance},
             #{snapshot.snapshotDate}
             )
@@ -94,7 +94,7 @@
     <insert id="insertComposition">
         INSERT INTO compositions (user_id,
                                   asset_composition)
-        VALUES (#{composition.userId},
+        VALUES (#{traineeId},
                 #{composition.assetComposition, typeHandler=com.kbulkup.asset.typehandler.JsonToMapTypeHandler})
     </insert>
 
